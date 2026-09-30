@@ -1,0 +1,38 @@
+.com-patrykmalinowski-pomidor {
+  &-header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &-header-left {
+    display: flex;
+    align-items: center;
+  }
+
+  &-page {
+    flex: 1;
+    overflow: hidden;
+
+    &>* {
+      height: 100%;
+    }
+  }
+
+  &-form {
+    @apply w-full flex flex-col justify-start gap-2;
+
+    label {
+      @apply flex flex-col gap-1
+    }
+  }
+
+  &-dialog-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 3px;
+  }
+}
+
+#webpack-dev-server-client-overlay {
+  display: none;
+}

@@ -1,0 +1,49 @@
+body {
+  margin: 0;
+}
+
+html {
+  line-height: revert;
+}
+
+ul,
+li {
+  all: revert;
+  margin: 0;
+}
+
+a {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+@mixin m-line-height {
+  line-height: 1;
+}
+
+textarea {
+  @include m-line-height;
+}
+
+p {
+  @include m-line-height;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @include m-line-height;
+  font-size: revert;
+  font-weight: revert;
+}
+
+input {
+  display: block;
+}
+
+.MuiPopper-root {
+  user-select: none;
+}

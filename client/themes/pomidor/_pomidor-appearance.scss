@@ -1,0 +1,190 @@
+@mixin information {
+  @apply select-text;
+
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: revert;
+    margin: revert;
+    padding: revert;
+  }
+
+  p,
+  li {
+    font-size: 20px;
+  }
+}
+
+.com-patrykmalinowski-pomidor {
+
+  //HEADER
+  &-header {
+    @apply p-1 gap-1;
+    background-color: var(--pomidor-color-header);
+    color: var(--pomidor-color-header-text);
+  }
+
+
+  &-header-left {
+    @apply gap-2;
+
+
+    &__title-text {
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+  }
+
+  &-logo-in-box {
+    @apply p-1 rounded-xl;
+    overflow: hidden;
+    background-color: white;
+
+    &__logo {
+      width: 16px;
+      height: auto;
+    }
+  }
+
+  &-header-tabs {
+    @apply items-center gap-2;
+    font-size: 1.2rem;
+    font-weight: bold;
+
+    &__button {
+      @apply p-1.5 rounded-lg;
+
+      &:hover {
+        cursor: pointer;
+      }
+
+      &--selected {
+        background-color: var(--pomidor-color-header-selected);
+      }
+    }
+  }
+
+
+  &-central-box {
+    @apply p-1;
+
+    &__box {
+      @apply p-3 rounded-md border border-(--pomidor-color-login-box-border);
+    }
+  }
+
+  // TASKS EDITOR
+  &-tasks-editor-tasks-column {
+    border: 1px solid var(--avocado-color-box-border);
+    border-radius: 5px;
+    padding: 10px;
+
+    &__label {
+      font-weight: bold;
+    }
+  }
+
+  &-tasks-editor-task-box {
+    background-color: var(--pomidor-color-task-box-background);
+
+    border-radius: 5px;
+    border: 1px solid var(--avocado-color-box-border);
+  }
+
+  &-headermenu {
+    border-top: 3px solid var(--pomidor-color-header-text);
+    border-bottom: 3px solid var(--pomidor-color-header-text);
+
+    &__tab-button {
+      &:not(:first-child) {
+
+        border-top: 1px solid var(--pomidor-color-header-text);
+      }
+
+      background-color: var(--avocado-color-window-header);
+      color: var(--pomidor-color-header-text);
+
+      &--selected {
+        background-color: var(--pomidor-color-header-selected);
+      }
+    }
+  }
+
+
+  &-users-editor-desktop {
+    &__separator {
+      background-color: var(--pomidor-color-separator);
+    }
+  }
+
+  &-users-list {
+    background: var(--avocado-color-box);
+    border: 1px solid var(--avocado-color-box-border);
+    border-radius: 5px;
+
+    &__item {
+      &:not(:last-child) {
+        border-bottom: 1px solid var(--avocado-color-box-border);
+      }
+    }
+  }
+
+  //TABLE
+  &-table {
+    background-color: var(--avocado-color-box);
+    border: 1px solid var(--avocado-color-box-border);
+    border-radius: 5px;
+    border-spacing: 0;
+
+    thead {
+      background-color: var(--avocado-color-window-header);
+      color: var(--avocado-color-window-header-text);
+    }
+
+    th,
+    td {
+      margin: 0;
+      padding: 5px;
+      border-bottom: 1px solid var(--avocado-color-box-border);
+      border-right: 1px solid var(--avocado-color-box-border);
+
+      &:last-child {
+        border-right: none;
+      }
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    &__row--selected {
+      background-color: var(--avocado-color-selection);
+    }
+  }
+
+  &-selectable-menu {
+    &__item {
+      padding: 5px;
+
+      &:not(:last-child) {
+        border-bottom: 1px solid var(--avocado-color-box-border);
+      }
+
+      &--selected {
+        background-color: var(--avocado-color-selection);
+      }
+    }
+  }
+
+  &-privacy-policy {
+    @include information;
+  }
+
+  &-introduction {
+    @include information;
+  }
+}

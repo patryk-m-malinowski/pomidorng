@@ -1,0 +1,44 @@
+import { Component, effect, inject, OnInit, ViewChild } from "@angular/core";
+import { OfflineDlg } from "./offlineDlg.component";
+import PendingRequestsService from "/imports/client/PendingRequestsService";
+import UserService from "./userService";
+import { RouterOutlet } from "@angular/router";
+import { Header } from "./header.component";
+
+@Component({
+  selector: "app-root",
+  standalone: true,
+  imports: [RouterOutlet, OfflineDlg, Header],
+  template: ` <div
+    className="com-patrykmalinowski-avocado-web-app flex flex-col h-screen w-screen"
+  >
+    <app-header />
+    <button class="bg-green-200" (click)="offlineDlg.open()">
+      Open Offline Dialog
+    </button>
+    <app-offline-dlg></app-offline-dlg>
+    <router-outlet></router-outlet>
+  </div>`,
+})
+export class App {
+  title = "Angular Meteor App";
+  userService: UserService = inject(UserService);
+  pendingRequestsService: PendingRequestsService = inject(
+    PendingRequestsService,
+  );
+  @ViewChild(OfflineDlg)
+  offlineDlg!: OfflineDlg;
+
+  constructor() {
+    effect(() => {
+      const offline = this.pendingRequestsService.offline();
+      if (this.offlineDlg) {
+        if (!offline) {
+          this.offlineDlg.close();
+        } else {
+          this.offlineDlg.open();
+        }
+      }
+    });
+  }
+}

@@ -1,0 +1,177 @@
+@mixin textfield {
+  @apply h-7 p-2 rounded outline outline-(--avocado-color-text-input-border) bg-(--avocado-color-text-input-background) transition-colors focus-within:outline-2 focus-within:outline-(--avocado-color-focus);
+}
+
+body {
+  font-family: avenir;
+  color: var(--avocado-color-text)
+}
+
+input:read-only,
+input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea {
+  @include textfield;
+}
+
+
+//WIDGETS
+button,
+select {
+  background-color: var(--avocado-color-button);
+  border: 1px solid var(--avocado-color-button-border);
+  border-radius: 5px;
+  color: var(--avocado-color-button-text);
+  font-family: avenir;
+  font-size: 16px;
+  padding: 5px;
+}
+
+button {
+  @apply flex items-center gap-1 cursor-pointer;
+  height: 30px;
+
+
+  &:hover:not(:disabled):not(:active) {
+    transition: background-color 0.2s ease;
+    background-color: var(--avocado-color-button-background-hover);
+  }
+
+  &:active {
+    background-color: var(--avocado-color-button-background-pressed);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: var(--avocado-color-button-disabled-background);
+    color: var(--avocado-color-button-disabled-text);
+  }
+}
+
+//CHECKBOX
+input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    :not(:checked) {
+      background: hsl(216, 100%, 91%);
+    }
+
+    :checked {
+      background: #5d9eff;
+    }
+  }
+}
+
+
+input[type="checkbox"]:after {
+  content: ' ';
+  position: relative;
+  left: 40%;
+  top: 20%;
+  width: 15%;
+  height: 40%;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(50deg);
+  display: none;
+}
+
+a {
+  color: var(--avocado-color-anchor);
+}
+
+.com-patrykmalinowski-avocado {
+  &-web-app {
+    background-color: var(--avocado-color-background);
+  }
+
+  &-group-box {
+    &__container {
+      border: 1px solid var(--avocado-color-groupbox-border);
+      border-radius: 5px;
+      padding: 10px;
+    }
+
+    &__label {
+      font-weight: bold;
+      margin: 0 0 5px 0;
+    }
+  }
+
+
+  &-window {
+    &__window {
+      border: 2px solid var(--avocado-color-window-border);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    &__header {
+      @apply p-1 pl-2 font-bold;
+      color: var(--avocado-color-text-on-window-header);
+      background-color: var(--avocado-color-window-header);
+    }
+
+    &__content {
+      @apply p-2 bg-(--avocado-color-background);
+    }
+
+    &__blocker {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  //TOOLBAR
+  &-toolbar {
+    background-color: var(--avocado-color-toolbar);
+  }
+
+  &-button-extra {
+    background: var(--avocado-color-button-extra-background);
+    color: var(--avocado-color-button-extra-text);
+    border: 1px solid var(--avocado-color-button-extra-border);
+
+    &:hover:not(:disabled) {
+      background-color: var(--avocado-color-button-extra-background-hover);
+    }
+  }
+
+  &-error-message {
+    color: var(--avocado-color-error-message);
+  }
+
+  &-searchfield {
+    @include textfield;
+    @apply p-0;
+
+    &__field {
+      @apply m-0 h-full border-0 bg-transparent px-2 pr-14 outline-none focus:outline-none;
+      color: var(--avocado-color-text) !important;
+    }
+
+    &__btn-search,
+    &__btn-clear {
+      padding: 0 !important;
+      margin: 0 !important;
+      @apply text-(--avocado-color-text);
+      color: var(--avocado-color-text) !important;
+    }
+  }
+}
+
+//THIRD-PARTY
+.MuiPopper-root {
+  z-index: 1000;
+  border: 2px solid var(--avocado-color-box-border);
+  border-radius: 5px;
+  background-color: var(--avocado-color-box);
+}

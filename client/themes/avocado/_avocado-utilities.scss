@@ -1,0 +1,11 @@
+.com-patrykmalinowski-avocado {
+  &-web-app {
+    height: 100vh;
+    width: 100vw;
+    user-select: none;
+  }
+
+  &-toolbar {
+    @apply flex justify-start items-center flex-wrap gap-0.5 rounded p-1
+  }
+}

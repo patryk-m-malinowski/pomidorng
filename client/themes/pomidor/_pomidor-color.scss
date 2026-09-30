@@ -1,0 +1,23 @@
+body:not(.com-patrykmalinowski-avocado-dark-theme) {
+  --pomidor-color-header: var(--avocado-color-window-header);
+  --pomidor-color-header-text: var(--avocado-color-window-header-text);
+  --pomidor-color-login-box-border: black;
+  --pomidor-color-header-selected: #e17f45;
+  --pomidor-color-separator: #e17f45;
+  --pomidor-color-task-box-background: white;
+  --pomidor-color-tasks-col-done: #bcecbc;
+  --pomidor-color-tasks-col-inprogress: #F9F4B5;
+  --pomidor-color-tasks-col-todo: #fbd2d2;
+}
+
+body.com-patrykmalinowski-avocado-dark-theme {
+  --pomidor-color-header-selected: #a1573d;
+  --pomidor-color-header-text: var(--avocado-color-window-header-text);
+  --pomidor-color-header: var(--avocado-color-window-header);
+  --pomidor-color-login-box-border: white;
+  --pomidor-color-separator: #4c4c4c;
+  --pomidor-color-task-box-background: var(--avocado-color-box);
+  --pomidor-color-tasks-col-done: #14450c;
+  --pomidor-color-tasks-col-inprogress: #353802;
+  --pomidor-color-tasks-col-todo: #400e0e;
+}

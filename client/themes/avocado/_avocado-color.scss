@@ -1,0 +1,61 @@
+body:not(.com-patrykmalinowski-avocado-dark-theme) {
+  --avocado-color-anchor: blue;
+  --avocado-color-background: #fffae6;
+  --avocado-color-border: black;
+  --avocado-color-box: white;
+  --avocado-color-box-border: #c2c2c2;
+  --avocado-color-button: #15951d;
+  --avocado-color-button-background-hover: #1cba26;
+  --avocado-color-button-background-pressed: #6cff76;
+  --avocado-color-button-border: white;
+  --avocado-color-button-disabled-background: #89b28c;
+  --avocado-color-button-disabled-text: #666;
+  --avocado-color-button-extra-text: black;
+  --avocado-color-button-extra-background: white;
+  --avocado-color-button-extra-background-hover: white;
+  --avocado-color-button-extra-border: var(--avocado-color-box-border);
+  --avocado-color-button-text: white;
+  --avocado-color-error-message: red;
+  --avocado-color-focus: var(--avocado-color-button);
+  --avocado-color-groupbox-border: black;
+  --avocado-color-selection: #92cbff;
+  --avocado-color-text: black;
+  --avocado-color-text-input-background: white;
+  --avocado-color-text-input-border: #ccc;
+  --avocado-color-text-on-window-header: white;
+  --avocado-color-toolbar: #ffdcaf;
+  --avocado-color-window-border: black;
+  --avocado-color-window-header: #d44d20;
+  --avocado-color-window-header-text: white;
+}
+
+body.com-patrykmalinowski-avocado-dark-theme {
+  --avocado-color-anchor: #9090ff;
+  --avocado-color-background: black;
+  --avocado-color-border: white;
+  --avocado-color-box: #232323;
+  --avocado-color-box-border: #545454;
+  --avocado-color-button: #006a07;
+  --avocado-color-button-background-pressed: #64d96c;
+  --avocado-color-button-background-hover: #2c9b33;
+  --avocado-color-button-border: var(--avocado-color-box-border);
+  --avocado-color-button-disabled-background: #203d22;
+  --avocado-color-button-disabled-text: #666;
+  --avocado-color-button-extra-background: black;
+  --avocado-color-button-extra-background-hover: #444;
+  --avocado-color-button-extra-border: white;
+  --avocado-color-button-extra-text: white;
+  --avocado-color-button-text: white;
+  --avocado-color-error-message: red;
+  --avocado-color-focus: var(--avocado-color-button);
+  --avocado-color-groupbox-border: #6d6d6d;
+  --avocado-color-selection: #35597a;
+  --avocado-color-text-input-background: #393939;
+  --avocado-color-text-input-border: var(--avocado-color-box-border);
+  --avocado-color-text-on-window-header: white;
+  --avocado-color-text: white;
+  --avocado-color-toolbar: var(--avocado-color-box);
+  --avocado-color-window-border: var(--avocado-color-box-border);
+  --avocado-color-window-header: #71311b;
+  --avocado-color-window-header-text: white;
+}
