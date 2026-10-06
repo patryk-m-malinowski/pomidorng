@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, effect, inject } from "@angular/core";
+import { Component, effect, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Meteor } from "meteor/meteor";
 import { Router } from "@angular/router";
@@ -103,20 +103,20 @@ import { StackLayout, StackPage } from "./util/StackLayout";
                 ></app-password-editor>
               </label>
 
-              @switch (errorMessage) {
-                @case ("invalid-username-password") {
+              <app-stack-layout [selection]="errorMessage()">
+                <app-stack-page id="invalid-username-password">
                   <p class="com-patrykmalinowski-avocado-error-message">
                     The account matching the username and password does not
                     exist. Please make sure you've entered the details
                     correctly.
                   </p>
-                }
-                @case ("unknown-error") {
+                </app-stack-page>
+                <app-stack-page id="unknown-error">
                   <p class="com-patrykmalinowski-avocado-error-message">
                     An unknown error occurred. Please try again later.
                   </p>
-                }
-              }
+                </app-stack-page>
+              </app-stack-layout>
 
               <button class="justify-center" type="submit">Log In</button>
               <button
@@ -159,7 +159,7 @@ export class LoginForm {
 
   username = "";
   password = "";
-  errorMessage: string | null = null;
+  errorMessage = signal<string | null>(null);
   loginMethod: "continue" | "user" | "spectator" = "continue";
 
   constructor() {
@@ -175,7 +175,7 @@ export class LoginForm {
   }
 
   async onSubmit(): Promise<void> {
-    this.errorMessage = null;
+    this.errorMessage.set(null);
 
     const loginError = await new Promise<boolean>((resolve) => {
       Meteor.loginWithPassword(
@@ -188,7 +188,7 @@ export class LoginForm {
     });
 
     if (loginError) {
-      this.errorMessage = "invalid-username-password";
+      this.errorMessage.set("invalid-username-password");
     } else {
       this.navigateToApp();
     }
