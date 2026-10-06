@@ -1,9 +1,9 @@
 import { Component, effect, inject, ViewChild } from "@angular/core";
-import { OfflineDlg } from "./offlineDlg.component";
+import { OfflineDlg } from "./OfflineDlg";
 import PendingRequestsService from "/imports/client/PendingRequestsService";
-import UserService from "./userService";
+import UserService from "./UserService";
 import { RouterOutlet } from "@angular/router";
-import { Header } from "./header.component";
+import { Header } from "./Header";
 
 @Component({
   selector: "app-root",

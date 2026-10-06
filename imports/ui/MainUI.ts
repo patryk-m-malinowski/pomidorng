@@ -1,6 +1,6 @@
 import { Component, ViewChild, inject } from "@angular/core";
 import { CdkPortal } from "@angular/cdk/portal";
-import { HeaderPortalService } from "/imports/ui/header-portal.service";
+import { HeaderPortalService } from "/imports/ui/HeaderPortalService";
 
 @Component({
   selector: "main-ui",

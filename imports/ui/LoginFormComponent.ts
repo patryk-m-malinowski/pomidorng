@@ -3,10 +3,10 @@ import { Component, effect, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Meteor } from "meteor/meteor";
 import { Router } from "@angular/router";
-import UserService from "./userService";
-import { CentralBox } from "./util/centralbox.component";
-import { PasswordEditor } from "./util/passwordeditor.component";
-import { StackLayout, StackPage } from "./util/stacklayout.component";
+import UserService from "./UserService";
+import { CentralBox } from "./util/CentralBox";
+import { PasswordEditor } from "./util/PasswordEditor";
+import { StackLayout, StackPage } from "./util/StackLayout";
 
 @Component({
   selector: "app-login-form",

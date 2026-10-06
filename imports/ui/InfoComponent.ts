@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Meteor } from 'meteor/meteor';
 import { Tracker } from 'meteor/tracker';
-import { LinksCollection } from '../api/links';
+import { LinksCollection } from '../api/LinksCollection';
 
 interface Link {
   _id?: string;

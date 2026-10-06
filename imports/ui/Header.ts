@@ -1,7 +1,7 @@
 import { Component, Input, inject } from "@angular/core";
 import { CdkPortalOutlet } from "@angular/cdk/portal";
-import { HeaderPortalService } from "/imports/ui/header-portal.service";
-import { ThemeSelector } from "./theme-selector.component";
+import { HeaderPortalService } from "/imports/ui/HeaderPortalService";
+import { ThemeSelector } from "./ThemeSelector";
 
 @Component({
   selector: "app-header",

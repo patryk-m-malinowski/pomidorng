@@ -1,5 +1,5 @@
 import { Component, ViewChild } from "@angular/core";
-import { WindowComponent } from "./util/dialog/window.component";
+import { WindowComponent } from "./util/dialog/WindowComponent";
 
 @Component({
   selector: "app-offline-dlg",

@@ -1,5 +1,5 @@
 import { Injectable, WritableSignal } from "@angular/core";
-import { CallTracker } from "./MethodCallsTracker";
+import { CallTracker } from "./CallTracker";
 
 @Injectable({ providedIn: "root" })
 export default class PendingRequestsService {

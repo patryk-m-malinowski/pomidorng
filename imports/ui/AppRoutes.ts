@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { Routes, UrlMatcher, UrlSegment } from "@angular/router";
-import { LoginFormComponent } from "./loginform.component";
-import { MainUI } from "./mainui.component";
+import { LoginFormComponent } from "./LoginFormComponent";
+import { MainUI } from "./MainUI";
 
 @Component({
   standalone: true,
