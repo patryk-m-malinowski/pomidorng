@@ -12,9 +12,9 @@ import { Header } from "./Header";
   template: ` <div
     class="com-patrykmalinowski-avocado-web-app flex flex-col h-screen w-screen"
   >
-    <app-header [username]="userService.user()?.name ?? ''"></app-header>
+    <header [username]="userService.user()?.name ?? ''"></header>
     <router-outlet></router-outlet>
-    <app-offline-dlg></app-offline-dlg>
+    <offline-dlg></offline-dlg>
   </div>`,
 })
 export class App {

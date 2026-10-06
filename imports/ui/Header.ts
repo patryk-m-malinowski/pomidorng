@@ -4,7 +4,7 @@ import { HeaderPortalService } from "/imports/ui/HeaderPortalService";
 import { ThemeSelector } from "./ThemeSelector";
 
 @Component({
-  selector: "app-header",
+  selector: "header",
   standalone: true,
   imports: [CdkPortalOutlet, ThemeSelector],
   template: `
@@ -47,9 +47,9 @@ import { ThemeSelector } from "./ThemeSelector";
           <ng-template [cdkPortalOutlet]="headerPortalService.rightPortal()" />
         </div>
         <div class="border-l border-l-white h-[80%]"></div>
-        <app-theme-selector
+        <theme-selector
           class="h-full flex items-center justify-center"
-        ></app-theme-selector>
+        ></theme-selector>
       </div>
     </div>
 

@@ -9,7 +9,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { MatIconModule, MatIcon } from "@angular/material/icon";
 
 @Component({
-  selector: "app-password-editor",
+  selector: "password-editor",
   standalone: true,
   imports: [MatIconModule],
   template: `

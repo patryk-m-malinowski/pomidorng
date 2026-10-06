@@ -8,7 +8,7 @@ import {
 } from "@angular/core";
 
 @Component({
-  selector: "app-stack-page",
+  selector: "stack-page",
   standalone: true,
   template: "<ng-content></ng-content>",
 })
@@ -41,7 +41,7 @@ export class StackPage {
 }
 
 @Component({
-  selector: "app-stack-layout",
+  selector: "stack-layout",
   standalone: true,
   template: `
     <div style="display: grid;">

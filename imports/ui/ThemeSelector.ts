@@ -12,7 +12,7 @@ import ThemeService, {
 import { MatIcon } from "@angular/material/icon";
 
 @Component({
-  selector: "app-theme-selector",
+  selector: "theme-selector",
   standalone: true,
   imports: [MatIcon],
   template: `

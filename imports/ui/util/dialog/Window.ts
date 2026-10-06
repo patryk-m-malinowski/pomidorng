@@ -17,7 +17,7 @@ export interface WindowApi {
 }
 
 @Component({
-  selector: "app-window",
+  selector: "window",
   standalone: true,
   imports: [CommonModule],
   template: `

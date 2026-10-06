@@ -11,7 +11,7 @@ interface Link {
 }
 
 @Component({
-  selector: "app-info",
+  selector: "info",
   standalone: true,
   imports: [CommonModule],
   template: `
