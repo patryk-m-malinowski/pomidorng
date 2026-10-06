@@ -4,6 +4,29 @@ import { Accounts } from "meteor/accounts-base";
 import { PomidorUser } from "#pomidor/data/users/PomidorUser";
 import { pomidorUsers } from "#pomidor/db/users/PomidorUsers";
 import { deletePomidorUser } from "#pomidor/api/users/usersMethods";
+import { WebApp } from "meteor/webapp";
+
+const appAssetRequestRegex =
+  /^\/app\/(.+\.(?:css|js|json|map|ico|png|svg|woff2?|ttf|eot))(\?.*)?$/i;
+
+WebApp.rawConnectHandlers.use((req, res, next) => {
+  const url = req.url ?? "";
+  if (!url.startsWith("/app/")) {
+    next();
+    return;
+  }
+
+  const assetMatch = url.match(appAssetRequestRegex);
+  if (!assetMatch) {
+    next();
+    return;
+  }
+
+  res.writeHead(307, {
+    Location: `/${assetMatch[1]}${assetMatch[2] ?? ""}`,
+  });
+  res.end();
+});
 
 async function cleanupOldUsers() {
   let cutoffDate = Dates.addDays(new Date(), -7);
