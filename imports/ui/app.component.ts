@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit, ViewChild } from "@angular/core";
+import { Component, effect, inject, ViewChild } from "@angular/core";
 import { OfflineDlg } from "./offlineDlg.component";
 import PendingRequestsService from "/imports/client/PendingRequestsService";
 import UserService from "./userService";
@@ -10,14 +10,11 @@ import { Header } from "./header.component";
   standalone: true,
   imports: [RouterOutlet, OfflineDlg, Header],
   template: ` <div
-    className="com-patrykmalinowski-avocado-web-app flex flex-col h-screen w-screen"
+    class="com-patrykmalinowski-avocado-web-app flex flex-col h-screen w-screen"
   >
-    <app-header />
-    <button class="bg-green-200" (click)="offlineDlg.open()">
-      Open Offline Dialog
-    </button>
-    <app-offline-dlg></app-offline-dlg>
+    <app-header [username]="userService.user()?.name ?? ''"></app-header>
     <router-outlet></router-outlet>
+    <app-offline-dlg></app-offline-dlg>
   </div>`,
 })
 export class App {

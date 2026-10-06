@@ -1,10 +1,12 @@
-import { Component, Input } from "@angular/core";
-import { NgIf } from "@angular/common";
+import { Component, Input, inject } from "@angular/core";
+import { CdkPortalOutlet } from "@angular/cdk/portal";
+import { HeaderPortalService } from "/imports/ui/header-portal.service";
+import { ThemeSelector } from "./theme-selector.component";
 
 @Component({
   selector: "app-header",
   standalone: true,
-  imports: [NgIf],
+  imports: [CdkPortalOutlet, ThemeSelector],
   template: `
     <div class="com-patrykmalinowski-pomidor-header">
       <div
@@ -23,37 +25,43 @@ import { NgIf } from "@angular/common";
           </div>
         </div>
 
-        <h3
-          *ngIf="isApp && username"
-          class="com-patrykmalinowski-pomidor-header-left__welcome-text text-nowrap"
-        >
-          <span class="hidden lg:inline">Welcome, {{ username }}</span>
-          <span class="lg:hidden">{{ username }}</span>
-        </h3>
+        @if (isApp && username) {
+          <h3
+            class="com-patrykmalinowski-pomidor-header-left__welcome-text text-nowrap"
+          >
+            <span class="hidden lg:inline">Welcome, {{ username }}</span>
+            <span class="lg:hidden">{{ username }}</span>
+          </h3>
+        }
 
-        <ng-container *ngIf="isApp">
+        @if (isApp) {
           <div class="border-l border-l-white h-[80%]"></div>
           <div class="com-patrykmalinowski-pomidor-header-save-indicator"></div>
-        </ng-container>
+        }
       </div>
 
       <div
         class="com-patrykmalinowski-pomidor-header__right flex gap-2 items-center"
       >
-        <div id="pomidor-portal-header-right" class="h-full"></div>
+        <div class="h-full">
+          <ng-template [cdkPortalOutlet]="headerPortalService.rightPortal()" />
+        </div>
         <div class="border-l border-l-white h-[80%]"></div>
-        <div
-          class="com-patrykmalinowski-pomidor-header-theme-selector flex justify-stretch items-stretch"
-        ></div>
+        <app-theme-selector
+          class="h-full flex items-center justify-center"
+        ></app-theme-selector>
       </div>
     </div>
 
-    <div id="pomidor-portal-header-menu"></div>
+    <div id="pomidor-portal-header-menu">
+      <ng-template [cdkPortalOutlet]="headerPortalService.menuPortal()" />
+    </div>
   `,
 })
 export class Header {
   @Input() username = "";
   @Input() isApp = false;
+  readonly headerPortalService = inject(HeaderPortalService);
 
   async onLogoClick(): Promise<void> {
     if (this.isApp) {

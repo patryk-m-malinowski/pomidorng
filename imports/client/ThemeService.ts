@@ -1,4 +1,3 @@
-import { Computer, DarkMode, LightMode } from "@mui/icons-material";
 import { computed, effect, Injectable, signal } from "@angular/core";
 const darkClassName = "com-patrykmalinowski-avocado-dark-theme";
 
@@ -8,15 +7,15 @@ const darkClassName = "com-patrykmalinowski-avocado-dark-theme";
 export const THEMES = {
   system: {
     title: "System Default",
-    icon: Computer,
+    icon: "computer",
   },
   light: {
     title: "Light",
-    icon: LightMode,
+    icon: "light_mode",
   },
   dark: {
     title: "Dark",
-    icon: DarkMode,
+    icon: "dark_mode",
   },
 };
 
