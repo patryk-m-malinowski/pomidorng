@@ -11,6 +11,7 @@
     "types": ["node", "mocha"],
     "baseUrl": ".",
     "paths": {
+      "#pomidor/*": ["imports/*"],
       /* Support absolute /imports/* with a leading '/' */
       "/*": ["*"],
       /* Pull in type declarations for Meteor packages */
@@ -31,6 +32,7 @@
     "./packages/**",
     "./_build/**",
     "./public/build-chunks/**",
-    "./public/build-assets/**"
+    "./public/build-assets/**",
+    "./imports-react/**"
   ]
 }

@@ -1,37 +1,30 @@
-import { Meteor } from 'meteor/meteor';
-import { LinksCollection } from '/imports/api/LinksCollection';
+import * as Dates from "#pomidor/util/Dates";
+import "#pomidor/api/users/usersMethods";
+import { Accounts } from "meteor/accounts-base";
+import { PomidorUser } from "#pomidor/data/users/PomidorUser";
+import { pomidorUsers } from "#pomidor/db/users/PomidorUsers";
+import { deletePomidorUser } from "#pomidor/api/users/usersMethods";
 
-async function insertLink({ title, url }) {
-  await LinksCollection.insertAsync({ title, url, createdAt: new Date() });
+async function cleanupOldUsers() {
+  let cutoffDate = Dates.addDays(new Date(), -7);
+  let toDelete = await pomidorUsers
+    .rawCollection()
+    .find(
+      { isAdmin: { $ne: true }, lastLogin: { $lt: cutoffDate } },
+      { projection: { _id: 1 } },
+    )
+    .toArray();
+  await Promise.all(
+    toDelete.map((user) => {
+      return deletePomidorUser(user._id);
+    }),
+  );
+
+  setTimeout(cleanupOldUsers, 60 * 1000); // run every minute
 }
 
-Meteor.startup(async () => {
-  // If the Links collection is empty, add some data.
-  if (await LinksCollection.find().countAsync() === 0) {
-    await insertLink({
-      title: 'Do the Tutorial',
-      url: 'https://angular.io/tutorial',
-    });
+cleanupOldUsers();
 
-    await insertLink({
-      title: 'Follow the Guide',
-      url: 'https://angular.io/guide/architecture',
-    });
-
-    await insertLink({
-      title: 'Read the Docs',
-      url: 'https://angular.io/docs',
-    });
-
-    await insertLink({
-      title: 'Join the Community',
-      url: 'https://angular.io/community',
-    });
-  }
-
-  // We publish the entire Links collection to all clients.
-  // In order to be fetched in real-time to the clients
-  Meteor.publish("links", function () {
-    return LinksCollection.find();
-  });
+Accounts.onLogin((info: { user: PomidorUser }) => {
+  pomidorUsers.updateAsync(info.user._id, { $set: { lastLogin: new Date() } });
 });

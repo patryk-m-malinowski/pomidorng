@@ -2,12 +2,7 @@ import { Component } from "@angular/core";
 import { Routes, UrlMatcher, UrlSegment } from "@angular/router";
 import { LoginForm } from "./LoginForm";
 import { MainUI } from "./MainUI";
-
-@Component({
-  standalone: true,
-  template: `<div>Registration Form</div>`,
-})
-class RegistrationForm {}
+import { RegistrationForm } from "./RegistrationForm";
 
 @Component({
   standalone: true,

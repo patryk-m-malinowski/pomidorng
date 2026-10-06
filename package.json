@@ -7,6 +7,9 @@
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
     "visualize": "meteor --production --extra-packages bundle-visualizer"
   },
+  "imports": {
+    "#pomidor/*": "./imports/*"
+  },
   "dependencies": {
     "@angular/cdk": "^20.2.14",
     "@angular/common": "^20.0.0",
@@ -20,6 +23,7 @@
     "@mui/icons-material": "^9.4.0",
     "@swc/helpers": "^0.5.17",
     "@tailwindcss/postcss": "^4.3.3",
+    "dayjs": "^1.11.23",
     "meteor-node-stubs": "^1.2.30",
     "postcss": "^8.5.28",
     "postcss-load-config": "^6.0.1",

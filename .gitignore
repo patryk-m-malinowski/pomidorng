@@ -1,4 +1,5 @@
 node_modules/
+notes/
 
 # Meteor Modern-Tools build context directories
 _build
@@ -15,4 +16,9 @@ public/main.html
 */build-assets*
 */build-chunks*
 imports-react
-.vscode/settings.json
+.vscode/
+settings.json
+todo.md
+scratchpad
+mongo-playground.js
+tsconfig.tsbuildinfo

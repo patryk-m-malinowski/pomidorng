@@ -10,6 +10,7 @@
   "include": [
     "client/**/*.ts",
     "imports/**/*.ts",
+    "server/**/*.ts",
     "imports/ui/app.spec.ts"
   ],
   "exclude": [
