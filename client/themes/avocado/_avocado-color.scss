@@ -18,6 +18,8 @@ body:not(.com-patrykmalinowski-avocado-dark-theme) {
   --avocado-color-error-message: red;
   --avocado-color-focus: var(--avocado-color-button);
   --avocado-color-groupbox-border: black;
+  --avocado-color-menu-item-selected: var(--avocado-color-selection);//!todo get rid of selection color
+  --avocado-color-menu-item-hover: #cfe8ff;
   --avocado-color-selection: #92cbff;
   --avocado-color-text: black;
   --avocado-color-text-input-background: white;
@@ -49,6 +51,8 @@ body.com-patrykmalinowski-avocado-dark-theme {
   --avocado-color-error-message: red;
   --avocado-color-focus: var(--avocado-color-button);
   --avocado-color-groupbox-border: #6d6d6d;
+  --avocado-color-menu-item-selected: var(--avocado-color-selection);
+  --avocado-color-menu-item-hover: #082947;
   --avocado-color-selection: #35597a;
   --avocado-color-text-input-background: #393939;
   --avocado-color-text-input-border: var(--avocado-color-box-border);

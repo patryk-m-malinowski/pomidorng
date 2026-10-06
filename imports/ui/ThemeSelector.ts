@@ -1,10 +1,5 @@
-import {
-  Component,
-  computed,
-  ElementRef,
-  HostListener,
-  inject,
-} from "@angular/core";
+import { Component, inject } from "@angular/core";
+import { CdkConnectedOverlay, CdkOverlayOrigin } from "@angular/cdk/overlay";
 import ThemeService, {
   THEMES,
   type ThemeId,
@@ -14,19 +9,29 @@ import { MatIcon } from "@angular/material/icon";
 @Component({
   selector: "theme-selector",
   standalone: true,
-  imports: [MatIcon],
+  imports: [MatIcon, CdkConnectedOverlay, CdkOverlayOrigin],
   template: `
     <div
+      cdkOverlayOrigin
+      #themeSelectorOrigin="cdkOverlayOrigin"
       class="com-patrykmalinowski-pomidor-header-theme-selector cursor-pointer flex flex-col justify-center"
-      (click)="open = true"
+      (click)="open = !open"
     >
       <mat-icon>{{ THEMES[themeService.activeTheme()].icon }}</mat-icon>
     </div>
 
-    @if (open) {
-      <div class="absolute right-0 top-0 z-10 mt-2">
+    <ng-template
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="themeSelectorOrigin"
+      [cdkConnectedOverlayOpen]="open"
+      [cdkConnectedOverlayHasBackdrop]="true"
+      cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+      [cdkConnectedOverlayOffsetY]="8"
+      (backdropClick)="open = false"
+    >
+      <div class="com-patrykmalinowski-pomidor-popup">
         <div
-          class="com-patrykmalinowski-pomidor-selectable-menu bg-white text-black shadow-md rounded-sm"
+          class="com-patrykmalinowski-pomidor-selectable-menu rounded-sm shadow-lg"
         >
           @for (themeId of themeIds; track themeId) {
             <div
@@ -44,7 +49,7 @@ import { MatIcon } from "@angular/material/icon";
           }
         </div>
       </div>
-    }
+    </ng-template>
   `,
 })
 export class ThemeSelector {
@@ -53,15 +58,6 @@ export class ThemeSelector {
   readonly themeIds = Object.keys(THEMES) as ThemeId[];
 
   open = false;
-
-  private readonly elementRef = inject(ElementRef<HTMLElement>);
-
-  @HostListener("document:click", ["$event.target"])
-  onDocumentClick(target: Node): void {
-    if (this.open && !this.elementRef.nativeElement.contains(target)) {
-      this.open = false;
-    }
-  }
 
   selectTheme(themeId: ThemeId): void {
     this.themeService.userChoice.set(themeId);

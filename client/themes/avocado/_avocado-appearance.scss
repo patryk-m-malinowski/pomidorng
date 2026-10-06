@@ -7,8 +7,12 @@ body {
   color: var(--avocado-color-text)
 }
 
-input:read-only,
-input[type="checkbox"]:disabled {
+input[type="text"]:read-only,
+input[type="password"]:read-only,
+input[type="email"]:read-only,
+textarea:read-only,
+input[type="checkbox"]:disabled,
+input[type="radio"]:disabled {
   cursor: not-allowed;
 }
 
@@ -110,13 +114,13 @@ a {
 
   &-window {
     &__window {
-      border: 2px solid var(--avocado-color-window-border);
+      border: 1px solid var(--avocado-color-window-border);
       border-radius: 5px;
       overflow: hidden;
     }
 
     &__header {
-      @apply p-1 pl-2 font-bold;
+      @apply p-1.5 pl-2 font-bold;
       color: var(--avocado-color-text-on-window-header);
       background-color: var(--avocado-color-window-header);
     }
@@ -169,7 +173,7 @@ a {
 }
 
 //THIRD-PARTY
-.MuiPopper-root {
+.com-patrykmalinowski-pomidor-popup {
   z-index: 1000;
   border: 2px solid var(--avocado-color-box-border);
   border-radius: 5px;

@@ -19,6 +19,8 @@ body:not(.com-patrykmalinowski-avocado-dark-theme) {
   --avocado-color-error-message: red;
   --avocado-color-focus: var(--avocado-color-button);
   --avocado-color-groupbox-border: black;
+  --avocado-color-menu-item-selected: var(--avocado-color-selection);
+  --avocado-color-menu-item-hover: #cfe8ff;
   --avocado-color-selection: #92cbff;
   --avocado-color-text: black;
   --avocado-color-text-input-background: white;
@@ -50,6 +52,8 @@ body.com-patrykmalinowski-avocado-dark-theme {
   --avocado-color-error-message: red;
   --avocado-color-focus: var(--avocado-color-button);
   --avocado-color-groupbox-border: #6d6d6d;
+  --avocado-color-menu-item-selected: var(--avocado-color-selection);
+  --avocado-color-menu-item-hover: #082947;
   --avocado-color-selection: #35597a;
   --avocado-color-text-input-background: #393939;
   --avocado-color-text-input-border: var(--avocado-color-box-border);
@@ -103,17 +107,17 @@ input {
   display: block;
 }
 
-.MuiPopper-root {
-  user-select: none;
-}
-
 body {
   font-family: avenir;
   color: var(--avocado-color-text);
 }
 
-input:read-only,
-input[type=checkbox]:disabled {
+input[type=text]:read-only,
+input[type=password]:read-only,
+input[type=email]:read-only,
+textarea:read-only,
+input[type=checkbox]:disabled,
+input[type=radio]:disabled {
   cursor: not-allowed;
 }
 
@@ -195,12 +199,12 @@ a {
   margin: 0 0 5px 0;
 }
 .com-patrykmalinowski-avocado-window__window {
-  border: 2px solid var(--avocado-color-window-border);
+  border: 1px solid var(--avocado-color-window-border);
   border-radius: 5px;
   overflow: hidden;
 }
 .com-patrykmalinowski-avocado-window__header {
-  @apply p-1 pl-2 font-bold;
+  @apply p-1.5 pl-2 font-bold;
   color: var(--avocado-color-text-on-window-header);
   background-color: var(--avocado-color-window-header);
 }
@@ -239,7 +243,7 @@ a {
   color: var(--avocado-color-text) !important;
 }
 
-.MuiPopper-root {
+.com-patrykmalinowski-pomidor-popup {
   z-index: 1000;
   border: 2px solid var(--avocado-color-box-border);
   border-radius: 5px;
@@ -257,9 +261,10 @@ a {
 
 body:not(.com-patrykmalinowski-avocado-dark-theme) {
   --pomidor-color-header: var(--avocado-color-window-header);
+  --pomidor-color-header-hover: #e66439;
+  --pomidor-color-header-selected: #e17f45;
   --pomidor-color-header-text: var(--avocado-color-window-header-text);
   --pomidor-color-login-box-border: black;
-  --pomidor-color-header-selected: #e17f45;
   --pomidor-color-separator: #e17f45;
   --pomidor-color-task-box-background: white;
   --pomidor-color-tasks-col-done: #bcecbc;
@@ -268,9 +273,10 @@ body:not(.com-patrykmalinowski-avocado-dark-theme) {
 }
 
 body.com-patrykmalinowski-avocado-dark-theme {
+  --pomidor-color-header: var(--avocado-color-window-header);
+  --pomidor-color-header-hover: #82503f;
   --pomidor-color-header-selected: #a1573d;
   --pomidor-color-header-text: var(--avocado-color-window-header-text);
-  --pomidor-color-header: var(--avocado-color-window-header);
   --pomidor-color-login-box-border: white;
   --pomidor-color-separator: #4c4c4c;
   --pomidor-color-task-box-background: var(--avocado-color-box);
@@ -291,6 +297,16 @@ body.com-patrykmalinowski-avocado-dark-theme {
   font-weight: bold;
   font-size: 1.5rem;
 }
+.com-patrykmalinowski-pomidor-header-theme-selector {
+  @apply p-1.5 rounded-lg;
+}
+.com-patrykmalinowski-pomidor-header-theme-selector:hover {
+  cursor: pointer;
+  background-color: var(--pomidor-color-header-hover);
+}
+.com-patrykmalinowski-pomidor-header-theme-selector--selected {
+  background-color: var(--pomidor-color-header-selected) !important;
+}
 .com-patrykmalinowski-pomidor-logo-in-box {
   @apply p-1 rounded-xl;
   overflow: hidden;
@@ -310,9 +326,10 @@ body.com-patrykmalinowski-avocado-dark-theme {
 }
 .com-patrykmalinowski-pomidor-header-tabs__button:hover {
   cursor: pointer;
+  background-color: var(--pomidor-color-header-hover);
 }
 .com-patrykmalinowski-pomidor-header-tabs__button--selected {
-  background-color: var(--pomidor-color-header-selected);
+  background-color: var(--pomidor-color-header-selected) !important;
 }
 .com-patrykmalinowski-pomidor-central-box {
   @apply p-1;
@@ -391,8 +408,11 @@ body.com-patrykmalinowski-avocado-dark-theme {
 .com-patrykmalinowski-pomidor-selectable-menu__item:not(:last-child) {
   border-bottom: 1px solid var(--avocado-color-box-border);
 }
+.com-patrykmalinowski-pomidor-selectable-menu__item:hover {
+  background-color: var(--avocado-color-menu-item-hover);
+}
 .com-patrykmalinowski-pomidor-selectable-menu__item--selected {
-  background-color: var(--avocado-color-selection);
+  background-color: var(--avocado-color-menu-item-selected) !important;
 }
 .com-patrykmalinowski-pomidor-privacy-policy {
   @apply select-text;

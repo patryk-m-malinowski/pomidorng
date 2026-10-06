@@ -19,6 +19,19 @@
   }
 }
 
+@mixin header-button {
+  @apply p-1.5 rounded-lg;
+
+  &:hover {
+    cursor: pointer;
+    background-color: var(--pomidor-color-header-hover); 
+  }
+
+  &--selected {
+    background-color: var(--pomidor-color-header-selected) !important;
+  }
+}
+
 .com-patrykmalinowski-pomidor {
 
   //HEADER
@@ -39,6 +52,9 @@
     }
   }
 
+  &-header-theme-selector {
+    @include header-button;
+  }
   &-logo-in-box {
     @apply p-1 rounded-xl;
     overflow: hidden;
@@ -56,15 +72,7 @@
     font-weight: bold;
 
     &__button {
-      @apply p-1.5 rounded-lg;
-
-      &:hover {
-        cursor: pointer;
-      }
-
-      &--selected {
-        background-color: var(--pomidor-color-header-selected);
-      }
+      @include header-button;
     }
   }
 
@@ -174,8 +182,12 @@
         border-bottom: 1px solid var(--avocado-color-box-border);
       }
 
+      &:hover {
+        background-color: var(--avocado-color-menu-item-hover);
+      }
+
       &--selected {
-        background-color: var(--avocado-color-selection);
+        background-color: var(--avocado-color-menu-item-selected) !important;
       }
     }
   }
