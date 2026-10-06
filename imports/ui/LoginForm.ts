@@ -153,7 +153,7 @@ import { StackLayout, StackPage } from "./util/StackLayout";
     class: "h-full",
   },
 })
-export class LoginFormComponent {
+export class LoginForm {
   readonly userService = inject(UserService);
   readonly router = inject(Router);
 

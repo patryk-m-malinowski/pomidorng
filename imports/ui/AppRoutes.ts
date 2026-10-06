@@ -1,31 +1,31 @@
 import { Component } from "@angular/core";
 import { Routes, UrlMatcher, UrlSegment } from "@angular/router";
-import { LoginFormComponent } from "./LoginFormComponent";
+import { LoginForm } from "./LoginForm";
 import { MainUI } from "./MainUI";
 
 @Component({
   standalone: true,
   template: `<div>Registration Form</div>`,
 })
-class RegistrationFormComponent {}
+class RegistrationForm {}
 
 @Component({
   standalone: true,
   template: `<div>Privacy Policy</div>`,
 })
-class PrivacyPolicyComponent {}
+class PrivacyPolicy {}
 
 @Component({
   standalone: true,
   template: `<div>Introduction</div>`,
 })
-class IntroductionComponent {}
+class Introduction {}
 
 @Component({
   standalone: true,
   template: `<div>Page not found</div>`,
 })
-class NotFoundComponent {}
+class NotFound {}
 
 const appWildcardMatcher: UrlMatcher = (segments: UrlSegment[]) => {
   if (segments.length > 0 && segments[0].path === "app") {
@@ -36,10 +36,10 @@ const appWildcardMatcher: UrlMatcher = (segments: UrlSegment[]) => {
 };
 
 export const routes: Routes = [
-  { path: "register", component: RegistrationFormComponent },
-  { path: "", pathMatch: "full", component: LoginFormComponent },
+  { path: "register", component: RegistrationForm },
+  { path: "", pathMatch: "full", component: LoginForm },
   { matcher: appWildcardMatcher, component: MainUI },
-  { path: "privacy-policy", component: PrivacyPolicyComponent },
-  { path: "introduction", component: IntroductionComponent },
-  { path: "**", component: NotFoundComponent },
+  { path: "privacy-policy", component: PrivacyPolicy },
+  { path: "introduction", component: Introduction },
+  { path: "**", component: NotFound },
 ];

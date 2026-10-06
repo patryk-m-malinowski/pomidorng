@@ -62,7 +62,7 @@ export interface WindowApi {
     ".com-patrykmalinowski-avocado-window__content { overflow: auto; }",
   ],
 })
-export class WindowComponent implements WindowApi, AfterViewInit, OnChanges {
+export class Window implements WindowApi, AfterViewInit, OnChanges {
   @Input() title = "";
   @Input() className?: string;
   @Input() children?: unknown;
@@ -333,4 +333,4 @@ interface DragState {
   };
 }
 
-export default WindowComponent;
+export default Window;

@@ -1,10 +1,10 @@
 import { Component, ViewChild } from "@angular/core";
-import { WindowComponent } from "./util/dialog/WindowComponent";
+import { Window } from "./util/dialog/Window";
 
 @Component({
   selector: "app-offline-dlg",
   standalone: true,
-  imports: [WindowComponent],
+  imports: [Window],
   template: `
     <app-window
       [userCloseable]="false"
@@ -20,8 +20,8 @@ import { WindowComponent } from "./util/dialog/WindowComponent";
   `,
 })
 export class OfflineDlg {
-  @ViewChild(WindowComponent)
-  private window?: WindowComponent;
+  @ViewChild(Window)
+  private window?: Window;
 
   open(): void {
     this.window?.open();

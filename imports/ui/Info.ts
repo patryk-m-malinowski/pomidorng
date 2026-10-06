@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Meteor } from 'meteor/meteor';
-import { Tracker } from 'meteor/tracker';
-import { LinksCollection } from '../api/LinksCollection';
+import { Component, OnInit, OnDestroy, NgZone } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { Meteor } from "meteor/meteor";
+import { Tracker } from "meteor/tracker";
+import { LinksCollection } from "../api/LinksCollection";
 
 interface Link {
   _id?: string;
@@ -11,7 +11,7 @@ interface Link {
 }
 
 @Component({
-  selector: 'app-info',
+  selector: "app-info",
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -29,9 +29,9 @@ interface Link {
         </li>
       </ul>
     </div>
-  `
+  `,
 })
-export class InfoComponent implements OnInit, OnDestroy {
+export class Info implements OnInit, OnDestroy {
   loading = true;
   error: string | null = null;
   links: Link[] = [];
@@ -43,7 +43,7 @@ export class InfoComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // Start the subscription with simple lifecycle callbacks
-    this.linksSub = Meteor.subscribe('links', {
+    this.linksSub = Meteor.subscribe("links", {
       onReady: () => {
         this.ngZone.run(() => {
           this.loading = false;
@@ -51,10 +51,10 @@ export class InfoComponent implements OnInit, OnDestroy {
       },
       onStop: (err?: Error) => {
         this.ngZone.run(() => {
-          if (err) this.error = err.message || 'Subscription stopped';
+          if (err) this.error = err.message || "Subscription stopped";
           this.loading = false;
         });
-      }
+      },
     });
 
     // Reactively fetch data from the collection
