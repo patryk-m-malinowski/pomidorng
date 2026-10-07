@@ -13,11 +13,6 @@ import {
 import { CommonModule } from "@angular/common";
 import { CdkConnectedOverlay, CdkOverlayOrigin } from "@angular/cdk/overlay";
 
-export interface WindowApi {
-  open(): void;
-  close(): void;
-}
-
 @Component({
   selector: "window",
   standalone: true,
@@ -73,7 +68,7 @@ export interface WindowApi {
     ".com-patrykmalinowski-avocado-window__content { overflow: auto; }",
   ],
 })
-export class Window implements WindowApi, AfterViewInit, OnChanges {
+export class Window implements AfterViewInit, OnChanges {
   @Input() title = "";
   @Input() className?: string;
   @Input() children?: unknown;
@@ -86,6 +81,16 @@ export class Window implements WindowApi, AfterViewInit, OnChanges {
   @Output() onClose = new EventEmitter<Event | void>();
 
   @ViewChild("windowRoot")
+  set windowRootRef(value: ElementRef<HTMLElement> | undefined) {
+    this.windowRoot = value;
+    if (value && this.needsCenter) {
+      this.center();
+      this.needsCenter = false;
+    } else if (!value) {
+      this.needsCenter = false;
+    }
+  }
+
   private windowRoot?: ElementRef<HTMLElement>;
 
   public left = 0;
@@ -96,6 +101,7 @@ export class Window implements WindowApi, AfterViewInit, OnChanges {
 
   private dragState: DragState | null = null;
   private resizeState: ResizeState | null = null;
+  private needsCenter = false;
 
   private readonly EDGE_SIZE = 8;
 
@@ -103,13 +109,13 @@ export class Window implements WindowApi, AfterViewInit, OnChanges {
 
   ngAfterViewInit(): void {
     if (this.isOpen) {
-      void this.center();
+      this.requestCenter();
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["isOpen"] && this.isOpen) {
-      void this.center();
+      this.requestCenter();
     }
   }
 
@@ -123,7 +129,7 @@ export class Window implements WindowApi, AfterViewInit, OnChanges {
 
   open(): void {
     this.isOpen = true;
-    this.center();
+    this.requestCenter();
   }
 
   close(): void {
@@ -273,6 +279,14 @@ export class Window implements WindowApi, AfterViewInit, OnChanges {
 
   private get windowElement(): HTMLElement | null {
     return this.windowRoot?.nativeElement ?? null;
+  }
+
+  private requestCenter(): void {
+    if (this.windowElement) {
+      this.center();
+    } else {
+      this.needsCenter = true;
+    }
   }
 
   private center(): void {

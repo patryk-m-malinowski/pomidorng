@@ -237,6 +237,8 @@ a {
   color: var(--avocado-color-text) !important;
 }
 .com-patrykmalinowski-avocado-searchfield__btn-search, .com-patrykmalinowski-avocado-searchfield__btn-clear {
+  @apply cursor-pointer border-none;
+  background: transparent !important;
   padding: 0 !important;
   margin: 0 !important;
   @apply text-(--avocado-color-text);

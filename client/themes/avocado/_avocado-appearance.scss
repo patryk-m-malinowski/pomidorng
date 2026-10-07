@@ -2,6 +2,11 @@
   @apply h-7 p-2 rounded outline outline-(--avocado-color-text-input-border) bg-(--avocado-color-text-input-background) transition-colors focus-within:outline-2 focus-within:outline-(--avocado-color-focus);
 }
 
+@mixin icon-button {
+  @apply cursor-pointer border-none;
+  background: transparent !important;
+}
+
 body {
   font-family: avenir;
   color: var(--avocado-color-text)
@@ -164,6 +169,7 @@ a {
 
     &__btn-search,
     &__btn-clear {
+      @include icon-button;
       padding: 0 !important;
       margin: 0 !important;
       @apply text-(--avocado-color-text);

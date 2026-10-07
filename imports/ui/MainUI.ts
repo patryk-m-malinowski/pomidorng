@@ -8,16 +8,20 @@ import { HeaderPortalService } from "/imports/ui/HeaderPortalService";
 import { HeaderMenu } from "/imports/ui/header/HeaderMenu";
 import { HeaderTabs } from "/imports/ui/header/HeaderTabs";
 import type { Page } from "/imports/ui/header/Page";
+import { TasksEditor } from "/imports/ui/tasksEditor/TasksEditor";
 
 @Component({
   selector: "main-ui",
   standalone: true,
   imports: [CommonModule, CdkPortal, HeaderTabs, HeaderMenu, MatIcon],
+  host: {
+    class: "h-full",
+  },
   template: `
     @for (pageEntry of pageEntries; track pageEntry[0]) {
       <div
         [hidden]="pageEntry[0] !== selectedPage()"
-        class="com-patrykmalinowski-pomidor-page"
+        class="com-patrykmalinowski-pomidor-page h-full"
       >
         <ng-container
           *ngComponentOutlet="pageEntry[1].component"
@@ -75,7 +79,7 @@ export class MainUI implements OnDestroy {
     tasks: {
       title: "Tasks",
       icon: "list",
-      component: TasksPage,
+      component: TasksEditor,
     },
     users: {
       title: "Users",
@@ -166,17 +170,6 @@ export class MainUI implements OnDestroy {
     return page;
   }
 }
-
-@Component({
-  selector: "tasks-page",
-  standalone: true,
-  template: `
-    <div class="flex h-full items-center justify-center p-4">
-      <h2 class="text-xl font-bold">Tasks</h2>
-    </div>
-  `,
-})
-class TasksPage {}
 
 @Component({
   selector: "users-page",
