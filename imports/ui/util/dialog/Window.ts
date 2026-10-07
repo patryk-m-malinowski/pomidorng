@@ -33,12 +33,10 @@ export interface WindowApi {
       [cdkConnectedOverlayOrigin]="windowOrigin"
       [cdkConnectedOverlayOpen]="isOpen"
       [cdkConnectedOverlayHasBackdrop]="true"
-      (backdropClick)="userCloseable && close()"
     >
       <div class="com-patrykmalinowski-avocado-window">
         <div
           class="com-patrykmalinowski-avocado-window__blocker fixed inset-0 w-full h-full"
-          (click)="userCloseable && close()"
         ></div>
         <div
           #windowRoot
@@ -51,12 +49,12 @@ export interface WindowApi {
           }"
           (mousemove)="onMouseMoveDialog($event)"
           (mouseleave)="resizeCursor = 'default'"
-          (mousedown)="resizable && onResizeMouseDown($event)"
+          (mousedown)="onResizeMouseDown($event)"
         >
           <div
             class="com-patrykmalinowski-avocado-window__header flex-none"
             [style.cursor]="draggable ? 'move' : 'default'"
-            (mousedown)="draggable && onMouseDownHeader($event)"
+            (mousedown)="onMouseDownHeader($event)"
           >
             {{ title }}
           </div>
@@ -224,6 +222,7 @@ export class Window implements WindowApi, AfterViewInit, OnChanges {
   };
 
   onResizeMouseDown(event: MouseEvent): void {
+    if (!this.resizable) return;
     const rect = this.windowElement!.getBoundingClientRect();
     const direction = this.getResizeDirection(event, rect);
 
