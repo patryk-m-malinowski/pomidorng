@@ -5,11 +5,13 @@ import {
   HostListener,
   Input,
   Output,
+  ViewChild,
   type AfterViewInit,
   type OnChanges,
   SimpleChanges,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { CdkConnectedOverlay, CdkOverlayOrigin } from "@angular/cdk/overlay";
 
 export interface WindowApi {
   open(): void;
@@ -19,42 +21,53 @@ export interface WindowApi {
 @Component({
   selector: "window",
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CdkConnectedOverlay, CdkOverlayOrigin],
+  host: {
+    class: "block",
+  },
   template: `
-    <div *ngIf="isOpen" class="com-patrykmalinowski-avocado-window">
-      <div
-        class="com-patrykmalinowski-avocado-window__blocker fixed inset-0 w-full h-full"
-        (click)="userCloseable && close()"
-      ></div>
-      <div
-        class="com-patrykmalinowski-avocado-window__window absolute flex flex-col z-1000"
-        [ngClass]="className"
-        [ngStyle]="{
-          width: toCssSize((windowWidth ?? initWidth) || '300px'),
-          height: toCssSize((windowHeight ?? initHeight) || '200px'),
-          left: left + 'px',
-          top: top + 'px',
-          cursor: resizeCursor,
-        }"
-        (mousemove)="onMouseMoveDialog($event)"
-        (mouseleave)="resizeCursor = 'default'"
-        (mousedown)="resizable && onResizeMouseDown($event)"
-      >
+    <div cdkOverlayOrigin #windowOrigin="cdkOverlayOrigin" class="hidden"></div>
+
+    <ng-template
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="windowOrigin"
+      [cdkConnectedOverlayOpen]="isOpen"
+      [cdkConnectedOverlayHasBackdrop]="true"
+      (backdropClick)="userCloseable && close()"
+    >
+      <div class="com-patrykmalinowski-avocado-window">
         <div
-          class="com-patrykmalinowski-avocado-window__header flex-none"
-          [style.cursor]="draggable ? 'move' : 'default'"
-          (mousedown)="draggable && onMouseDownHeader($event)"
+          class="com-patrykmalinowski-avocado-window__blocker fixed inset-0 w-full h-full"
+          (click)="userCloseable && close()"
+        ></div>
+        <div
+          #windowRoot
+          class="com-patrykmalinowski-avocado-window__window absolute flex flex-col z-1000"
+          [ngClass]="className"
+          [ngStyle]="{
+            left: left + 'px',
+            top: top + 'px',
+            cursor: resizeCursor,
+          }"
+          (mousemove)="onMouseMoveDialog($event)"
+          (mouseleave)="resizeCursor = 'default'"
+          (mousedown)="resizable && onResizeMouseDown($event)"
         >
-          {{ title }}
-        </div>
-        <div class="com-patrykmalinowski-avocado-window__content flex-1">
-          <ng-content></ng-content>
+          <div
+            class="com-patrykmalinowski-avocado-window__header flex-none"
+            [style.cursor]="draggable ? 'move' : 'default'"
+            (mousedown)="draggable && onMouseDownHeader($event)"
+          >
+            {{ title }}
+          </div>
+          <div class="com-patrykmalinowski-avocado-window__content flex-1">
+            <ng-content></ng-content>
+          </div>
         </div>
       </div>
-    </div>
+    </ng-template>
   `,
   styles: [
-    ":host { display: block; }",
     ".com-patrykmalinowski-avocado-window { position: fixed; inset: 0; z-index: 1000; }",
     ".com-patrykmalinowski-avocado-window__blocker { background: rgba(0, 0, 0, 0.2); }",
     ".com-patrykmalinowski-avocado-window__window { position: absolute; overflow: hidden; }",
@@ -74,6 +87,9 @@ export class Window implements WindowApi, AfterViewInit, OnChanges {
   @Input() userCloseable = true;
   @Output() onClose = new EventEmitter<Event | void>();
 
+  @ViewChild("windowRoot")
+  private windowRoot?: ElementRef<HTMLElement>;
+
   public left = 0;
   public top = 0;
   public windowWidth: number | null = null;
@@ -88,10 +104,10 @@ export class Window implements WindowApi, AfterViewInit, OnChanges {
   constructor(private readonly elementRef: ElementRef<HTMLElement>) {}
 
   ngAfterViewInit(): void {
-    const host = this.elementRef.nativeElement;
-    if (document.body && !document.body.contains(host)) {
-      document.body.appendChild(host);
-    }
+    // const host = this.elementRef.nativeElement;
+    // if (document.body && !document.body.contains(host)) {
+    //   document.body.appendChild(host);
+    // }
 
     if (this.isOpen) {
       void this.center();
@@ -262,9 +278,7 @@ export class Window implements WindowApi, AfterViewInit, OnChanges {
   }
 
   private get windowElement(): HTMLElement | null {
-    return this.elementRef.nativeElement.querySelector(
-      ".com-patrykmalinowski-avocado-window__window",
-    ) as HTMLElement | null;
+    return this.windowRoot?.nativeElement ?? null;
   }
 
   private center(): void {

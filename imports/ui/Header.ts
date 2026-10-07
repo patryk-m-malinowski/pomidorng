@@ -2,6 +2,8 @@ import { Component, Input, inject } from "@angular/core";
 import { CdkPortalOutlet } from "@angular/cdk/portal";
 import { HeaderPortalService } from "/imports/ui/HeaderPortalService";
 import { ThemeSelector } from "./ThemeSelector";
+import CommonDialogsService from "./util/dialog/CommonDialogsService";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "header",
@@ -61,11 +63,19 @@ import { ThemeSelector } from "./ThemeSelector";
 export class Header {
   @Input() username = "";
   @Input() isApp = false;
+  readonly router = inject(Router);
+
+  readonly dialogsApi = inject(CommonDialogsService);
   readonly headerPortalService = inject(HeaderPortalService);
 
   async onLogoClick(): Promise<void> {
     if (this.isApp) {
-      // Placeholder for "confirm and navigate" logic from the React version.
+      let confirm = await this.dialogsApi.showConfirmation(
+        "Go back to main page",
+        "Are you sure you want to go back to the main page?",
+      );
+      if (!confirm) return;
+      this.router.navigateByUrl("/");
     }
   }
 }
