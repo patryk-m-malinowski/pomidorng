@@ -171,7 +171,7 @@ export class LoginForm {
 
   navigateToApp(): void {
     const page = window.localStorage.getItem("pomidor.selectedPage") ?? "tasks";
-    this.router.navigateByUrl(`/app/${page}`);
+    this.router.navigateByUrl(`/pomidorapp/${page}`);
   }
 
   async onSubmit(): Promise<void> {

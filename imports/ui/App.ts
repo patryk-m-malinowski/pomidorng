@@ -37,7 +37,7 @@ export class App implements OnDestroy {
     PendingRequestsService,
   );
   readonly router = inject(Router);
-  readonly isApp = signal(this.router.url.startsWith("/app"));
+  readonly isApp = signal(this.router.url.startsWith("/pomidorapp"));
   private readonly routerEventsSubscription: Subscription;
 
   @ViewChild(OfflineDlg)
@@ -46,7 +46,7 @@ export class App implements OnDestroy {
   constructor() {
     this.routerEventsSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        this.isApp.set(this.router.url.startsWith("/app"));
+        this.isApp.set(this.router.url.startsWith("/pomidorapp"));
       }
     });
 

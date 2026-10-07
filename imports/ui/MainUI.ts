@@ -96,7 +96,7 @@ export class MainUI implements OnDestroy {
   constructor() {
     this.selectedPage.subscribe((pageId) => {
       const currentPath = this.router.url.split("?")[0];
-      const expectedPath = `/app/${pageId}`;
+      const expectedPath = `/pomidorapp/${pageId}`;
 
       if (!this.pages[pageId]) {
         return;
@@ -156,7 +156,7 @@ export class MainUI implements OnDestroy {
   }
 
   private getPageFromPathname(pathname: string): string | null {
-    const match = pathname.match(/^\/app\/([^/]+)/);
+    const match = pathname.match(/^\/pomidorapp\/([^/]+)/);
     const page = match?.[1] ?? "";
 
     if (!Object.keys(this.pages).includes(page)) {

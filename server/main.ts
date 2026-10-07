@@ -7,11 +7,11 @@ import { deletePomidorUser } from "#pomidor/api/users/usersMethods";
 import { WebApp } from "meteor/webapp";
 
 const appAssetRequestRegex =
-  /^\/app\/(.+\.(?:css|js|json|map|ico|png|svg|woff2?|ttf|eot))(\?.*)?$/i;
+  /^\/pomidorapp\/(.+\.(?:css|js|json|map|ico|png|svg|woff2?|ttf|eot))(\?.*)?$/i;
 
 WebApp.rawConnectHandlers.use((req, res, next) => {
   const url = req.url ?? "";
-  if (!url.startsWith("/app/")) {
+  if (!url.startsWith("/pomidorapp/")) {
     next();
     return;
   }

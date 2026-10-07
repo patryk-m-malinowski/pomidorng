@@ -23,7 +23,7 @@ class Introduction {}
 class NotFound {}
 
 const appWildcardMatcher: UrlMatcher = (segments: UrlSegment[]) => {
-  if (segments.length > 0 && segments[0].path === "app") {
+  if (segments.length > 0 && segments[0].path === "pomidorapp") {
     return { consumed: segments };
   }
 

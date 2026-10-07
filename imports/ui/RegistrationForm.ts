@@ -181,8 +181,8 @@ export class RegistrationForm {
 
   navigateToApp(): void {
     // const page = window.localStorage.getItem("pomidor.selectedPage") ?? "tasks";//!todo check
-    // this.router.navigateByUrl(`/app/${page}`);
-    this.router.navigateByUrl(`/app/`);
+    // this.router.navigateByUrl(`/pomidorapp/${page}`);
+    this.router.navigateByUrl(`/pomidorapp/`);
   }
 
   openLogin(): void {
