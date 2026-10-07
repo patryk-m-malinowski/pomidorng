@@ -104,11 +104,6 @@ export class Window implements WindowApi, AfterViewInit, OnChanges {
   constructor(private readonly elementRef: ElementRef<HTMLElement>) {}
 
   ngAfterViewInit(): void {
-    // const host = this.elementRef.nativeElement;
-    // if (document.body && !document.body.contains(host)) {
-    //   document.body.appendChild(host);
-    // }
-
     if (this.isOpen) {
       void this.center();
     }
