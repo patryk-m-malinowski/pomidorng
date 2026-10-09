@@ -3,18 +3,23 @@ import {
   AfterViewInit,
   Component,
   OnDestroy,
+  OnInit,
   ViewChild,
   computed,
   inject,
   signal,
 } from "@angular/core";
+import { TaskCollection } from "#pomidor/db/tasks/TaskCollection";
+import { Tracker } from "meteor/tracker";
 
-import type { Task } from "/imports/data/tasks/Task";
+import { Task } from "/imports/data/tasks/Task";
 import TasksService from "./TasksService";
 import { TaskBox } from "/imports/ui/tasksEditor/TaskBox";
 import { TasksColumn } from "/imports/ui/tasksEditor/TasksColumn";
 import { SearchField } from "/imports/ui/util/SearchField";
 import { EditTaskDlg } from "./EditTaskDlg";
+import { ServerPojo } from "#pomidor/common/mso/ObjectsMgr.js";
+import { MgrFactory } from "#pomidor/common/mso/MgrFactory";
 
 @Component({
   selector: "tasks-editor",
@@ -87,52 +92,27 @@ import { EditTaskDlg } from "./EditTaskDlg";
     <edit-task-dlg #editTaskDlg></edit-task-dlg>
   `,
 })
-export class TasksEditor implements AfterViewInit, OnDestroy {
+export class TasksEditor implements AfterViewInit, OnInit, OnDestroy {
+  private tasksSub: Meteor.SubscriptionHandle | null = null;
+  private tracker: Tracker.Computation | null = null;
+  private loading = signal(true);
+
   private readonly tasksService = inject(TasksService)!;
 
   @ViewChild("editTaskDlg")
   private editTaskDlg!: EditTaskDlg;
 
-  readonly shownTasks = signal<Task[]>([
-    {
-      _id: "task-1",
-      createdBy: "user-a",
-      assignedTo: "user-b",
-      title: "Draft release notes",
-      description: "Prepare release highlights for the next sprint demo.",
-      status: "todo",
-      dateModified: new Date("2026-10-01T09:00:00.000Z"),
-    },
-    {
-      _id: "task-2",
-      createdBy: "user-a",
-      assignedTo: null,
-      title: "Refine onboarding flow",
-      description: "Adjust first-run experience copy and remove noisy prompts.",
-      status: "inProgress",
-      dateModified: new Date("2026-10-03T11:30:00.000Z"),
-    },
-    {
-      _id: "task-3",
-      createdBy: "user-c",
-      assignedTo: "user-a",
-      title: "QA regression run",
-      description: "Run smoke suite against latest candidate build.",
-      status: "done",
-      dateModified: new Date("2026-10-05T16:15:00.000Z"),
-    },
-  ]);
-
   readonly searchDraft = signal("");
   readonly searchQuery = signal("");
+  readonly tasks = signal<Task[]>([]);
 
   readonly filteredTasks = computed(() => {
     const normalizedSearch = this.searchQuery().trim().toLowerCase();
     if (!normalizedSearch) {
-      return this.shownTasks();
+      return this.tasks();
     }
 
-    return this.shownTasks().filter((task: Task) => {
+    return this.tasks().filter((task: Task) => {
       return (
         task.title.toLowerCase().includes(normalizedSearch) ||
         task.description.toLowerCase().includes(normalizedSearch)
@@ -157,9 +137,10 @@ export class TasksEditor implements AfterViewInit, OnDestroy {
   };
 
   readonly deleteTask = (task: Task): void => {
-    this.shownTasks.update((tasks: Task[]) =>
+    this.tasks.update((tasks: Task[]) =>
       tasks.filter((existingTask: Task) => existingTask._id !== task._id),
     );
+    task.delete();
   };
 
   clearSearch(): void {
@@ -168,29 +149,41 @@ export class TasksEditor implements AfterViewInit, OnDestroy {
   }
 
   async createTask(): Promise<void> {
-    const draftTask: Omit<Task, "_id" | "dateModified"> = {
-      createdBy: "user-a",
-      assignedTo: null,
-      title: "",
-      description: "",
-      status: "todo",
-    };
-
-    await this.tasksService.editDlg.open("new", draftTask as any); //!todo
-
-    this.shownTasks.update((tasks: Task[]) => [
-      ...tasks,
-      {
-        ...draftTask,
-        _id: `task-${tasks.length + 1}`,
-        dateModified: new Date(),
-      },
-    ]);
+    let task = new Task();
+    let okPressed = await this.tasksService.editDlg.open("new", task);
+    if (okPressed) {
+      await task.register();
+    }
   }
 
   ngAfterViewInit(): void {
     this.tasksService.registerHost(this.editTaskDlg);
   }
+  ngOnInit(): void {
+    this.tasksSub = Meteor.subscribe("tasks.Task", {
+      onReady: () => {
+        this.loading.set(false);
+      },
+      onStop: (err?: Error) => {
+        this.loading.set(false);
+      },
+    });
 
-  ngOnDestroy(): void {}
+    // Reactively fetch data from the collection
+    this.tracker = Tracker.autorun(() => {
+      const pojos = TaskCollection.find({}).fetch() as ServerPojo[];
+      let tasks = pojos.map((pojo) =>
+        MgrFactory.instance.getManager(Task).get(pojo),
+      );
+      this.tasks.set(tasks);
+    });
+  }
+  ngOnDestroy(): void {
+    if (this.tasksSub) {
+      this.tasksSub.stop();
+    }
+    if (this.tracker) {
+      this.tracker.stop();
+    }
+  }
 }

@@ -5,6 +5,8 @@ import { PomidorUser } from "#pomidor/data/users/PomidorUser";
 import { pomidorUsers } from "#pomidor/db/users/PomidorUsers";
 import { deletePomidorUser } from "#pomidor/api/users/usersMethods";
 import { WebApp } from "meteor/webapp";
+import "/imports/api/tasks/tasksPublications";
+import "/imports/api/tasks/tasksMethods";
 
 const appAssetRequestRegex =
   /^\/pomidorapp\/(.+\.(?:css|js|json|map|ico|png|svg|woff2?|ttf|eot))(\?.*)?$/i;

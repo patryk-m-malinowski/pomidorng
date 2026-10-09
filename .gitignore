@@ -16,6 +16,7 @@ public/main.html
 */build-assets*
 */build-chunks*
 imports-react
+imports/unused/
 .vscode/
 settings.json
 todo.md

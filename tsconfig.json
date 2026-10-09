@@ -2,7 +2,7 @@
   "compilerOptions": {
     /* Basic Options */
     "target": "es2022",
-    "lib": ["es2020", "dom"],
+    "lib": ["es2021", "dom"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": false,
 
@@ -11,13 +11,13 @@
     "types": ["node", "mocha"],
     "baseUrl": ".",
     "paths": {
-      "#pomidor/*": ["imports/*"],
+      "#pomidor/*": ["./imports/*"],
       /* Support absolute /imports/* with a leading '/' */
       "/*": ["*"],
       /* Pull in type declarations for Meteor packages */
       "meteor/*": [
-        "node_modules/@types/meteor/*",
-        ".meteor/local/types/packages.d.ts"
+        "./node_modules/@types/meteor/*",
+        "./.meteor/local/types/packages.d.ts"
       ]
     },
   },
@@ -33,6 +33,7 @@
     "./_build/**",
     "./public/build-chunks/**",
     "./public/build-assets/**",
-    "./imports-react/**"
+    "./imports-react/**",
+    "./imports/unused/**"
   ]
 }

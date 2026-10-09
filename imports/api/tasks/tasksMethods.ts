@@ -4,6 +4,7 @@ import {
   TaskCollection,
 } from "/imports/db/tasks/TaskCollection";
 import type { Task } from "/imports/data/tasks/Task";
+import type { ServerPojo } from "#pomidor/common/mso/ObjectsMgr.js";
 import { mutexPerUser } from "/imports/srv/util/MutexByUser";
 import { TASKS_CONSTANTS } from "../../common/TasksConstants";
 import { isAdmin } from "../apiUtils";
@@ -31,7 +32,9 @@ function validateTask(task: Partial<Task>) {
 }
 
 Meteor.methods({
-  "tasks.addTask": mutexPerUser(async function (task: Task): Promise<void> {
+  "tasks.Task.insert": mutexPerUser(async function (
+    task: ServerPojo,
+  ): Promise<void> {
     if (!Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
     }
@@ -55,32 +58,32 @@ Meteor.methods({
     task.createdBy = Meteor.userId()!;
     await TaskCollection.insertAsync(task);
   }),
-  "tasks.deleteTask": async function (taskId: string): Promise<void> {
+  "tasks.Task.delete": async function (taskId: string): Promise<void> {
     if (!Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
     }
     await TaskCollection.removeAsync(taskId);
   },
-  "tasks.updateTask": async function (
+  "tasks.Task.update": async function (
     taskId: string,
-    changes: any,
+    propertyName: string,
+    value: any,
   ): Promise<void> {
     if (!Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
     }
 
-    if (changes.$set) {
-      let set = changes.$set;
-      if (Object.keys(set).find((it) => it == "createdBy")) {
-        throw new Meteor.Error(
-          "not-authorized",
-          "You cannot change the createdBy property of a task.",
-        );
-      }
-      validateTask(set);
+    if (propertyName == "createdBy") {
+      throw new Meteor.Error(
+        "not-authorized",
+        "You cannot change the createdBy property of a task.",
+      );
     }
+    validateTask({ [propertyName]: value });
 
-    await TaskCollection.updateAsync(taskId, changes);
+    await TaskCollection.updateAsync(taskId, {
+      $set: { [propertyName]: value },
+    });
   },
 
   "tasks.assignToUser": async function (

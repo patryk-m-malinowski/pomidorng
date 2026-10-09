@@ -77,7 +77,7 @@ export type EditTaskDlgMode = "new" | "edit";
 })
 export class EditTaskDlg {
   @ViewChild(SubmittableDlg)
-  private dialog!: SubmittableDlg<Task>;
+  private dialog!: SubmittableDlg<boolean>;
 
   readonly TASKS_CONSTANTS = TASKS_CONSTANTS;
 
@@ -85,17 +85,18 @@ export class EditTaskDlg {
   @Input() task: Task | null = null;
   error = "";
 
-  async open(mode: EditTaskDlgMode, task: Task): Promise<void> {
+  async open(mode: EditTaskDlgMode, task: Task): Promise<boolean> {
     this.error = "";
     this.task = task;
     this.mode = mode;
-    await this.dialog.open();
+    let result = await this.dialog.open();
     this.task = null;
+    return !!result;
   }
 
   onDlgButton(btn: ButtonKind): void {
     if (btn === "cancel") {
-      this.dialog.submit(null);
+      this.dialog.submit(false);
       return;
     }
 
@@ -104,7 +105,7 @@ export class EditTaskDlg {
 
   private submitTask(): void {
     if (!this.task) {
-      this.dialog.submit(null);
+      this.dialog.submit(false);
       return;
     }
 
@@ -117,6 +118,6 @@ export class EditTaskDlg {
       this.task.assignedTo = null;
     }
 
-    this.dialog.submit(this.task);
+    this.dialog.submit(true);
   }
 }
