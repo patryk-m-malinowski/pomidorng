@@ -1,4 +1,4 @@
-import type { WritableSignal } from "@angular/core";
+import { signal, type WritableSignal } from "@angular/core";
 import { ServerPojo } from "./ObjectsMgr";
 import { MgrFactory } from "./MgrFactory";
 
@@ -33,28 +33,26 @@ export default abstract class MsoObject {
       prototype[symProperties][propertyKey] = meta ?? {};
       Object.defineProperty(prototype, propertyKey, {
         set(this: MsoObject, v) {
-          let oldValue = this.propertyValues[propertyKey];
+          const signal = this.propertySignals[propertyKey];
+          let oldValue = signal();
           if (v !== oldValue) {
             if (!this.isUpdating) {
               this.lastUserPropertySetAt[propertyKey] = Date.now();
             }
-            this.propertyValues[propertyKey] = v;
+            signal.set(v);
             this.onPropertyChange(propertyKey, v, oldValue);
-            console.log("property changed", {
-              propertyKey,
-              value: v,
-              oldValue,
-            });
           }
         },
         get(this: MsoObject) {
-          if (this.propertyValues[propertyKey] === undefined) {
+          const signal = this.propertySignals[propertyKey];
+          let value = signal();
+          if (value === undefined) {
             if (!this.registered) {
               return prototype[symProperties][propertyKey].init;
             }
             throw new Error(`Property ${propertyKey} is not ready yet.`);
           }
-          return this.propertyValues[propertyKey];
+          return value;
         },
         enumerable: true,
         configurable: true,
@@ -70,12 +68,15 @@ export default abstract class MsoObject {
         `Class metadata is not defined for ${this.constructor.name}. Did you forget to add the @MsoObject.Meta decorator?`,
       );
     }
+    for (let property in this[symProperties]) {
+      this.propertySignals[property] = signal(undefined);
+    }
   }
   private isUpdating = 0;
   private registering = false;
   private registered = false;
   public _id!: string;
-  private propertyValues: Record<string, WritableSignal<any>> = {};
+  private propertySignals: Record<string, WritableSignal<any>> = {};
   private lastUserPropertySetAt: Record<string, number> = {};
   private queuedServerPropertyUpdates: Record<
     string,
@@ -118,10 +119,10 @@ export default abstract class MsoObject {
       for (let propertyKey in this[symProperties] ?? {}) {
         let initValue = this[symProperties][propertyKey].init;
         if (
-          this.propertyValues[propertyKey] === undefined &&
+          this.propertySignals[propertyKey]() === undefined &&
           initValue !== undefined
         ) {
-          this.propertyValues[propertyKey] = initValue;
+          this.propertySignals[propertyKey].set(initValue);
         }
       }
       return await MgrFactory.instance
@@ -163,7 +164,6 @@ export default abstract class MsoObject {
       throw new Error(`Cannot change properties on a deleted object.`);
     }
     let meta = MsoObject.getClazzMeta(this.constructor as new () => MsoObject);
-    console.log("updating collection " + meta.collectionName);
     Meteor.callAsync(
       meta.collectionName + ".update",
       this._id,
@@ -205,7 +205,7 @@ export default abstract class MsoObject {
   public serialize(): ServerPojo {
     let obj = { _id: this._id } as ServerPojo;
     for (let propertyKey in this[symProperties] ?? {}) {
-      obj[propertyKey] = this.propertyValues[propertyKey];
+      obj[propertyKey] = this.propertySignals[propertyKey]();
     }
     return obj;
   }
