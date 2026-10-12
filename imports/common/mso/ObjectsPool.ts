@@ -4,7 +4,7 @@ export interface ServerPojo {
   _id: string;
   [key: string]: unknown;
 }
-export default class ObjectsMgr<T extends MsoObject> {
+export default class ObjectsPool<T extends MsoObject> {
   constructor(private readonly clazz: new () => T) {}
   /**
    * We use a weak registry to ensure that duplicate objects with the same ID are not created;
@@ -17,7 +17,7 @@ export default class ObjectsMgr<T extends MsoObject> {
 
   public get(data: ServerPojo): T {
     let obj = this.itemsById[data._id]?.deref();
-    if (obj == undefined) {
+    if (obj === undefined) {
       obj = new this.clazz();
       this.itemsById[data._id] = new WeakRef(obj);
       this.finalizationRegistry.register(obj, data._id);

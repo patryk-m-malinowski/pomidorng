@@ -1,6 +1,6 @@
 import { signal, type WritableSignal } from "@angular/core";
-import { ServerPojo } from "./ObjectsMgr";
-import { MgrFactory } from "./MgrFactory";
+import { ServerPojo } from "./ObjectsPool";
+import { PoolFactory } from "./PoolFactory";
 
 export interface ClassMeta {
   collectionName: string;
@@ -125,8 +125,8 @@ export default abstract class MsoObject {
           this.propertySignals[propertyKey].set(initValue);
         }
       }
-      return await MgrFactory.instance
-        .getManager(this.constructor as new () => MsoObject)
+      return await PoolFactory.instance
+        .getPool(this.constructor as new () => MsoObject)
         .insert(this);
     } finally {
       this.registering = false;
@@ -144,8 +144,8 @@ export default abstract class MsoObject {
       throw new Error(`Object is already deleted.`);
     }
     this.deleted = true;
-    return await MgrFactory.instance
-      .getManager(this.constructor as new () => MsoObject)
+    return await PoolFactory.instance
+      .getPool(this.constructor as new () => MsoObject)
       .delete(this);
   }
 

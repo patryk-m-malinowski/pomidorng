@@ -1,6 +1,6 @@
 import { Mongo } from "meteor/mongo";
 import type { Task } from "/imports/data/tasks/Task";
-import { ServerPojo } from "#pomidor/common/mso/ObjectsMgr.js";
+import { ServerPojo } from "#pomidor/common/mso/ObjectsPool";
 
 /**
  * @type {Mongo.Collection<ServerPojo, ServerPojo>}

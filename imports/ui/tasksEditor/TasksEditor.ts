@@ -18,8 +18,8 @@ import { TaskBox } from "/imports/ui/tasksEditor/TaskBox";
 import { TasksColumn } from "/imports/ui/tasksEditor/TasksColumn";
 import { SearchField } from "/imports/ui/util/SearchField";
 import { EditTaskDlg } from "./EditTaskDlg";
-import { ServerPojo } from "#pomidor/common/mso/ObjectsMgr.js";
-import { MgrFactory } from "#pomidor/common/mso/MgrFactory";
+import { ServerPojo } from "#pomidor/common/mso/ObjectsPool";
+import { PoolFactory } from "#pomidor/common/mso/PoolFactory";
 
 @Component({
   selector: "tasks-editor",
@@ -173,7 +173,7 @@ export class TasksEditor implements AfterViewInit, OnInit, OnDestroy {
     this.tracker = Tracker.autorun(() => {
       const pojos = TaskCollection.find({}).fetch() as ServerPojo[];
       let tasks = pojos.map((pojo) =>
-        MgrFactory.instance.getManager(Task).get(pojo),
+        PoolFactory.instance.getPool(Task).get(pojo),
       );
       this.tasks.set(tasks);
     });

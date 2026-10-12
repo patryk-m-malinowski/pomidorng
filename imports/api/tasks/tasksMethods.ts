@@ -4,7 +4,7 @@ import {
   TaskCollection,
 } from "/imports/db/tasks/TaskCollection";
 import type { Task } from "/imports/data/tasks/Task";
-import type { ServerPojo } from "#pomidor/common/mso/ObjectsMgr.js";
+import type { ServerPojo } from "#pomidor/common/mso/ObjectsPool";
 import { mutexPerUser } from "/imports/srv/util/MutexByUser";
 import { TASKS_CONSTANTS } from "../../common/TasksConstants";
 import { isAdmin } from "../apiUtils";
