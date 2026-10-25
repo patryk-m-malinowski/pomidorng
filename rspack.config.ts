@@ -16,12 +16,15 @@ export default defineConfig(async (Meteor) => {
     options: {
       browser: Meteor.mainClientEntry,
       index: Meteor.mainClientHtmlEntry,
+      // Absolute asset URLs so scripts resolve from "/" on nested routes
+      deployUrl: "/",
       sourceMap: {
         scripts: true,
         styles: true,
         vendor: false,
         hidden: false,
       },
+      optimization: Meteor.isProduction,
     },
   });
 
