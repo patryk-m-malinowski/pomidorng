@@ -2,13 +2,14 @@ import { Component, Input, inject } from "@angular/core";
 import { CdkPortalOutlet } from "@angular/cdk/portal";
 import { HeaderPortalService } from "/imports/ui/HeaderPortalService";
 import { ThemeSelector } from "./ThemeSelector";
+import { SaveIndicator } from "./header/SaveIndicator";
 import CommonDialogsService from "./util/dialog/CommonDialogsService";
 import { Router } from "@angular/router";
 
 @Component({
   selector: "header",
   standalone: true,
-  imports: [CdkPortalOutlet, ThemeSelector],
+  imports: [CdkPortalOutlet, ThemeSelector, SaveIndicator],
   template: `
     <div class="com-patrykmalinowski-pomidor-header">
       <div
@@ -38,7 +39,7 @@ import { Router } from "@angular/router";
 
         @if (isApp) {
           <div class="border-l border-l-white h-[80%]"></div>
-          <div class="com-patrykmalinowski-pomidor-header-save-indicator"></div>
+          <save-indicator />
         }
       </div>
 

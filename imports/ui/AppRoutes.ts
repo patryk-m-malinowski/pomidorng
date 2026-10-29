@@ -6,18 +6,21 @@ import { RegistrationForm } from "./RegistrationForm";
 
 @Component({
   standalone: true,
+  selector: "app-privacy-policy",
   template: `<div>Privacy Policy</div>`,
 })
 class PrivacyPolicy {}
 
 @Component({
   standalone: true,
+  selector: "app-introduction",
   template: `<div>Introduction</div>`,
 })
 class Introduction {}
 
 @Component({
   standalone: true,
+  selector: "app-not-found",
   template: `<div>Page not found</div>`,
 })
 class NotFound {}
