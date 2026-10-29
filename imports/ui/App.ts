@@ -22,7 +22,7 @@ import { Subscription } from "rxjs";
     class="com-patrykmalinowski-avocado-web-app flex flex-col h-screen w-screen"
   >
     <header
-      [username]="userService.user()?.name ?? ''"
+      [username]="userService.user()?.username"
       [isApp]="isApp()"
     ></header>
     <router-outlet></router-outlet>

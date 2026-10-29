@@ -8,7 +8,8 @@ export default class UserService {
   public user = signal<PomidorUser | null>(null);
   constructor() {
     Tracker.autorun(() => {
-      this.user.set(getPomidorUser());
+      const user = getPomidorUser();
+      this.user.set(user);
     });
   }
 }
