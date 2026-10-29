@@ -9,6 +9,7 @@ import {
   type AfterViewInit,
   type OnChanges,
   SimpleChanges,
+  signal,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { CdkConnectedOverlay, CdkOverlayOrigin } from "@angular/cdk/overlay";
@@ -38,8 +39,8 @@ import { CdkConnectedOverlay, CdkOverlayOrigin } from "@angular/cdk/overlay";
           class="com-patrykmalinowski-avocado-window__window absolute flex flex-col z-1000"
           [ngClass]="className"
           [ngStyle]="{
-            left: left + 'px',
-            top: top + 'px',
+            left: left() + 'px',
+            top: top() + 'px',
             cursor: resizeCursor,
           }"
           (mousemove)="onMouseMoveDialog($event)"
@@ -93,8 +94,8 @@ export class Window implements AfterViewInit, OnChanges {
 
   private windowRoot?: ElementRef<HTMLElement>;
 
-  public left = 0;
-  public top = 0;
+  public left = signal(0);
+  public top = signal(0);
   public windowWidth: number | null = null;
   public windowHeight: number | null = null;
   public resizeCursor = "default";
@@ -172,8 +173,8 @@ export class Window implements AfterViewInit, OnChanges {
     nextLeft = Math.max(0, Math.min(leftMax, nextLeft));
     nextTop = Math.max(0, Math.min(topMax, nextTop));
 
-    this.left = nextLeft;
-    this.top = nextTop;
+    this.left.set(nextLeft);
+    this.top.set(nextTop);
   };
 
   onMouseUpHeader = (): void => {
@@ -213,8 +214,8 @@ export class Window implements AfterViewInit, OnChanges {
 
     this.windowWidth = newWidth;
     this.windowHeight = newHeight;
-    this.left = newLeft;
-    this.top = newTop;
+    this.left.set(newLeft);
+    this.top.set(newTop);
   };
 
   onResizeMouseUp = (): void => {
@@ -297,8 +298,8 @@ export class Window implements AfterViewInit, OnChanges {
     const height =
       element?.clientHeight ??
       this.parseSize(this.windowHeight ?? this.initHeight, 200);
-    this.left = (window.innerWidth - width) / 2;
-    this.top = (window.innerHeight - height) / 2;
+    this.left.set((window.innerWidth - width) / 2);
+    this.top.set((window.innerHeight - height) / 2);
   }
 
   private parseSize(
