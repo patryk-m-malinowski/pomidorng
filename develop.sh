@@ -1,3 +1,3 @@
 #!/bin/bash
 
-meteor --settings settings.json --inspect=9001
+meteor-dev --settings settings.json
