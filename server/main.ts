@@ -1,7 +1,8 @@
 import * as Dates from "#pomidor/util/Dates";
 import "#pomidor/api/users/usersMethods";
+import "#pomidor/api/users/usersPublications";
 import { Accounts } from "meteor/accounts-base";
-import { PomidorUser } from "#pomidor/data/users/PomidorUser";
+import type { PomidorUser } from "#pomidor/data/users/PomidorUser";
 import { pomidorUsers } from "#pomidor/db/users/PomidorUsers";
 import { deletePomidorUser } from "#pomidor/api/users/usersMethods";
 import { WebApp } from "meteor/webapp";

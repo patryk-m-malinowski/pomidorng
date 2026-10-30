@@ -9,6 +9,7 @@ import { HeaderMenu } from "/imports/ui/header/HeaderMenu";
 import { HeaderTabs } from "/imports/ui/header/HeaderTabs";
 import type { Page } from "/imports/ui/header/Page";
 import { TasksEditor } from "/imports/ui/tasksEditor/TasksEditor";
+import { UsersEditor } from "/imports/ui/users/UsersEditor";
 
 @Component({
   selector: "main-ui",
@@ -84,7 +85,7 @@ export class MainUI implements OnDestroy {
     users: {
       title: "Users",
       icon: "shield",
-      component: UsersPage,
+      component: UsersEditor,
     },
     me: {
       title: "Me",
@@ -108,8 +109,12 @@ export class MainUI implements OnDestroy {
 
       window.localStorage.setItem("pomidor.selectedPage", pageId);
 
-      if (currentPath !== expectedPath) {
-        void this.router.navigateByUrl(expectedPath);
+      // Sub-routes such as /pomidorapp/users/:id still belong to the page
+      if (
+        currentPath !== expectedPath &&
+        !currentPath.startsWith(expectedPath + "/")
+      ) {
+        this.router.navigateByUrl(expectedPath);
       }
     });
 
@@ -170,17 +175,6 @@ export class MainUI implements OnDestroy {
     return page;
   }
 }
-
-@Component({
-  selector: "users-page",
-  standalone: true,
-  template: `
-    <div class="flex h-full items-center justify-center p-4">
-      <h2 class="text-xl font-bold">Users</h2>
-    </div>
-  `,
-})
-class UsersPage {}
 
 @Component({
   selector: "me-page",

@@ -186,17 +186,18 @@ a {
   color: var(--avocado-color-anchor);
 }
 
-.com-patrykmalinowski-avocado-web-app {
-  background-color: var(--avocado-color-background);
-}
-.com-patrykmalinowski-avocado-group-box__container {
+fieldset {
   border: 1px solid var(--avocado-color-groupbox-border);
   border-radius: 5px;
   padding: 10px;
 }
-.com-patrykmalinowski-avocado-group-box__label {
+fieldset > legend {
   font-weight: bold;
-  margin: 0 0 5px 0;
+  @apply px-1;
+}
+
+.com-patrykmalinowski-avocado-web-app {
+  background-color: var(--avocado-color-background);
 }
 .com-patrykmalinowski-avocado-window__window {
   border: 1px solid var(--avocado-color-window-border);

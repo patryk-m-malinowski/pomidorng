@@ -10,7 +10,15 @@ export interface ClassMeta {
  * This is defined by the user
  */
 export interface PropertyMeta {
+  /**
+   * What the default value is when the object is first created and registered.
+   */
   init?: any;
+  /**
+   * Specifies the client-side access level for this property.
+   * Default: readwrite
+   */
+  client?: "readonly" | "hidden" | "readwrite";
 }
 
 const symMeta = Symbol("mso.metaData"); //Used when we want to attach MSO-specific metadata to a class/object.
@@ -28,9 +36,11 @@ export default abstract class MsoObject {
    * @decorator
    */
   public static Property(meta?: PropertyMeta) {
+    meta ??= {};
+    meta.client ??= "readwrite";
     return function (prototype: MsoObject, propertyKey: string) {
       prototype[symProperties] ??= {};
-      prototype[symProperties][propertyKey] = meta ?? {};
+      prototype[symProperties][propertyKey] = meta;
       Object.defineProperty(prototype, propertyKey, {
         set(this: MsoObject, v) {
           const signal = this.propertySignals[propertyKey];
@@ -50,7 +60,9 @@ export default abstract class MsoObject {
             if (!this.registered) {
               return prototype[symProperties][propertyKey].init;
             }
-            throw new Error(`Property ${propertyKey} is not ready yet.`);
+            throw new Error(
+              `Property ${propertyKey} is not available. This means it hasn't been sent to the client via your subscription.`,
+            );
           }
           return value;
         },
@@ -72,7 +84,10 @@ export default abstract class MsoObject {
       this.propertySignals[property] = signal(undefined);
     }
   }
-  private isUpdating = 0;
+  /**
+   * Whether it's updating with data from the server
+   */
+  private isUpdating = false;
   private registering = false;
   private registered = false;
   public _id!: string;
@@ -93,13 +108,14 @@ export default abstract class MsoObject {
    * @param source
    */
   public update(source: ServerPojo): void {
-    this.isUpdating++;
+    this.registered = true;
+    this.isUpdating = true;
     try {
       for (let prop in source) {
         this.setPropertyFromServer(prop, (source as any)[prop]);
       }
     } finally {
-      this.isUpdating--;
+      this.isUpdating = false;
     }
   }
 
@@ -125,9 +141,10 @@ export default abstract class MsoObject {
           this.propertySignals[propertyKey].set(initValue);
         }
       }
-      return await PoolFactory.instance
+      await PoolFactory.instance
         .getPool(this.constructor as new () => MsoObject)
         .insert(this);
+      this.registered = true;
     } finally {
       this.registering = false;
     }
@@ -150,7 +167,7 @@ export default abstract class MsoObject {
   }
 
   private onPropertyChange(propertyKey: string, value: any, oldValue: any) {
-    if (this.isUpdating > 0) {
+    if (this.isUpdating) {
       return;
     }
     if (this.registering) {
@@ -164,6 +181,11 @@ export default abstract class MsoObject {
       throw new Error(`Cannot change properties on a deleted object.`);
     }
     let meta = MsoObject.getClazzMeta(this.constructor as new () => MsoObject);
+    if (Meteor.isClient) {
+      if (this[symProperties][propertyKey]?.client !== "readwrite") {
+        throw new Error(`Cannot change readonly property '${propertyKey}'.`);
+      }
+    }
     Meteor.callAsync(
       meta.collectionName + ".update",
       this._id,
@@ -185,12 +207,7 @@ export default abstract class MsoObject {
       const elapsedSinceUserSet = now - lastUserSetAt;
 
       if (elapsedSinceUserSet >= userCooldownMs) {
-        this.isUpdating++;
-        try {
-          (this as any)[propertyKey] = value;
-        } finally {
-          this.isUpdating--;
-        }
+        (this as any)[propertyKey] = value;
         return;
       } else {
         this.queuedServerPropertyUpdates[propertyKey] = {

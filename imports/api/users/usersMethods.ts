@@ -6,6 +6,7 @@ import { MutexByKey } from "../../common/util/MutexByKey";
 import { pomidorSettings } from "/imports/common/PomidorSettings";
 import { TaskCollection } from "/imports/db/tasks/TaskCollection";
 import { isAdmin } from "../apiUtils";
+import { PomidorUser } from "#pomidor/data/users/PomidorUser.js";
 
 let mutexCreateUser = new MutexByKey();
 
@@ -16,7 +17,7 @@ Meteor.methods({
    * @param property Name of property we are modifying
    * @param value Value of the property to set
    */
-  "users.updateUser": async function (
+  "users.update": async function (
     id: string,
     property: string,
     value: any,
@@ -89,13 +90,16 @@ Meteor.methods({
       }
 
       let userId;
+      let properties = {
+        registrationIp: ipHash,
+        lastLogin: null,
+        isAdmin: false,
+      } as Partial<PomidorUser>;
 
       try {
         userId = await Accounts.createUserAsync({ username, password });
         if (playgroundUser) {
-          await pomidorUsers.updateAsync(userId, {
-            $set: { playgroundUser: true },
-          });
+          properties.playgroundUser = true;
         }
       } catch (e: any) {
         if (e.error === 403) {
@@ -104,7 +108,7 @@ Meteor.methods({
         throw e;
       }
       await pomidorUsers.updateAsync(userId, {
-        $set: { registrationIp: ipHash },
+        $set: properties,
       });
       return { userId };
     }
@@ -134,14 +138,6 @@ Meteor.methods({
       throw new Meteor.Error(403, "Not authorized");
     }
     await deletePomidorUser(id);
-  },
-
-  "users.impersonate": async function (id: string): Promise<string> {
-    if (!(await isAdmin())) {
-      throw new Meteor.Error("not-authorized");
-    }
-    this.setUserId(id);
-    return id;
   },
 
   "users.getConnectionInfo": async function (): Promise<Object> {
