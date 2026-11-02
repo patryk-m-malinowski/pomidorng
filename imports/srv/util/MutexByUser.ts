@@ -1,5 +1,5 @@
 import { Meteor } from "meteor/meteor";
-import { MutexByKey } from "#pomidor/common/util/MutexByKey";
+import { MutexByKey } from "#pomidor/util/MutexByKey";
 
 /**
  * Takes a callback and returns a function which calls the callback in a mutex per user basis

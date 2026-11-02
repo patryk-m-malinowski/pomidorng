@@ -16,7 +16,7 @@ import { pomidorUsers } from "#pomidor/db/users/PomidorUsers";
 import { PomidorUser } from "#pomidor/data/users/PomidorUser";
 import type { ServerPojo } from "#pomidor/common/mso/ObjectsPool";
 import { PoolFactory } from "#pomidor/common/mso/PoolFactory";
-import { formatDate } from "#pomidor/util/PomidorGlobals";
+import { formatDate } from "#pomidor/common/PomidorGlobals";
 import CommonDialogsService from "#pomidor/ui/util/dialog/CommonDialogsService";
 import UserService from "#pomidor/ui/UserService";
 import {
@@ -144,7 +144,11 @@ import { ChangePasswordDlg } from "./ChangePasswordDlg";
             (selectionChange)="selectedUserId.set($event[0] ?? null)"
           >
             <pom-pomidor-columns>
-              <pom-pomidor-column id="username" title="Username" [width]="180" />
+              <pom-pomidor-column
+                id="username"
+                title="Username"
+                [width]="180"
+              />
               <pom-pomidor-column id="playgroundUser" title="Playground User" />
               <pom-pomidor-column id="createdAt" title="Date Joined" />
               <pom-pomidor-column id="lastLogin" title="Last Login" />

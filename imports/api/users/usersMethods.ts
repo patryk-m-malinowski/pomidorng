@@ -2,7 +2,7 @@ import { Accounts } from "meteor/accounts-base";
 import { Meteor } from "meteor/meteor";
 import * as ConnectionUtils from "#pomidor/util/ConnectionUtils";
 import { pomidorUsers } from "#pomidor/db/users/PomidorUsers";
-import { MutexByKey } from "../../common/util/MutexByKey";
+import { MutexByKey } from "../../util/MutexByKey";
 import { pomidorSettings } from "#pomidor/common/PomidorSettings";
 import { TaskCollection } from "#pomidor/db/tasks/TaskCollection";
 import { isAdmin } from "../apiUtils";

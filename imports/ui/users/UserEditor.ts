@@ -3,7 +3,7 @@ import { FormsModule } from "@angular/forms";
 import type { PomidorUser } from "#pomidor/data/users/PomidorUser";
 import { CheckBox } from "#pomidor/ui/util/CheckBox";
 import UserService from "#pomidor/ui/UserService";
-import { formatDate } from "#pomidor/util/PomidorGlobals";
+import { formatDate } from "#pomidor/common/PomidorGlobals";
 
 @Component({
   selector: "pom-user-editor",
