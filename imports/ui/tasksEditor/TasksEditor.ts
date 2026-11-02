@@ -12,14 +12,16 @@ import {
 import { TaskCollection } from "#pomidor/db/tasks/TaskCollection";
 import { Tracker } from "meteor/tracker";
 
-import { Task } from "/imports/data/tasks/Task";
+import { Task } from "#pomidor/data/tasks/Task";
 import TasksService from "./TasksService";
-import { TaskBox } from "/imports/ui/tasksEditor/TaskBox";
-import { TasksColumn } from "/imports/ui/tasksEditor/TasksColumn";
-import { SearchField } from "/imports/ui/util/SearchField";
+import { TaskBox } from "#pomidor/ui/tasksEditor/TaskBox";
+import { TasksColumn } from "#pomidor/ui/tasksEditor/TasksColumn";
+import { SearchField } from "#pomidor/ui/util/SearchField";
 import { EditTaskDlg } from "./EditTaskDlg";
 import { ServerPojo } from "#pomidor/common/mso/ObjectsPool";
 import { PoolFactory } from "#pomidor/common/mso/PoolFactory";
+import CommonDialogsService from "../util/dialog/CommonDialogsService";
+import UserService from "../UserService";
 
 @Component({
   selector: "tasks-editor",
@@ -41,7 +43,13 @@ import { PoolFactory } from "#pomidor/common/mso/PoolFactory";
             ></search-field>
           </div>
 
-          <button type="button" (click)="createTask()">+ New Task</button>
+          <button
+            type="button"
+            (click)="createTask()"
+            [disabled]="!userService.user()"
+          >
+            + New Task
+          </button>
         </div>
 
         <div class="flex-1 overflow-x-scroll w-full">
@@ -97,7 +105,9 @@ export class TasksEditor implements AfterViewInit, OnInit, OnDestroy {
   private tracker: Tracker.Computation | null = null;
   private loading = signal(true);
 
-  private readonly tasksService = inject(TasksService)!;
+  readonly tasksService = inject(TasksService)!;
+  readonly dialogs = inject(CommonDialogsService)!;
+  readonly userService = inject(UserService)!;
 
   @ViewChild("editTaskDlg")
   private editTaskDlg!: EditTaskDlg;
@@ -132,11 +142,17 @@ export class TasksEditor implements AfterViewInit, OnInit, OnDestroy {
 
   readonly openEditTask = async (task: Task): Promise<void> => {
     await this.tasksService.editDlg.open("edit", task);
-
     task.dateModified = new Date();
   };
 
-  readonly deleteTask = (task: Task): void => {
+  readonly deleteTask = async (task: Task): Promise<void> => {
+    let confirm = await this.dialogs.showConfirmation(
+      "Delete Task",
+      "Are you sure you want to delete this task?",
+    );
+    if (!confirm) {
+      return;
+    }
     this.tasks.update((tasks: Task[]) =>
       tasks.filter((existingTask: Task) => existingTask._id !== task._id),
     );

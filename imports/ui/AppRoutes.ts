@@ -1,22 +1,10 @@
 import { Component } from "@angular/core";
+import { Introduction } from "./Introduction";
+import { PrivacyPolicy } from "./PrivacyPolicy";
 import { Routes, UrlMatcher, UrlSegment } from "@angular/router";
 import { LoginForm } from "./LoginForm";
 import { MainUI } from "./MainUI";
 import { RegistrationForm } from "./RegistrationForm";
-
-@Component({
-  standalone: true,
-  selector: "app-privacy-policy",
-  template: `<div>Privacy Policy</div>`,
-})
-class PrivacyPolicy {}
-
-@Component({
-  standalone: true,
-  selector: "app-introduction",
-  template: `<div>Introduction</div>`,
-})
-class Introduction {}
 
 @Component({
   standalone: true,

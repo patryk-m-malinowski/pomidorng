@@ -1,15 +1,15 @@
-import type { Document } from "/imports/data/Document";
-import MsoObject from "/imports/common/mso/MsoObject";
+import type { Document } from "#pomidor/data/Document";
+import MsoObject from "#pomidor/common/mso/MsoObject";
 
 @MsoObject.Meta({
   collectionName: "tasks.Task",
 })
 export class Task extends MsoObject {
   //ID of user who created the task
-  @MsoObject.Property()
+  @MsoObject.Property({ init: null })
   declare createdBy: string;
-  //List of IDs of users who are assigned to the task
-  @MsoObject.Property()
+  //ID of user who is assigned to the task
+  @MsoObject.Property({ init: null })
   declare assignedTo: string | null;
   @MsoObject.Property({ init: "" })
   declare title: string;

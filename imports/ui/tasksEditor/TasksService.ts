@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 
-import type { Task } from "/imports/data/tasks/Task";
+import type { Task } from "#pomidor/data/tasks/Task";
 import { EditTaskDlg, type EditTaskDlgMode } from "./EditTaskDlg";
 
 @Injectable({ providedIn: "root" })

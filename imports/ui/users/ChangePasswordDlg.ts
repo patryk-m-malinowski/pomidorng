@@ -1,9 +1,9 @@
-import { Component, Input, ViewChild } from "@angular/core";
+import { Component, Input, signal, ViewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { PasswordEditor } from "/imports/ui/util/PasswordEditor";
-import { DialogButtons } from "/imports/ui/util/dialog/DialogButtons";
-import { StackLayout, StackPage } from "/imports/ui/util/StackLayout";
-import { SubmittableDlg } from "/imports/ui/util/dialog/SubmittableDlg";
+import { PasswordEditor } from "#pomidor/ui/util/PasswordEditor";
+import { DialogButtons } from "#pomidor/ui/util/dialog/DialogButtons";
+import { StackLayout, StackPage } from "#pomidor/ui/util/StackLayout";
+import { SubmittableDlg } from "#pomidor/ui/util/dialog/SubmittableDlg";
 
 export interface ChangePasswordResult {
   currentPassword: string;
@@ -13,7 +13,14 @@ export interface ChangePasswordResult {
 @Component({
   selector: "change-password-dlg",
   standalone: true,
-  imports: [FormsModule, SubmittableDlg, DialogButtons, PasswordEditor, StackLayout, StackPage],
+  imports: [
+    FormsModule,
+    SubmittableDlg,
+    DialogButtons,
+    PasswordEditor,
+    StackLayout,
+    StackPage,
+  ],
   template: `
     <submittable-dlg title="Change Password">
       <form class="com-patrykmalinowski-pomidor-form" (ngSubmit)="onSubmit()">
@@ -53,7 +60,7 @@ export interface ChangePasswordResult {
             [(ngModel)]="confirmPassword"
           />
         </label>
-        <stack-layout [selection]="errorMessage">
+        <stack-layout [selection]="errorMessage()">
           <stack-page id="passwords-do-not-match">
             <p class="com-patrykmalinowski-avocado-error-message">
               Passwords do not match.
@@ -75,16 +82,16 @@ export class ChangePasswordDlg {
   @ViewChild(SubmittableDlg)
   private dialog!: SubmittableDlg<ChangePasswordResult>;
 
-  errorMessage = "";
-  password = "";
-  currentPassword = "";
-  confirmPassword = "";
+  readonly errorMessage = signal("");
+  readonly password = signal("");
+  readonly currentPassword = signal("");
+  readonly confirmPassword = signal("");
 
   open(): Promise<ChangePasswordResult | null> {
-    this.errorMessage = "";
-    this.currentPassword = "";
-    this.password = "";
-    this.confirmPassword = "";
+    this.errorMessage.set("");
+    this.currentPassword.set("");
+    this.password.set("");
+    this.confirmPassword.set("");
     return this.dialog.open();
   }
 
@@ -95,13 +102,13 @@ export class ChangePasswordDlg {
   }
 
   onSubmit(): void {
-    if (this.password !== this.confirmPassword) {
-      this.errorMessage = "passwords-do-not-match";
+    if (this.password() !== this.confirmPassword()) {
+      this.errorMessage.set("passwords-do-not-match");
       return;
     }
     this.dialog.submit({
-      currentPassword: this.currentPassword,
-      newPassword: this.password,
+      currentPassword: this.currentPassword(),
+      newPassword: this.password(),
     });
   }
 }

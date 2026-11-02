@@ -1,3 +1,4 @@
+import { getServerCollection } from "./getServerCollection";
 import MsoObject from "./MsoObject";
 
 export interface ServerPojo {
@@ -32,10 +33,19 @@ export default class ObjectsPool<T extends MsoObject> {
    */
   async insert(obj: T): Promise<void> {
     let meta = MsoObject.getClazzMeta(this.clazz);
-    let id = await Meteor.callAsync(
-      meta.collectionName + ".insert",
-      obj.serialize(),
-    );
+    let id: string;
+    if (Meteor.isServer) {
+      const { _id, ...doc } = obj.serialize();
+      const collection = getServerCollection(meta.collectionName);
+      id = (await collection.insertAsync(
+        (_id ? { _id, ...doc } : doc) as any,
+      )) as string;
+    } else {
+      id = await Meteor.callAsync(
+        meta.collectionName + ".insert",
+        obj.serialize(),
+      );
+    }
     obj._id = id;
     this.itemsById[obj._id] = new WeakRef(obj);
     this.finalizationRegistry.register(obj, obj._id);
@@ -48,6 +58,11 @@ export default class ObjectsPool<T extends MsoObject> {
   async delete(obj: T): Promise<void> {
     let meta = MsoObject.getClazzMeta(this.clazz);
     delete this.itemsById[obj._id];
-    await Meteor.callAsync(meta.collectionName + ".delete", obj._id);
+    if (Meteor.isServer) {
+      const collection = getServerCollection(meta.collectionName);
+      await collection.removeAsync(obj._id);
+    } else {
+      await Meteor.callAsync(meta.collectionName + ".delete", obj._id);
+    }
   }
 }

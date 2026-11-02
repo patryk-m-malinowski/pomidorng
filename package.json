@@ -1,5 +1,5 @@
 {
-  "name": "pomidorng",
+  "name": "pomidor",
   "private": true,
   "scripts": {
     "start": "meteor run",
@@ -29,12 +29,11 @@
     "postcss-load-config": "^6.0.1",
     "rxjs": "^7.8.1",
     "sass": "^1.105.1",
-    "tailwindcss": "^4.3.3",
-    "zone.js": "^0.15.1"
+    "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@angular/compiler-cli": "^20.0.0",
-    "@meteorjs/rspack": "file:../meteor/npm-packages/meteor-rspack",
+    "@meteorjs/rspack": "^2.2.0",
     "@nx/angular-rspack": "^21.1.0",
     "@rsdoctor/rspack-plugin": "^1.5.7",
     "@rspack/cli": "^1.7.1",

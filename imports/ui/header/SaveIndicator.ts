@@ -1,6 +1,6 @@
 import { Component, inject } from "@angular/core";
 import { MatIcon } from "@angular/material/icon";
-import PendingRequestsService from "/imports/client/PendingRequestsService";
+import PendingRequestsService from "#pomidor/client/PendingRequestsService";
 
 @Component({
   selector: "save-indicator",

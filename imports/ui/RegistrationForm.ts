@@ -3,7 +3,7 @@ import { Component, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Meteor } from "meteor/meteor";
 import { Router } from "@angular/router";
-import { USERS_CONSTANTS } from "/imports/common/UsersConstants";
+import { USERS_CONSTANTS } from "#pomidor/common/UsersConstants";
 import { CentralBox } from "./util/CentralBox";
 import { PasswordEditor } from "./util/PasswordEditor";
 import { StackLayout, StackPage } from "./util/StackLayout";
@@ -136,11 +136,11 @@ import { StackLayout, StackPage } from "./util/StackLayout";
 export class RegistrationForm {
   readonly router = inject(Router);
 
-  username = "";
-  password = "";
-  confirmPassword = "";
-  acceptedTerms = false;
-  errorMessage = signal<string | null>(null);
+  readonly username = signal("");
+  readonly password = signal("");
+  readonly confirmPassword = signal("");
+  readonly acceptedTerms = signal(false);
+  readonly errorMessage = signal<string | null>(null);
 
   readonly usersConstants = USERS_CONSTANTS;
   readonly accountLimit =
@@ -150,14 +150,14 @@ export class RegistrationForm {
   async onSubmit(): Promise<void> {
     this.errorMessage.set(null);
 
-    if (this.password !== this.confirmPassword) {
+    if (this.password() !== this.confirmPassword()) {
       this.errorMessage.set("passwords-do-not-match");
       return;
     }
 
     const result = (await Meteor.callAsync("users.createUser", {
-      username: this.username,
-      password: this.password,
+      username: this.username(),
+      password: this.password(),
       playgroundUser: false,
     })) as { error?: string } | undefined;
 
@@ -167,8 +167,8 @@ export class RegistrationForm {
     }
 
     Meteor.loginWithPassword(
-      { username: this.username },
-      this.password,
+      { username: this.username() },
+      this.password(),
       (error) => {
         if (error) {
           this.errorMessage.set("unknown-error");

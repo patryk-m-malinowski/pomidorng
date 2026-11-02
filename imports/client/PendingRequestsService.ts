@@ -3,10 +3,10 @@ import { CallTracker } from "./CallTracker";
 
 @Injectable({ providedIn: "root" })
 export default class PendingRequestsService {
-  private tracker: CallTracker;
+  private tracker: CallTracker = new CallTracker(2000); //!!temp
 
   constructor() {
-    this.tracker = monkeyPatchCallAsync();
+    monkeyPatchCallAsync(this.tracker);
   }
   public get pendingRequests(): WritableSignal<number> {
     return this.tracker.nRequests;
@@ -16,8 +16,7 @@ export default class PendingRequestsService {
   }
 }
 
-function monkeyPatchCallAsync() {
-  let tracker = new CallTracker(5000);
+function monkeyPatchCallAsync(tracker: CallTracker) {
   let impl = Meteor.callAsync;
   function newImpl(this: any): typeof Meteor.callAsync {
     tracker.beginRequest();
@@ -26,5 +25,4 @@ function monkeyPatchCallAsync() {
     return promise as any;
   }
   Meteor.callAsync = newImpl as any;
-  return tracker;
 }

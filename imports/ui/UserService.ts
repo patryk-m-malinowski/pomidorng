@@ -9,8 +9,13 @@ import { Tracker } from "meteor/tracker";
 export default class UserService {
   public user = signal<PomidorUser | null>(null);
   constructor() {
+    let loading = true;
+    Meteor.subscribe("users.allUsers", {
+      onReady: () => (loading = false),
+    });
     Tracker.autorun(() => {
       const pojo = getPomidorUser();
+      if (loading) return;
       this.user.set(
         pojo
           ? PoolFactory.instance

@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from "@angular/core";
+import { Component, Input, signal, ViewChild } from "@angular/core";
 import { ButtonKind, DialogButtons } from "./DialogButtons";
 import { SubmittableDlg } from "./SubmittableDlg";
 
@@ -7,13 +7,13 @@ import { SubmittableDlg } from "./SubmittableDlg";
   standalone: true,
   imports: [SubmittableDlg, DialogButtons],
   template: `
-    <submittable-dlg [title]="title">
+    <submittable-dlg [title]="title()">
       <div class="flex flex-col gap-1.5">
         <div class="flex gap-2.5 items-start">
           <span class="material-icons text-2xl border-2 rounded-full">{{
             icon
           }}</span>
-          <p class="max-w-lg">{{ message }}</p>
+          <p class="max-w-lg">{{ message() }}</p>
         </div>
         <dialog-buttons
           [show]="buttons"
@@ -30,12 +30,12 @@ export class CommonDlg {
   @ViewChild(SubmittableDlg)
   private dialog?: SubmittableDlg<ButtonKind>;
 
-  title = "";
-  message = "";
+  title = signal("");
+  message = signal("");
 
   open(title: string, message: string): Promise<ButtonKind | null> {
-    this.title = title;
-    this.message = message;
+    this.title.set(title);
+    this.message.set(message);
     return this.dialog?.open() ?? Promise.resolve(null);
   }
 

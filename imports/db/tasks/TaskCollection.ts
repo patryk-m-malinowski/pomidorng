@@ -1,5 +1,5 @@
 import { Mongo } from "meteor/mongo";
-import type { Task } from "/imports/data/tasks/Task";
+import type { Task } from "#pomidor/data/tasks/Task";
 import { ServerPojo } from "#pomidor/common/mso/ObjectsPool";
 
 /**

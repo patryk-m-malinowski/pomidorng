@@ -1,11 +1,17 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import {
+  ApplicationConfig,
+  ErrorHandler,
+  provideZonelessChangeDetection,
+} from "@angular/core";
+import { provideRouter } from "@angular/router";
 
-import { routes } from './AppRoutes';
+import { GlobalErrorHandler } from "./GlobalErrorHandler";
+import { routes } from "./AppRoutes";
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes)
-  ]
+    provideZonelessChangeDetection(),
+    provideRouter(routes),
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
+  ],
 };

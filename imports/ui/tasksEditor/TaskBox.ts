@@ -1,14 +1,16 @@
 import { CommonModule } from "@angular/common";
-import { Component, Input } from "@angular/core";
+import { Component, inject, Input } from "@angular/core";
+import { UserField } from "./UserField";
 import { MatIcon } from "@angular/material/icon";
-import { Meteor } from "meteor/meteor";
+import UserService from "../UserService";
 
-import type { Task } from "/imports/data/tasks/Task";
+import type { Task } from "#pomidor/data/tasks/Task";
+import { CursorTooltip } from "../util/CursorTooltip";
 
 @Component({
   selector: "task-box",
   standalone: true,
-  imports: [CommonModule, MatIcon],
+  imports: [CommonModule, MatIcon, CursorTooltip, UserField],
   template: `
     <div
       class="com-patrykmalinowski-pomidor-tasks-editor-task-box flex flex-col gap-2.5 p-2"
@@ -17,7 +19,8 @@ import type { Task } from "/imports/data/tasks/Task";
         <button
           type="button"
           aria-label="Move to left column"
-          [disabled]="!user || task.status === 'todo'"
+          [disabled]="!user() || task.status === 'todo'"
+          cursorTooltip="Move to left column"
           (click)="moveTaskLeft()"
         >
           <mat-icon>arrow_back</mat-icon>
@@ -26,7 +29,8 @@ import type { Task } from "/imports/data/tasks/Task";
         <button
           type="button"
           aria-label="Edit task"
-          [disabled]="!user"
+          [disabled]="!user()"
+          cursorTooltip="Edit task"
           (click)="onEditClicked()"
         >
           <mat-icon>edit</mat-icon>
@@ -35,7 +39,8 @@ import type { Task } from "/imports/data/tasks/Task";
         <button
           type="button"
           aria-label="Delete Task"
-          [disabled]="!user"
+          [disabled]="!user()"
+          cursorTooltip="Delete Task"
           (click)="onDeleteClicked()"
         >
           <mat-icon>delete</mat-icon>
@@ -44,7 +49,8 @@ import type { Task } from "/imports/data/tasks/Task";
         <button
           type="button"
           aria-label="Move to right column"
-          [disabled]="!user || task.status === 'done'"
+          [disabled]="!user() || task.status === 'done'"
+          cursorTooltip="Move to right column"
           (click)="moveTaskRight()"
         >
           <mat-icon>arrow_forward</mat-icon>
@@ -54,10 +60,7 @@ import type { Task } from "/imports/data/tasks/Task";
       <h3 class="font-bold text-xl">{{ task.title }}</h3>
 
       @if (task.assignedTo) {
-        <div class="flex items-center gap-1">
-          <mat-icon>person</mat-icon>
-          <span>{{ task.assignedTo }}</span>
-        </div>
+        <user-field userId="{{ task.assignedTo }}"></user-field>
       } @else {
         <div class="flex items-center gap-1">
           <mat-icon>account_circle</mat-icon>
@@ -78,9 +81,7 @@ export class TaskBox {
 
   readonly statusOrder: Task["status"][] = ["todo", "inProgress", "done"];
 
-  get user() {
-    return Meteor.user();
-  }
+  readonly user = inject(UserService).user;
 
   moveTaskLeft(): void {
     const index = this.statusOrder.indexOf(this.task.status);

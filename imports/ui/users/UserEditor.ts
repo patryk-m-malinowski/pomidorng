@@ -1,9 +1,9 @@
 import { Component, computed, inject, input, Signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import type { PomidorUser } from "/imports/data/users/PomidorUser";
-import { CheckBox } from "/imports/ui/util/CheckBox";
-import UserService from "/imports/ui/UserService";
-import { formatDate } from "/imports/util/PomidorGlobals";
+import type { PomidorUser } from "#pomidor/data/users/PomidorUser";
+import { CheckBox } from "#pomidor/ui/util/CheckBox";
+import UserService from "#pomidor/ui/UserService";
+import { formatDate } from "#pomidor/util/PomidorGlobals";
 
 @Component({
   selector: "user-editor",
@@ -13,24 +13,28 @@ import { formatDate } from "/imports/util/PomidorGlobals";
     <div class="flex flex-col gap-4 max-w-100">
       <fieldset class="com-patrykmalinowski-pomidor-form">
         <legend>Details</legend>
+        <p>
+          Username:
+          <span>{{ value().username }}</span>
+        </p>
+        <p>
+          Playground User:
+          <span>{{ value().playgroundUser ? "Yes" : "No" }}</span>
+        </p>
+        <p>
+          Date Joined:
+          <span>{{ createdAt() }}</span>
+        </p>
+        <p>
+          Last Logged In:
+          <span>{{ lastLogin() }}</span>
+        </p>
         <check-box
           label="Admin"
           [disabled]="!canEditAdmin()"
           [readOnly]="!!currentUser() && !currentUser()!.isAdmin"
           [(ngModel)]="value().isAdmin"
         />
-        <label>
-          Username:
-          <input readonly type="text" [value]="value().username" />
-        </label>
-        <label>
-          Date Joined:
-          <input readonly type="text" [value]="createdAt()" />
-        </label>
-        <label>
-          Last Logged In:
-          <input readonly type="text" [value]="lastLogin()" />
-        </label>
       </fieldset>
     </div>
   `,

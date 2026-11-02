@@ -4,12 +4,13 @@ import { Component, OnDestroy, ViewChild, inject, model } from "@angular/core";
 import { MatIcon } from "@angular/material/icon";
 import { NavigationEnd, Router } from "@angular/router";
 import { filter } from "rxjs/operators";
-import { HeaderPortalService } from "/imports/ui/HeaderPortalService";
-import { HeaderMenu } from "/imports/ui/header/HeaderMenu";
-import { HeaderTabs } from "/imports/ui/header/HeaderTabs";
-import type { Page } from "/imports/ui/header/Page";
-import { TasksEditor } from "/imports/ui/tasksEditor/TasksEditor";
-import { UsersEditor } from "/imports/ui/users/UsersEditor";
+import { HeaderPortalService } from "#pomidor/ui/HeaderPortalService";
+import { HeaderMenu } from "#pomidor/ui/header/HeaderMenu";
+import { HeaderTabs } from "#pomidor/ui/header/HeaderTabs";
+import type { Page } from "#pomidor/ui/header/Page";
+import { TasksEditor } from "#pomidor/ui/tasksEditor/TasksEditor";
+import { MyProfileEditor } from "#pomidor/ui/users/MyProfileEditor";
+import { UsersEditor } from "#pomidor/ui/users/UsersEditor";
 
 @Component({
   selector: "main-ui",
@@ -90,7 +91,7 @@ export class MainUI implements OnDestroy {
     me: {
       title: "Me",
       icon: "account_circle",
-      component: MePage,
+      component: MyProfileEditor,
     },
   };
 
@@ -175,14 +176,3 @@ export class MainUI implements OnDestroy {
     return page;
   }
 }
-
-@Component({
-  selector: "me-page",
-  standalone: true,
-  template: `
-    <div class="flex h-full items-center justify-center p-4">
-      <h2 class="text-xl font-bold">Me</h2>
-    </div>
-  `,
-})
-class MePage {}

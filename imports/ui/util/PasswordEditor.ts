@@ -4,6 +4,7 @@ import {
   Input,
   Output,
   forwardRef,
+  signal,
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { MatIconModule, MatIcon } from "@angular/material/icon";
@@ -21,23 +22,23 @@ import { MatIconModule, MatIcon } from "@angular/material/icon";
         [required]="required"
         [maxLength]="maxLength"
         [tabindex]="tabIndex ?? 0"
-        [type]="isVisible ? 'text' : 'password'"
-        [value]="value"
+        [type]="isVisible() ? 'text' : 'password'"
+        [value]="currentValue()"
         (input)="handleInput($event)"
         (blur)="onTouched()"
-        class="m-0 h-8.75 w-full flex-1 bg-transparent px-2 pr-10 text-(--avocado-color-text)"
+        class="m-0 h-7 w-full flex-1 px-2 pr-10 text-(--avocado-color-text)"
       />
       <span class="absolute right-0 top-1/2 -translate-y-1/2">
         <div
           type="button"
-          [attr.aria-label]="isVisible ? 'Hide password' : 'Show password'"
-          [attr.aria-pressed]="isVisible"
+          [attr.aria-label]="isVisible() ? 'Hide password' : 'Show password'"
+          [attr.aria-pressed]="isVisible()"
           class="p-0 m-1 text-(--avocado-color-text) bg-transparent flex items-center cursor-pointer"
           tabindex="-1"
           (mousedown)="$event.preventDefault()"
           (click)="toggleVisibility()"
         >
-          @if (isVisible) {
+          @if (isVisible()) {
             <mat-icon>visibility_off</mat-icon>
           } @else {
             <mat-icon>visibility</mat-icon>
@@ -61,18 +62,24 @@ export class PasswordEditor implements ControlValueAccessor {
   @Input() required = false;
   @Input() maxLength?: number = 32;
   @Input() tabIndex: number | null = 0;
-  @Input() value = "";
+  @Input() set value(v: string) {
+    this.currentValue.set(v ?? "");
+  }
+  get value(): string {
+    return this.currentValue();
+  }
   @Input() placeholder = "";
 
   @Output() valueChange = new EventEmitter<string>();
 
-  isVisible = false;
+  readonly isVisible = signal(false);
+  readonly currentValue = signal("");
 
   private onChange: (value: string) => void = () => {};
   onTouched: () => void = () => {};
 
   writeValue(value: string | null): void {
-    this.value = value ?? "";
+    this.currentValue.set(value ?? "");
   }
 
   registerOnChange(fn: (value: string) => void): void {
@@ -89,12 +96,12 @@ export class PasswordEditor implements ControlValueAccessor {
 
   handleInput(event: Event): void {
     const target = event.target as HTMLInputElement;
-    this.value = target.value;
-    this.onChange(this.value);
-    this.valueChange.emit(this.value);
+    this.currentValue.set(target.value);
+    this.onChange(target.value);
+    this.valueChange.emit(target.value);
   }
 
   toggleVisibility(): void {
-    this.isVisible = !this.isVisible;
+    this.isVisible.update((v) => !v);
   }
 }

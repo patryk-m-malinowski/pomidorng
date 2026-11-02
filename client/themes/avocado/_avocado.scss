@@ -1,4 +1,6 @@
-@import "./avocado-color";
-@import "./avocado-reset";
-@import "./avocado-appearance";
-@import "./avocado-utilities";
+@layer base {
+  @import "./avocado-color";
+  @import "./avocado-reset";
+  @import "./avocado-appearance";
+  @import "./avocado-utilities";
+}

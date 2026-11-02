@@ -1,12 +1,12 @@
 import { Accounts } from "meteor/accounts-base";
 import { Meteor } from "meteor/meteor";
-import * as ConnectionUtils from "/imports/util/ConnectionUtils";
-import { pomidorUsers } from "/imports/db/users/PomidorUsers";
+import * as ConnectionUtils from "#pomidor/util/ConnectionUtils";
+import { pomidorUsers } from "#pomidor/db/users/PomidorUsers";
 import { MutexByKey } from "../../common/util/MutexByKey";
-import { pomidorSettings } from "/imports/common/PomidorSettings";
-import { TaskCollection } from "/imports/db/tasks/TaskCollection";
+import { pomidorSettings } from "#pomidor/common/PomidorSettings";
+import { TaskCollection } from "#pomidor/db/tasks/TaskCollection";
 import { isAdmin } from "../apiUtils";
-import { PomidorUser } from "#pomidor/data/users/PomidorUser.js";
+import { PomidorUser } from "#pomidor/data/users/PomidorUser";
 
 let mutexCreateUser = new MutexByKey();
 
@@ -60,7 +60,13 @@ Meteor.methods({
     id: string,
     password: string,
   ): Promise<void> {
-    if (!(await isAdmin())) {
+    let user = await pomidorUsers.findOneAsync(id);
+    if (!user) {
+      //perhaps it's been deleted
+      return;
+    }
+
+    if (!((await isAdmin()) || user.playgroundUser)) {
       throw new Meteor.Error("not-authorized");
     }
     await Accounts.setPasswordAsync(id, password, { logout: false });
@@ -89,28 +95,21 @@ Meteor.methods({
         }
       }
 
-      let userId;
-      let properties = {
-        registrationIp: ipHash,
-        lastLogin: null,
-        isAdmin: false,
-      } as Partial<PomidorUser>;
+      let user = new PomidorUser();
 
       try {
-        userId = await Accounts.createUserAsync({ username, password });
+        user.registrationIp = ipHash;
         if (playgroundUser) {
-          properties.playgroundUser = true;
+          user.playgroundUser = true;
         }
+        await user.registerInAccounts({ username, password });
       } catch (e: any) {
         if (e.error === 403) {
           return { error: "username-taken" };
         }
         throw e;
       }
-      await pomidorUsers.updateAsync(userId, {
-        $set: properties,
-      });
-      return { userId };
+      return { userId: user._id };
     }
 
     //Ensure this is mutexed per IP so we can reliably stop abuse of the registration system.
@@ -137,7 +136,8 @@ Meteor.methods({
     ) {
       throw new Meteor.Error(403, "Not authorized");
     }
-    await deletePomidorUser(id);
+    //Has to be done as a microtask, because if we delete the user that is invoking this request then strange things happen.
+    queueMicrotask(() => deletePomidorUser(id));
   },
 
   "users.getConnectionInfo": async function (): Promise<Object> {

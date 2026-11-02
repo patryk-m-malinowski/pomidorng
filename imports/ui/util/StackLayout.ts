@@ -5,6 +5,7 @@ import {
   HostBinding,
   Input,
   QueryList,
+  signal,
 } from "@angular/core";
 
 @Component({
@@ -15,28 +16,28 @@ import {
 export class StackPage {
   @Input() id = "";
 
-  visible = false;
+  readonly visible = signal(false);
 
   @HostBinding("style.gridArea") readonly gridArea = "1 / 1";
 
   @HostBinding("style.opacity")
   get opacity(): string {
-    return this.visible ? "1" : "0";
+    return this.visible() ? "1" : "0";
   }
 
   @HostBinding("style.pointerEvents")
   get pointerEvents(): string {
-    return this.visible ? "auto" : "none";
+    return this.visible() ? "auto" : "none";
   }
 
   @HostBinding("style.zIndex")
   get zIndex(): string {
-    return this.visible ? "1" : "0";
+    return this.visible() ? "1" : "0";
   }
 
   @HostBinding("attr.aria-hidden")
   get ariaHidden(): string | null {
-    return this.visible ? null : "true";
+    return this.visible() ? null : "true";
   }
 }
 
@@ -57,7 +58,7 @@ export class StackLayout implements AfterContentChecked {
 
   ngAfterContentChecked(): void {
     this.pages.forEach((page) => {
-      page.visible = page.id === this.selection;
+      page.visible.set(page.id === this.selection);
     });
   }
 }

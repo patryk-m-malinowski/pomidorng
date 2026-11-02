@@ -1,8 +1,7 @@
 import { bootstrapApplication } from "@angular/platform-browser";
 import { Meteor } from "meteor/meteor";
-import { App } from "/imports/ui/App";
-import { appConfig } from "/imports/ui/AppConfig";
-import "zone.js";
+import { App } from "#pomidor/ui/App";
+import { appConfig } from "#pomidor/ui/AppConfig";
 import "./main.css";
 
 Meteor.startup(() => {

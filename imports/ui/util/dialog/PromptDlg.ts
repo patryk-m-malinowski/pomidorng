@@ -1,24 +1,25 @@
-import { Component, Input, ViewChild } from "@angular/core";
+import { Component, Input, signal, ViewChild } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { DialogButtons } from "./DialogButtons";
 import { SubmittableDlg } from "./SubmittableDlg";
 
 @Component({
   selector: "prompt-dlg",
   standalone: true,
-  imports: [SubmittableDlg, DialogButtons],
+  imports: [SubmittableDlg, DialogButtons, FormsModule],
   template: `
-    <submittable-dlg [title]="title">
+    <submittable-dlg [title]="title()">
       <form
         class="com-patrykmalinowski-pomidor-form flex flex-col gap-1.5"
         (submit)="onSubmit($event)"
       >
-        <p class="max-w-lg">{{ message }}</p>
+        <p class="max-w-lg">{{ message() }}</p>
         <input
           type="text"
-          [value]="value"
-          [maxLength]="maxLength"
+          name="value"
+          [(ngModel)]="value"
+          [attr.maxlength]="maxLength ?? null"
           required
-          (input)="onInput($event)"
         />
         <dialog-buttons
           [show]="['ok', 'cancel']"
@@ -34,24 +35,19 @@ export class PromptDlg {
   @ViewChild(SubmittableDlg)
   private dialog?: SubmittableDlg<string>;
 
-  title = "Prompt";
-  message = "Enter a value:";
-  value = "";
+  readonly title = signal("Prompt");
+  readonly message = signal("Enter a value:");
+  readonly value = signal("");
 
   open(
     title: string,
     message: string,
     defaultValue?: string,
   ): Promise<string | null> {
-    this.title = title;
-    this.message = message;
-    this.value = defaultValue ?? "";
+    this.title.set(title);
+    this.message.set(message);
+    this.value.set(defaultValue ?? "");
     return this.dialog?.open() ?? Promise.resolve(null);
-  }
-
-  onInput(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.value = target.value;
   }
 
   onCancel(): void {
@@ -60,6 +56,6 @@ export class PromptDlg {
 
   onSubmit(event: Event): void {
     event.preventDefault();
-    this.dialog?.submit(this.value);
+    this.dialog?.submit(this.value());
   }
 }

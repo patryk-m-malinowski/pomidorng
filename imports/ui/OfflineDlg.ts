@@ -1,5 +1,5 @@
 import { Component, ViewChild } from "@angular/core";
-import { Window } from "./util/dialog/Window";
+import { Window } from "#pomidor/ui/util/dialog/Window";
 
 @Component({
   selector: "offline-dlg",

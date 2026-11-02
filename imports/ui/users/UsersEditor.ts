@@ -17,14 +17,14 @@ import { PomidorUser } from "#pomidor/data/users/PomidorUser";
 import type { ServerPojo } from "#pomidor/common/mso/ObjectsPool";
 import { PoolFactory } from "#pomidor/common/mso/PoolFactory";
 import { formatDate } from "#pomidor/util/PomidorGlobals";
-import CommonDialogsService from "/imports/ui/util/dialog/CommonDialogsService";
-import UserService from "/imports/ui/UserService";
+import CommonDialogsService from "#pomidor/ui/util/dialog/CommonDialogsService";
+import UserService from "#pomidor/ui/UserService";
 import {
   Column,
   Columns,
   PomidorTable,
   Row,
-} from "/imports/ui/util/table/PomidorTable";
+} from "#pomidor/ui/util/table/PomidorTable";
 import { UserEditor } from "./UserEditor";
 import { NewUserDialog } from "./NewUserDialog";
 import { ChangePasswordDlg } from "./ChangePasswordDlg";
@@ -114,7 +114,10 @@ import { ChangePasswordDlg } from "./ChangePasswordDlg";
             <mat-icon>add</mat-icon>
             Create User
           </button>
-          <button [disabled]="!canModifyUser()" (click)="onDeleteUserPressed()">
+          <button
+            [disabled]="!canModifyUser() || selectedUser() == appUser()"
+            (click)="onDeleteUserPressed()"
+          >
             <mat-icon>delete</mat-icon>
             Delete User
           </button>
@@ -200,7 +203,12 @@ export class UsersEditor implements OnInit, OnDestroy {
   readonly canModifyUser = computed(() => {
     const selected = this.selectedUser();
     const app = this.appUser();
-    return !!selected && !!app && (app.isAdmin || selected.playgroundUser);
+    return (
+      !!selected &&
+      !!app &&
+      app !== selected &&
+      (app.isAdmin || selected.playgroundUser)
+    );
   });
 
   ngOnInit(): void {
@@ -210,19 +218,31 @@ export class UsersEditor implements OnInit, OnDestroy {
       }
     });
 
-    this.usersSub = Meteor.subscribe("users.allUsers", {
-      onReady: () => this.loading.set(false),
+    const sub = Meteor.subscribe("users.allUsers", {
       onStop: () => this.loading.set(false),
     });
+    this.usersSub = sub;
 
+    // Loading is cleared in the same computation that reads the data, so the
+    // template never renders before the ready data has been processed.
     this.tracker = Tracker.autorun(() => {
+      const ready = sub.ready();
       const pojos = pomidorUsers.find({}).fetch() as unknown as ServerPojo[];
-      if (this.loading()) return;
+      console.log(
+        `debug: usersEditor tracker: length of pojos = ${pojos.length}, ready: ${ready}`,
+      );
       const users = pojos.map((pojo) =>
         PoolFactory.instance.getPool(PomidorUser).get(pojo),
       );
       users.sort((a, b) => a.username.localeCompare(b.username));
       this.users.set(users);
+      if (ready) {
+        if (users[0].createdAt === undefined) {
+          //this means bug still exists. Fix it!
+          debugger;
+        }
+        this.loading.set(false);
+      }
     });
   }
 

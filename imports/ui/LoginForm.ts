@@ -38,8 +38,8 @@ import { StackLayout, StackPage } from "./util/StackLayout";
               <input
                 type="radio"
                 name="login-method"
-                [checked]="loginMethod === 'continue'"
-                (change)="loginMethod = 'continue'"
+                [checked]="loginMethod() === 'continue'"
+                (change)="loginMethod.set('continue')"
               />
               Continue as {{ currentUser.username }}
             </label>
@@ -49,24 +49,24 @@ import { StackLayout, StackPage } from "./util/StackLayout";
             <input
               type="radio"
               name="login-method"
-              [checked]="loginMethod === 'spectator'"
-              (change)="loginMethod = 'spectator'"
+              [checked]="loginMethod() === 'guest'"
+              (change)="loginMethod.set('guest')"
             />
-            Log in as spectator
+            Log in as guest
           </label>
 
           <label class="flex gap-1 items-center">
             <input
               type="radio"
               name="login-method"
-              [checked]="loginMethod === 'user'"
-              (change)="loginMethod = 'user'"
+              [checked]="loginMethod() === 'user'"
+              (change)="loginMethod.set('user')"
             />
             Log in with account
           </label>
         </div>
 
-        <stack-layout [selection]="loginMethod">
+        <stack-layout [selection]="loginMethod()">
           <stack-page id="continue">
             <button
               type="button"
@@ -129,7 +129,7 @@ import { StackLayout, StackPage } from "./util/StackLayout";
             </form>
           </stack-page>
 
-          <stack-page id="spectator">
+          <stack-page id="guest">
             <div class="flex flex-col gap-2">
               <p>
                 You will be able to view the data but you won't be able to make
@@ -138,7 +138,7 @@ import { StackLayout, StackPage } from "./util/StackLayout";
               </p>
               <button
                 type="button"
-                (click)="onSpectatorLogin()"
+                (click)="onGuestLogin()"
                 class="justify-center"
               >
                 Log In
@@ -157,15 +157,15 @@ export class LoginForm {
   readonly userService = inject(UserService);
   readonly router = inject(Router);
 
-  username = "";
-  password = "";
-  errorMessage = signal<string | null>(null);
-  loginMethod: "continue" | "user" | "spectator" = "continue";
+  readonly username = signal("");
+  readonly password = signal("");
+  readonly errorMessage = signal<string | null>(null);
+  readonly loginMethod = signal<"continue" | "user" | "guest">("continue");
 
   constructor() {
     effect(() => {
       const currentUser = this.userService.user();
-      this.loginMethod = currentUser ? "continue" : "user";
+      this.loginMethod.set(currentUser ? "continue" : "user");
     });
   }
 
@@ -179,8 +179,8 @@ export class LoginForm {
 
     const loginError = await new Promise<boolean>((resolve) => {
       Meteor.loginWithPassword(
-        { username: this.username },
-        this.password,
+        { username: this.username() },
+        this.password(),
         (error) => {
           resolve(!!error);
         },
@@ -194,7 +194,7 @@ export class LoginForm {
     }
   }
 
-  onSpectatorLogin(): void {
+  onGuestLogin(): void {
     Meteor.logout(() => this.navigateToApp());
   }
 

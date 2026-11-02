@@ -1,3 +1,4 @@
+import { getServerCollection } from "./getServerCollection";
 import { signal, type WritableSignal } from "@angular/core";
 import { ServerPojo } from "./ObjectsPool";
 import { PoolFactory } from "./PoolFactory";
@@ -131,16 +132,7 @@ export default abstract class MsoObject {
     }
     this.registering = true;
     try {
-      //copy init values for undefined properties
-      for (let propertyKey in this[symProperties] ?? {}) {
-        let initValue = this[symProperties][propertyKey].init;
-        if (
-          this.propertySignals[propertyKey]() === undefined &&
-          initValue !== undefined
-        ) {
-          this.propertySignals[propertyKey].set(initValue);
-        }
-      }
+      this.copyInitValues();
       await PoolFactory.instance
         .getPool(this.constructor as new () => MsoObject)
         .insert(this);
@@ -186,6 +178,13 @@ export default abstract class MsoObject {
         throw new Error(`Cannot change readonly property '${propertyKey}'.`);
       }
     }
+    if (Meteor.isServer) {
+      const collection = getServerCollection(meta.collectionName);
+      collection
+        .updateAsync(this._id, { $set: { [propertyKey]: value } })
+        .catch((e) => console.error(e));
+      return;
+    }
     Meteor.callAsync(
       meta.collectionName + ".update",
       this._id,
@@ -225,5 +224,35 @@ export default abstract class MsoObject {
       obj[propertyKey] = this.propertySignals[propertyKey]();
     }
     return obj;
+  }
+
+  /**
+   * Copies the initial values for all properties that have an `init` value defined
+   * are are still undefined.
+   */
+  protected copyInitValues(): void {
+    for (let propertyKey in this[symProperties] ?? {}) {
+      let initValue = this[symProperties][propertyKey].init;
+      let value = this.propertySignals[propertyKey]();
+
+      if (value === undefined) {
+        if (initValue !== undefined) {
+          value = initValue;
+        } else {
+          throw new Error(
+            `Property '${propertyKey}' is undefined and has no init value.`,
+          );
+        }
+      }
+      this.propertySignals[propertyKey].set(value);
+    }
+  }
+
+  /**
+   * This method is only mean to be called by PomidorUser
+   * because its registration process is special compared to other objects.
+   */
+  protected makeRegistered(): void {
+    this.registered = true;
   }
 }

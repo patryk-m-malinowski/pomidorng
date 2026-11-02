@@ -1,6 +1,6 @@
 import { Component, Input, inject } from "@angular/core";
 import { CdkPortalOutlet } from "@angular/cdk/portal";
-import { HeaderPortalService } from "/imports/ui/HeaderPortalService";
+import { HeaderPortalService } from "#pomidor/ui/HeaderPortalService";
 import { ThemeSelector } from "./ThemeSelector";
 import { SaveIndicator } from "./header/SaveIndicator";
 import CommonDialogsService from "./util/dialog/CommonDialogsService";
@@ -28,12 +28,14 @@ import { Router } from "@angular/router";
           </div>
         </div>
 
-        @if (isApp && username) {
+        @if (isApp) {
           <h3
             class="com-patrykmalinowski-pomidor-header-left__welcome-text text-nowrap"
           >
-            <span class="hidden lg:inline">Welcome, {{ username }}</span>
-            <span class="lg:hidden">{{ username }}</span>
+            <span class="hidden lg:inline"
+              >Welcome, {{ username ?? "Guest" }}</span
+            >
+            <span class="lg:hidden">{{ username ?? "Guest" }}</span>
           </h3>
         }
 
@@ -56,7 +58,7 @@ import { Router } from "@angular/router";
       </div>
     </div>
 
-    <div id="pomidor-portal-header-menu">
+    <div>
       <ng-template [cdkPortalOutlet]="headerPortalService.menuPortal()" />
     </div>
   `,
@@ -76,7 +78,7 @@ export class Header {
         "Are you sure you want to go back to the main page?",
       );
       if (!confirm) return;
-      this.router.navigateByUrl("/");
     }
+    this.router.navigateByUrl("/");
   }
 }

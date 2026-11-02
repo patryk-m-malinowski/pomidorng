@@ -113,8 +113,6 @@ fieldset {
     background-color: var(--avocado-color-background);
   }
 
-
-
   &-window {
     &__window {
       border: 1px solid var(--avocado-color-window-border);
@@ -174,12 +172,11 @@ fieldset {
       color: var(--avocado-color-text) !important;
     }
   }
+  &-tooltip__surface {
+    background-color: var(--avocado-color-box);
+    color: var(--avocado-color-text);
+    border: 1px solid var(--avocado-color-window-border);
+  }
 }
 
 //THIRD-PARTY
-.com-patrykmalinowski-pomidor-popup {
-  z-index: 1000;
-  border: 2px solid var(--avocado-color-box-border);
-  border-radius: 5px;
-  background-color: var(--avocado-color-box);
-}

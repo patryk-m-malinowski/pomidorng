@@ -199,4 +199,10 @@
   &-introduction {
     @include information;
   }
+  &-popup {
+    z-index: 1000;
+    border: 2px solid var(--avocado-color-box-border);
+    border-radius: 5px;
+    background-color: var(--avocado-color-box);
+  }
 }

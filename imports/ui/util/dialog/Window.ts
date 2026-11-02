@@ -1,35 +1,31 @@
 import {
   Component,
   ElementRef,
+  inject,
+  Injector,
+  afterNextRender,
   EventEmitter,
   HostListener,
   Input,
   Output,
   ViewChild,
   type AfterViewInit,
-  type OnChanges,
-  SimpleChanges,
+  type OnDestroy,
   signal,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { CdkConnectedOverlay, CdkOverlayOrigin } from "@angular/cdk/overlay";
+import { CdkPortal } from "@angular/cdk/portal";
+import { WindowPortalService } from "./WindowPortalService";
 
 @Component({
   selector: "window",
   standalone: true,
-  imports: [CommonModule, CdkConnectedOverlay, CdkOverlayOrigin],
+  imports: [CommonModule, CdkPortal],
   host: {
     class: "block",
   },
   template: `
-    <div cdkOverlayOrigin #windowOrigin="cdkOverlayOrigin" class="hidden"></div>
-
-    <ng-template
-      cdkConnectedOverlay
-      [cdkConnectedOverlayOrigin]="windowOrigin"
-      [cdkConnectedOverlayOpen]="isOpen"
-      [cdkConnectedOverlayHasBackdrop]="true"
-    >
+    <ng-template cdkPortal>
       <div class="com-patrykmalinowski-avocado-window">
         <div
           class="com-patrykmalinowski-avocado-window__blocker fixed inset-0 w-full h-full"
@@ -41,10 +37,10 @@ import { CdkConnectedOverlay, CdkOverlayOrigin } from "@angular/cdk/overlay";
           [ngStyle]="{
             left: left() + 'px',
             top: top() + 'px',
-            cursor: resizeCursor,
+            cursor: resizeCursor(),
           }"
           (mousemove)="onMouseMoveDialog($event)"
-          (mouseleave)="resizeCursor = 'default'"
+          (mouseleave)="resizeCursor.set('default')"
           (mousedown)="onResizeMouseDown($event)"
         >
           <div
@@ -69,55 +65,77 @@ import { CdkConnectedOverlay, CdkOverlayOrigin } from "@angular/cdk/overlay";
     ".com-patrykmalinowski-avocado-window__content { overflow: auto; }",
   ],
 })
-export class Window implements AfterViewInit, OnChanges {
+export class Window implements AfterViewInit, OnDestroy {
   @Input() title = "";
   @Input() className?: string;
   @Input() children?: unknown;
   @Input() initWidth?: string | number = "300px";
   @Input() initHeight?: string | number = "200px";
-  @Input() isOpen = false;
+  @Input()
+  get isOpen(): boolean {
+    return this._isOpen;
+  }
+  set isOpen(value: boolean) {
+    this._isOpen = value;
+    this.syncPortal();
+  }
+  private _isOpen = false;
+
   @Input() resizable = false;
   @Input() draggable = true;
   @Input() userCloseable = true;
   @Output() onClose = new EventEmitter<Event | void>();
 
+  @ViewChild(CdkPortal, { static: true })
+  private portal?: CdkPortal;
   @ViewChild("windowRoot")
-  set windowRootRef(value: ElementRef<HTMLElement> | undefined) {
-    this.windowRoot = value;
-    if (value && this.needsCenter) {
-      this.center();
-      this.needsCenter = false;
-    } else if (!value) {
-      this.needsCenter = false;
-    }
-  }
-
   private windowRoot?: ElementRef<HTMLElement>;
+  private readonly windowPortal = inject(WindowPortalService);
+  private readonly injector = inject(Injector);
 
-  public left = signal(0);
-  public top = signal(0);
+  readonly left = signal(0);
+  readonly top = signal(0);
+
   public windowWidth: number | null = null;
   public windowHeight: number | null = null;
-  public resizeCursor = "default";
+  readonly resizeCursor = signal("default");
 
   private dragState: DragState | null = null;
   private resizeState: ResizeState | null = null;
-  private needsCenter = false;
 
   private readonly EDGE_SIZE = 8;
 
   constructor(private readonly elementRef: ElementRef<HTMLElement>) {}
 
   ngAfterViewInit(): void {
-    if (this.isOpen) {
-      this.requestCenter();
+    this.syncPortal();
+  }
+
+  ngOnDestroy(): void {
+    this.windowPortal.remove(this.portal);
+  }
+
+  private syncPortal(): void {
+    if (!this.portal) return;
+    if (this._isOpen) {
+      this.windowPortal.add(this.portal);
+      // Runs after App has rendered the portal, when the window has its real size.
+      afterNextRender(() => this.center(), { injector: this.injector });
+    } else {
+      this.windowPortal.remove(this.portal);
     }
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes["isOpen"] && this.isOpen) {
-      this.requestCenter();
+  private center(): void {
+    const element = this.windowElement;
+    if (!element) {
+      if (this._isOpen) {
+        requestAnimationFrame(() => this.center());
+      }
+      return;
     }
+    this.left.set(Math.round((window.innerWidth - element.offsetWidth) / 2));
+    this.top.set(Math.round((window.innerHeight - element.offsetHeight) / 2));
   }
 
   @HostListener("document:keydown.escape", ["$event"])
@@ -130,7 +148,6 @@ export class Window implements AfterViewInit, OnChanges {
 
   open(): void {
     this.isOpen = true;
-    this.requestCenter();
   }
 
   close(): void {
@@ -275,47 +292,11 @@ export class Window implements AfterViewInit, OnChanges {
       cursor += "e";
     }
 
-    this.resizeCursor = cursor.length ? `${cursor}-resize` : "default";
+    this.resizeCursor.set(cursor.length ? `${cursor}-resize` : "default");
   }
 
   private get windowElement(): HTMLElement | null {
     return this.windowRoot?.nativeElement ?? null;
-  }
-
-  private requestCenter(): void {
-    if (this.windowElement) {
-      this.center();
-    } else {
-      this.needsCenter = true;
-    }
-  }
-
-  private center(): void {
-    const element = this.windowElement;
-    const width =
-      element?.clientWidth ??
-      this.parseSize(this.windowWidth ?? this.initWidth, 300);
-    const height =
-      element?.clientHeight ??
-      this.parseSize(this.windowHeight ?? this.initHeight, 200);
-    this.left.set((window.innerWidth - width) / 2);
-    this.top.set((window.innerHeight - height) / 2);
-  }
-
-  private parseSize(
-    value: string | number | null | undefined,
-    fallback: number,
-  ): number {
-    if (typeof value === "number") {
-      return value;
-    }
-    if (typeof value === "string") {
-      const parsed = Number.parseFloat(value);
-      if (!Number.isNaN(parsed)) {
-        return parsed;
-      }
-    }
-    return fallback;
   }
 
   private getResizeDirection(event: MouseEvent, rect: DOMRect): string | null {

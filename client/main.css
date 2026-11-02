@@ -1,488 +1,471 @@
 @import "./tailwind.css";
-body:not(.com-patrykmalinowski-avocado-dark-theme) {
-  --avocado-color-anchor: blue;
-  --avocado-color-background: #fffae6;
-  --avocado-color-border: black;
-  --avocado-color-box: white;
-  --avocado-color-box-border: #c2c2c2;
-  --avocado-color-button: #15951d;
-  --avocado-color-button-background-hover: #1cba26;
-  --avocado-color-button-background-pressed: #6cff76;
-  --avocado-color-button-border: white;
-  --avocado-color-button-disabled-background: #89b28c;
-  --avocado-color-button-disabled-text: #666;
-  --avocado-color-button-extra-text: black;
-  --avocado-color-button-extra-background: white;
-  --avocado-color-button-extra-background-hover: white;
-  --avocado-color-button-extra-border: var(--avocado-color-box-border);
-  --avocado-color-button-text: white;
-  --avocado-color-error-message: red;
-  --avocado-color-focus: var(--avocado-color-button);
-  --avocado-color-groupbox-border: black;
-  --avocado-color-menu-item-selected: var(--avocado-color-selection);
-  --avocado-color-menu-item-hover: #cfe8ff;
-  --avocado-color-selection: #92cbff;
-  --avocado-color-text: black;
-  --avocado-color-text-input-background: white;
-  --avocado-color-text-input-border: #ccc;
-  --avocado-color-text-on-window-header: white;
-  --avocado-color-toolbar: #ffdcaf;
-  --avocado-color-window-border: black;
-  --avocado-color-window-header: #d44d20;
-  --avocado-color-window-header-text: white;
-}
-
-body.com-patrykmalinowski-avocado-dark-theme {
-  --avocado-color-anchor: #9090ff;
-  --avocado-color-background: black;
-  --avocado-color-border: white;
-  --avocado-color-box: #232323;
-  --avocado-color-box-border: #545454;
-  --avocado-color-button: #006a07;
-  --avocado-color-button-background-pressed: #64d96c;
-  --avocado-color-button-background-hover: #2c9b33;
-  --avocado-color-button-border: var(--avocado-color-box-border);
-  --avocado-color-button-disabled-background: #203d22;
-  --avocado-color-button-disabled-text: #666;
-  --avocado-color-button-extra-background: black;
-  --avocado-color-button-extra-background-hover: #444;
-  --avocado-color-button-extra-border: white;
-  --avocado-color-button-extra-text: white;
-  --avocado-color-button-text: white;
-  --avocado-color-error-message: red;
-  --avocado-color-focus: var(--avocado-color-button);
-  --avocado-color-groupbox-border: #6d6d6d;
-  --avocado-color-menu-item-selected: var(--avocado-color-selection);
-  --avocado-color-menu-item-hover: #082947;
-  --avocado-color-selection: #35597a;
-  --avocado-color-text-input-background: #393939;
-  --avocado-color-text-input-border: var(--avocado-color-box-border);
-  --avocado-color-text-on-window-header: white;
-  --avocado-color-text: white;
-  --avocado-color-toolbar: var(--avocado-color-box);
-  --avocado-color-window-border: var(--avocado-color-box-border);
-  --avocado-color-window-header: #71311b;
-  --avocado-color-window-header-text: white;
-}
-
-body {
-  margin: 0;
-}
-
-html {
-  line-height: revert;
-}
-
-ul,
-li {
-  all: revert;
-  margin: 0;
-}
-
-a {
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-textarea {
-  line-height: 1;
-}
-
-p {
-  line-height: 1;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  line-height: 1;
-  font-size: revert;
-  font-weight: revert;
-}
-
-input {
-  display: block;
-}
-
-body {
-  font-family: avenir;
-  color: var(--avocado-color-text);
-}
-
-input[type=text]:read-only,
-input[type=password]:read-only,
-input[type=email]:read-only,
-textarea:read-only,
-input[type=checkbox]:disabled,
-input[type=radio]:disabled {
-  cursor: not-allowed;
-}
-
-input[type=text],
-input[type=password],
-input[type=email],
-textarea {
-  @apply h-7 p-2 rounded outline outline-(--avocado-color-text-input-border) bg-(--avocado-color-text-input-background) transition-colors focus-within:outline-2 focus-within:outline-(--avocado-color-focus);
-}
-
-button,
-select {
-  background-color: var(--avocado-color-button);
-  border: 1px solid var(--avocado-color-button-border);
-  border-radius: 5px;
-  color: var(--avocado-color-button-text);
-  font-family: avenir;
-  font-size: 16px;
-  padding: 5px;
-}
-
-button {
-  @apply flex items-center gap-1 cursor-pointer;
-  height: 30px;
-}
-button:hover:not(:disabled):not(:active) {
-  transition: background-color 0.2s ease;
-  background-color: var(--avocado-color-button-background-hover);
-}
-button:active {
-  background-color: var(--avocado-color-button-background-pressed);
-}
-button:disabled {
-  cursor: not-allowed;
-  background-color: var(--avocado-color-button-disabled-background);
-  color: var(--avocado-color-button-disabled-text);
-}
-
-input[type=checkbox] {
-  width: 20px;
-  height: 20px;
-  margin: 0;
-  cursor: pointer;
-}
-input[type=checkbox]:hover:not(:disabled) :not(:checked) {
-  background: hsl(216, 100%, 91%);
-}
-input[type=checkbox]:hover:not(:disabled) :checked {
-  background: #5d9eff;
-}
-
-input[type=checkbox]:after {
-  content: " ";
-  position: relative;
-  left: 40%;
-  top: 20%;
-  width: 15%;
-  height: 40%;
-  border: solid #fff;
-  border-width: 0 2px 2px 0;
-  transform: rotate(50deg);
-  display: none;
-}
-
-a {
-  color: var(--avocado-color-anchor);
-}
-
-fieldset {
-  border: 1px solid var(--avocado-color-groupbox-border);
-  border-radius: 5px;
-  padding: 10px;
-}
-fieldset > legend {
-  font-weight: bold;
-  @apply px-1;
-}
-
-.com-patrykmalinowski-avocado-web-app {
-  background-color: var(--avocado-color-background);
-}
-.com-patrykmalinowski-avocado-window__window {
-  border: 1px solid var(--avocado-color-window-border);
-  border-radius: 5px;
-  overflow: hidden;
-}
-.com-patrykmalinowski-avocado-window__header {
-  @apply p-1.5 pl-2 font-bold;
-  color: var(--avocado-color-text-on-window-header);
-  background-color: var(--avocado-color-window-header);
-}
-.com-patrykmalinowski-avocado-window__content {
-  @apply p-2 bg-(--avocado-color-background);
-}
-.com-patrykmalinowski-avocado-window__blocker {
-  background-color: rgba(0, 0, 0, 0.5);
-}
-.com-patrykmalinowski-avocado-toolbar {
-  background-color: var(--avocado-color-toolbar);
-}
-.com-patrykmalinowski-avocado-button-extra {
-  background: var(--avocado-color-button-extra-background);
-  color: var(--avocado-color-button-extra-text);
-  border: 1px solid var(--avocado-color-button-extra-border);
-}
-.com-patrykmalinowski-avocado-button-extra:hover:not(:disabled) {
-  background-color: var(--avocado-color-button-extra-background-hover);
-}
-.com-patrykmalinowski-avocado-error-message {
-  color: var(--avocado-color-error-message);
-}
-.com-patrykmalinowski-avocado-searchfield {
-  @apply h-7 p-2 rounded outline outline-(--avocado-color-text-input-border) bg-(--avocado-color-text-input-background) transition-colors focus-within:outline-2 focus-within:outline-(--avocado-color-focus);
-  @apply p-0;
-}
-.com-patrykmalinowski-avocado-searchfield__field {
-  @apply m-0 h-full border-0 bg-transparent px-2 pr-14 outline-none focus:outline-none;
-  color: var(--avocado-color-text) !important;
-}
-.com-patrykmalinowski-avocado-searchfield__btn-search, .com-patrykmalinowski-avocado-searchfield__btn-clear {
-  @apply cursor-pointer border-none;
-  background: transparent !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  @apply text-(--avocado-color-text);
-  color: var(--avocado-color-text) !important;
-}
-
-.com-patrykmalinowski-pomidor-popup {
-  z-index: 1000;
-  border: 2px solid var(--avocado-color-box-border);
-  border-radius: 5px;
-  background-color: var(--avocado-color-box);
-}
-
-.com-patrykmalinowski-avocado-web-app {
-  height: 100vh;
-  width: 100vw;
-  user-select: none;
-}
-.com-patrykmalinowski-avocado-toolbar {
-  @apply flex justify-start items-center flex-wrap gap-0.5 rounded p-1;
-}
-
-body:not(.com-patrykmalinowski-avocado-dark-theme) {
-  --pomidor-color-header: var(--avocado-color-window-header);
-  --pomidor-color-header-hover: #e66439;
-  --pomidor-color-header-selected: #e17f45;
-  --pomidor-color-header-text: var(--avocado-color-window-header-text);
-  --pomidor-color-login-box-border: black;
-  --pomidor-color-separator: #e17f45;
-  --pomidor-color-task-box-background: white;
-  --pomidor-color-tasks-col-done: #bcecbc;
-  --pomidor-color-tasks-col-inprogress: #F9F4B5;
-  --pomidor-color-tasks-col-todo: #fbd2d2;
-}
-
-body.com-patrykmalinowski-avocado-dark-theme {
-  --pomidor-color-header: var(--avocado-color-window-header);
-  --pomidor-color-header-hover: #82503f;
-  --pomidor-color-header-selected: #a1573d;
-  --pomidor-color-header-text: var(--avocado-color-window-header-text);
-  --pomidor-color-login-box-border: white;
-  --pomidor-color-separator: #4c4c4c;
-  --pomidor-color-task-box-background: var(--avocado-color-box);
-  --pomidor-color-tasks-col-done: #14450c;
-  --pomidor-color-tasks-col-inprogress: #353802;
-  --pomidor-color-tasks-col-todo: #400e0e;
-}
-
-.com-patrykmalinowski-pomidor-header {
-  @apply p-1 gap-1;
-  background-color: var(--pomidor-color-header);
-  color: var(--pomidor-color-header-text);
-}
-.com-patrykmalinowski-pomidor-header-left {
-  @apply gap-2;
-}
-.com-patrykmalinowski-pomidor-header-left__title-text {
-  font-weight: bold;
-  font-size: 1.5rem;
-}
-.com-patrykmalinowski-pomidor-header-theme-selector {
-  @apply p-1.5 rounded-lg;
-}
-.com-patrykmalinowski-pomidor-header-theme-selector:hover {
-  cursor: pointer;
-  background-color: var(--pomidor-color-header-hover);
-}
-.com-patrykmalinowski-pomidor-header-theme-selector--selected {
-  background-color: var(--pomidor-color-header-selected) !important;
-}
-.com-patrykmalinowski-pomidor-logo-in-box {
-  @apply p-1 rounded-xl;
-  overflow: hidden;
-  background-color: white;
-}
-.com-patrykmalinowski-pomidor-logo-in-box__logo {
-  width: 16px;
-  height: auto;
-}
-.com-patrykmalinowski-pomidor-header-tabs {
-  @apply items-center gap-2;
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-.com-patrykmalinowski-pomidor-header-tabs__button {
-  @apply p-1.5 rounded-lg;
-}
-.com-patrykmalinowski-pomidor-header-tabs__button:hover {
-  cursor: pointer;
-  background-color: var(--pomidor-color-header-hover);
-}
-.com-patrykmalinowski-pomidor-header-tabs__button--selected {
-  background-color: var(--pomidor-color-header-selected) !important;
-}
-.com-patrykmalinowski-pomidor-central-box {
-  @apply p-1;
-}
-.com-patrykmalinowski-pomidor-central-box__box {
-  @apply p-3 rounded-md border border-(--pomidor-color-login-box-border);
-}
-.com-patrykmalinowski-pomidor-tasks-editor-tasks-column {
-  border: 1px solid var(--avocado-color-box-border);
-  border-radius: 5px;
-  padding: 10px;
-}
-.com-patrykmalinowski-pomidor-tasks-editor-tasks-column__label {
-  font-weight: bold;
-}
-.com-patrykmalinowski-pomidor-tasks-editor-task-box {
-  background-color: var(--pomidor-color-task-box-background);
-  border-radius: 5px;
-  border: 1px solid var(--avocado-color-box-border);
-}
-.com-patrykmalinowski-pomidor-headermenu {
-  border-top: 3px solid var(--pomidor-color-header-text);
-  border-bottom: 3px solid var(--pomidor-color-header-text);
-}
-.com-patrykmalinowski-pomidor-headermenu__tab-button {
-  background-color: var(--avocado-color-window-header);
-  color: var(--pomidor-color-header-text);
-}
-.com-patrykmalinowski-pomidor-headermenu__tab-button:not(:first-child) {
-  border-top: 1px solid var(--pomidor-color-header-text);
-}
-.com-patrykmalinowski-pomidor-headermenu__tab-button--selected {
-  background-color: var(--pomidor-color-header-selected);
-}
-.com-patrykmalinowski-pomidor-users-editor-desktop__separator {
-  background-color: var(--pomidor-color-separator);
-}
-.com-patrykmalinowski-pomidor-users-list {
-  background: var(--avocado-color-box);
-  border: 1px solid var(--avocado-color-box-border);
-  border-radius: 5px;
-}
-.com-patrykmalinowski-pomidor-users-list__item:not(:last-child) {
-  border-bottom: 1px solid var(--avocado-color-box-border);
-}
-.com-patrykmalinowski-pomidor-table {
-  background-color: var(--avocado-color-box);
-  border: 1px solid var(--avocado-color-box-border);
-  border-radius: 5px;
-  border-spacing: 0;
-}
-.com-patrykmalinowski-pomidor-table thead {
-  background-color: var(--avocado-color-window-header);
-  color: var(--avocado-color-window-header-text);
-}
-.com-patrykmalinowski-pomidor-table th,
-.com-patrykmalinowski-pomidor-table td {
-  margin: 0;
-  padding: 5px;
-  border-bottom: 1px solid var(--avocado-color-box-border);
-  border-right: 1px solid var(--avocado-color-box-border);
-}
-.com-patrykmalinowski-pomidor-table th:last-child,
-.com-patrykmalinowski-pomidor-table td:last-child {
-  border-right: none;
-}
-.com-patrykmalinowski-pomidor-table tr:last-child td {
-  border-bottom: none;
-}
-.com-patrykmalinowski-pomidor-table__row--selected {
-  background-color: var(--avocado-color-selection);
-}
-.com-patrykmalinowski-pomidor-selectable-menu__item {
-  padding: 5px;
-}
-.com-patrykmalinowski-pomidor-selectable-menu__item:not(:last-child) {
-  border-bottom: 1px solid var(--avocado-color-box-border);
-}
-.com-patrykmalinowski-pomidor-selectable-menu__item:hover {
-  background-color: var(--avocado-color-menu-item-hover);
-}
-.com-patrykmalinowski-pomidor-selectable-menu__item--selected {
-  background-color: var(--avocado-color-menu-item-selected) !important;
-}
-.com-patrykmalinowski-pomidor-privacy-policy {
-  @apply select-text;
-}
-.com-patrykmalinowski-pomidor-privacy-policy p,
-.com-patrykmalinowski-pomidor-privacy-policy h1,
-.com-patrykmalinowski-pomidor-privacy-policy h2,
-.com-patrykmalinowski-pomidor-privacy-policy h3,
-.com-patrykmalinowski-pomidor-privacy-policy h4,
-.com-patrykmalinowski-pomidor-privacy-policy h5,
-.com-patrykmalinowski-pomidor-privacy-policy h6 {
-  font-size: revert;
-  margin: revert;
-  padding: revert;
-}
-.com-patrykmalinowski-pomidor-privacy-policy p,
-.com-patrykmalinowski-pomidor-privacy-policy li {
-  font-size: 20px;
-}
-.com-patrykmalinowski-pomidor-introduction {
-  @apply select-text;
-}
-.com-patrykmalinowski-pomidor-introduction p,
-.com-patrykmalinowski-pomidor-introduction h1,
-.com-patrykmalinowski-pomidor-introduction h2,
-.com-patrykmalinowski-pomidor-introduction h3,
-.com-patrykmalinowski-pomidor-introduction h4,
-.com-patrykmalinowski-pomidor-introduction h5,
-.com-patrykmalinowski-pomidor-introduction h6 {
-  font-size: revert;
-  margin: revert;
-  padding: revert;
-}
-.com-patrykmalinowski-pomidor-introduction p,
-.com-patrykmalinowski-pomidor-introduction li {
-  font-size: 20px;
-}
-
-.com-patrykmalinowski-pomidor-header {
-  display: flex;
-  justify-content: space-between;
-}
-.com-patrykmalinowski-pomidor-header-left {
-  display: flex;
-  align-items: center;
-}
-.com-patrykmalinowski-pomidor-page {
-  flex: 1;
-  overflow: hidden;
-}
-.com-patrykmalinowski-pomidor-page > * {
-  height: 100%;
-}
-.com-patrykmalinowski-pomidor-form {
-  @apply w-full flex flex-col justify-start gap-2;
-}
-.com-patrykmalinowski-pomidor-form label {
-  @apply flex flex-col gap-1;
-}
-.com-patrykmalinowski-pomidor-dialog-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 3px;
-}
-
-#webpack-dev-server-client-overlay {
-  display: none;
+@layer base {
+  body:not(.com-patrykmalinowski-avocado-dark-theme) {
+    --avocado-color-anchor: blue;
+    --avocado-color-background: #fffae6;
+    --avocado-color-border: black;
+    --avocado-color-box: white;
+    --avocado-color-box-border: #c2c2c2;
+    --avocado-color-button: #15951d;
+    --avocado-color-button-background-hover: #1cba26;
+    --avocado-color-button-background-pressed: #6cff76;
+    --avocado-color-button-border: white;
+    --avocado-color-button-disabled-background: #89b28c;
+    --avocado-color-button-disabled-text: #666;
+    --avocado-color-button-extra-text: black;
+    --avocado-color-button-extra-background: white;
+    --avocado-color-button-extra-background-hover: white;
+    --avocado-color-button-extra-border: var(--avocado-color-box-border);
+    --avocado-color-button-text: white;
+    --avocado-color-error-message: red;
+    --avocado-color-focus: var(--avocado-color-button);
+    --avocado-color-groupbox-border: black;
+    --avocado-color-menu-item-selected: var(--avocado-color-selection);
+    --avocado-color-menu-item-hover: #cfe8ff;
+    --avocado-color-selection: #92cbff;
+    --avocado-color-text: black;
+    --avocado-color-text-input-background: white;
+    --avocado-color-text-input-border: #ccc;
+    --avocado-color-text-on-window-header: white;
+    --avocado-color-toolbar: #ffdcaf;
+    --avocado-color-window-border: black;
+    --avocado-color-window-header: #d44d20;
+    --avocado-color-window-header-text: white;
+  }
+  body.com-patrykmalinowski-avocado-dark-theme {
+    --avocado-color-anchor: #9090ff;
+    --avocado-color-background: black;
+    --avocado-color-border: white;
+    --avocado-color-box: #232323;
+    --avocado-color-box-border: #545454;
+    --avocado-color-button: #006a07;
+    --avocado-color-button-background-pressed: #64d96c;
+    --avocado-color-button-background-hover: #2c9b33;
+    --avocado-color-button-border: var(--avocado-color-box-border);
+    --avocado-color-button-disabled-background: #203d22;
+    --avocado-color-button-disabled-text: #666;
+    --avocado-color-button-extra-background: black;
+    --avocado-color-button-extra-background-hover: #444;
+    --avocado-color-button-extra-border: white;
+    --avocado-color-button-extra-text: white;
+    --avocado-color-button-text: white;
+    --avocado-color-error-message: red;
+    --avocado-color-focus: var(--avocado-color-button);
+    --avocado-color-groupbox-border: #6d6d6d;
+    --avocado-color-menu-item-selected: var(--avocado-color-selection);
+    --avocado-color-menu-item-hover: #082947;
+    --avocado-color-selection: #35597a;
+    --avocado-color-text-input-background: #393939;
+    --avocado-color-text-input-border: var(--avocado-color-box-border);
+    --avocado-color-text-on-window-header: white;
+    --avocado-color-text: white;
+    --avocado-color-toolbar: var(--avocado-color-box);
+    --avocado-color-window-border: var(--avocado-color-box-border);
+    --avocado-color-window-header: #71311b;
+    --avocado-color-window-header-text: white;
+  }
+  body {
+    margin: 0;
+  }
+  html {
+    line-height: revert;
+  }
+  ul,
+  li {
+    all: revert;
+    margin: 0;
+  }
+  a {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  textarea {
+    line-height: 1;
+  }
+  p {
+    line-height: 1;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    line-height: 1;
+    font-size: revert;
+    font-weight: revert;
+  }
+  input {
+    display: block;
+  }
+  body {
+    font-family: avenir;
+    color: var(--avocado-color-text);
+  }
+  input[type=text]:read-only,
+  input[type=password]:read-only,
+  input[type=email]:read-only,
+  textarea:read-only,
+  input[type=checkbox]:disabled,
+  input[type=radio]:disabled {
+    cursor: not-allowed;
+  }
+  input[type=text],
+  input[type=password],
+  input[type=email],
+  textarea {
+    @apply h-7 p-2 rounded outline outline-(--avocado-color-text-input-border) bg-(--avocado-color-text-input-background) transition-colors focus-within:outline-2 focus-within:outline-(--avocado-color-focus);
+  }
+  button,
+  select {
+    background-color: var(--avocado-color-button);
+    border: 1px solid var(--avocado-color-button-border);
+    border-radius: 5px;
+    color: var(--avocado-color-button-text);
+    font-family: avenir;
+    font-size: 16px;
+    padding: 5px;
+  }
+  button {
+    @apply flex items-center gap-1 cursor-pointer;
+    height: 30px;
+  }
+  button:hover:not(:disabled):not(:active) {
+    transition: background-color 0.2s ease;
+    background-color: var(--avocado-color-button-background-hover);
+  }
+  button:active {
+    background-color: var(--avocado-color-button-background-pressed);
+  }
+  button:disabled {
+    cursor: not-allowed;
+    background-color: var(--avocado-color-button-disabled-background);
+    color: var(--avocado-color-button-disabled-text);
+  }
+  input[type=checkbox] {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    cursor: pointer;
+  }
+  input[type=checkbox]:hover:not(:disabled) :not(:checked) {
+    background: hsl(216, 100%, 91%);
+  }
+  input[type=checkbox]:hover:not(:disabled) :checked {
+    background: #5d9eff;
+  }
+  input[type=checkbox]:after {
+    content: " ";
+    position: relative;
+    left: 40%;
+    top: 20%;
+    width: 15%;
+    height: 40%;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(50deg);
+    display: none;
+  }
+  a {
+    color: var(--avocado-color-anchor);
+  }
+  fieldset {
+    border: 1px solid var(--avocado-color-groupbox-border);
+    border-radius: 5px;
+    padding: 10px;
+  }
+  fieldset > legend {
+    font-weight: bold;
+    @apply px-1;
+  }
+  .com-patrykmalinowski-avocado-web-app {
+    background-color: var(--avocado-color-background);
+  }
+  .com-patrykmalinowski-avocado-window__window {
+    border: 1px solid var(--avocado-color-window-border);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .com-patrykmalinowski-avocado-window__header {
+    @apply p-1.5 pl-2 font-bold;
+    color: var(--avocado-color-text-on-window-header);
+    background-color: var(--avocado-color-window-header);
+  }
+  .com-patrykmalinowski-avocado-window__content {
+    @apply p-2 bg-(--avocado-color-background);
+  }
+  .com-patrykmalinowski-avocado-window__blocker {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  .com-patrykmalinowski-avocado-toolbar {
+    background-color: var(--avocado-color-toolbar);
+  }
+  .com-patrykmalinowski-avocado-button-extra {
+    background: var(--avocado-color-button-extra-background);
+    color: var(--avocado-color-button-extra-text);
+    border: 1px solid var(--avocado-color-button-extra-border);
+  }
+  .com-patrykmalinowski-avocado-button-extra:hover:not(:disabled) {
+    background-color: var(--avocado-color-button-extra-background-hover);
+  }
+  .com-patrykmalinowski-avocado-error-message {
+    color: var(--avocado-color-error-message);
+  }
+  .com-patrykmalinowski-avocado-searchfield {
+    @apply h-7 p-2 rounded outline outline-(--avocado-color-text-input-border) bg-(--avocado-color-text-input-background) transition-colors focus-within:outline-2 focus-within:outline-(--avocado-color-focus);
+    @apply p-0;
+  }
+  .com-patrykmalinowski-avocado-searchfield__field {
+    @apply m-0 h-full border-0 bg-transparent px-2 pr-14 outline-none focus:outline-none;
+    color: var(--avocado-color-text) !important;
+  }
+  .com-patrykmalinowski-avocado-searchfield__btn-search, .com-patrykmalinowski-avocado-searchfield__btn-clear {
+    @apply cursor-pointer border-none;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    @apply text-(--avocado-color-text);
+    color: var(--avocado-color-text) !important;
+  }
+  .com-patrykmalinowski-avocado-tooltip__surface {
+    background-color: var(--avocado-color-box);
+    color: var(--avocado-color-text);
+    border: 1px solid var(--avocado-color-window-border);
+  }
+  .com-patrykmalinowski-avocado-web-app {
+    height: 100vh;
+    width: 100vw;
+    user-select: none;
+  }
+  .com-patrykmalinowski-avocado-toolbar {
+    @apply flex justify-start items-center flex-wrap gap-0.5 rounded p-1;
+  }
+}
+@layer base {
+  body:not(.com-patrykmalinowski-avocado-dark-theme) {
+    --pomidor-color-header: var(--avocado-color-window-header);
+    --pomidor-color-header-hover: #e66439;
+    --pomidor-color-header-selected: #e17f45;
+    --pomidor-color-header-text: var(--avocado-color-window-header-text);
+    --pomidor-color-login-box-border: black;
+    --pomidor-color-separator: #e17f45;
+    --pomidor-color-task-box-background: white;
+    --pomidor-color-tasks-col-done: #bcecbc;
+    --pomidor-color-tasks-col-inprogress: #F9F4B5;
+    --pomidor-color-tasks-col-todo: #fbd2d2;
+  }
+  body.com-patrykmalinowski-avocado-dark-theme {
+    --pomidor-color-header: var(--avocado-color-window-header);
+    --pomidor-color-header-hover: #82503f;
+    --pomidor-color-header-selected: #a1573d;
+    --pomidor-color-header-text: var(--avocado-color-window-header-text);
+    --pomidor-color-login-box-border: white;
+    --pomidor-color-separator: #4c4c4c;
+    --pomidor-color-task-box-background: var(--avocado-color-box);
+    --pomidor-color-tasks-col-done: #14450c;
+    --pomidor-color-tasks-col-inprogress: #353802;
+    --pomidor-color-tasks-col-todo: #400e0e;
+  }
+  .com-patrykmalinowski-pomidor-header {
+    @apply p-1 gap-1;
+    background-color: var(--pomidor-color-header);
+    color: var(--pomidor-color-header-text);
+  }
+  .com-patrykmalinowski-pomidor-header-left {
+    @apply gap-2;
+  }
+  .com-patrykmalinowski-pomidor-header-left__title-text {
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+  .com-patrykmalinowski-pomidor-header-theme-selector {
+    @apply p-1.5 rounded-lg;
+  }
+  .com-patrykmalinowski-pomidor-header-theme-selector:hover {
+    cursor: pointer;
+    background-color: var(--pomidor-color-header-hover);
+  }
+  .com-patrykmalinowski-pomidor-header-theme-selector--selected {
+    background-color: var(--pomidor-color-header-selected) !important;
+  }
+  .com-patrykmalinowski-pomidor-logo-in-box {
+    @apply p-1 rounded-xl;
+    overflow: hidden;
+    background-color: white;
+  }
+  .com-patrykmalinowski-pomidor-logo-in-box__logo {
+    width: 16px;
+    height: auto;
+  }
+  .com-patrykmalinowski-pomidor-header-tabs {
+    @apply items-center gap-2;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  .com-patrykmalinowski-pomidor-header-tabs__button {
+    @apply p-1.5 rounded-lg;
+  }
+  .com-patrykmalinowski-pomidor-header-tabs__button:hover {
+    cursor: pointer;
+    background-color: var(--pomidor-color-header-hover);
+  }
+  .com-patrykmalinowski-pomidor-header-tabs__button--selected {
+    background-color: var(--pomidor-color-header-selected) !important;
+  }
+  .com-patrykmalinowski-pomidor-central-box {
+    @apply p-1;
+  }
+  .com-patrykmalinowski-pomidor-central-box__box {
+    @apply p-3 rounded-md border border-(--pomidor-color-login-box-border);
+  }
+  .com-patrykmalinowski-pomidor-tasks-editor-tasks-column {
+    border: 1px solid var(--avocado-color-box-border);
+    border-radius: 5px;
+    padding: 10px;
+  }
+  .com-patrykmalinowski-pomidor-tasks-editor-tasks-column__label {
+    font-weight: bold;
+  }
+  .com-patrykmalinowski-pomidor-tasks-editor-task-box {
+    background-color: var(--pomidor-color-task-box-background);
+    border-radius: 5px;
+    border: 1px solid var(--avocado-color-box-border);
+  }
+  .com-patrykmalinowski-pomidor-headermenu {
+    border-top: 3px solid var(--pomidor-color-header-text);
+    border-bottom: 3px solid var(--pomidor-color-header-text);
+  }
+  .com-patrykmalinowski-pomidor-headermenu__tab-button {
+    background-color: var(--avocado-color-window-header);
+    color: var(--pomidor-color-header-text);
+  }
+  .com-patrykmalinowski-pomidor-headermenu__tab-button:not(:first-child) {
+    border-top: 1px solid var(--pomidor-color-header-text);
+  }
+  .com-patrykmalinowski-pomidor-headermenu__tab-button--selected {
+    background-color: var(--pomidor-color-header-selected);
+  }
+  .com-patrykmalinowski-pomidor-users-editor-desktop__separator {
+    background-color: var(--pomidor-color-separator);
+  }
+  .com-patrykmalinowski-pomidor-users-list {
+    background: var(--avocado-color-box);
+    border: 1px solid var(--avocado-color-box-border);
+    border-radius: 5px;
+  }
+  .com-patrykmalinowski-pomidor-users-list__item:not(:last-child) {
+    border-bottom: 1px solid var(--avocado-color-box-border);
+  }
+  .com-patrykmalinowski-pomidor-table {
+    background-color: var(--avocado-color-box);
+    border: 1px solid var(--avocado-color-box-border);
+    border-radius: 5px;
+    border-spacing: 0;
+  }
+  .com-patrykmalinowski-pomidor-table thead {
+    background-color: var(--avocado-color-window-header);
+    color: var(--avocado-color-window-header-text);
+  }
+  .com-patrykmalinowski-pomidor-table th,
+  .com-patrykmalinowski-pomidor-table td {
+    margin: 0;
+    padding: 5px;
+    border-bottom: 1px solid var(--avocado-color-box-border);
+    border-right: 1px solid var(--avocado-color-box-border);
+  }
+  .com-patrykmalinowski-pomidor-table th:last-child,
+  .com-patrykmalinowski-pomidor-table td:last-child {
+    border-right: none;
+  }
+  .com-patrykmalinowski-pomidor-table tr:last-child td {
+    border-bottom: none;
+  }
+  .com-patrykmalinowski-pomidor-table__row--selected {
+    background-color: var(--avocado-color-selection);
+  }
+  .com-patrykmalinowski-pomidor-selectable-menu__item {
+    padding: 5px;
+  }
+  .com-patrykmalinowski-pomidor-selectable-menu__item:not(:last-child) {
+    border-bottom: 1px solid var(--avocado-color-box-border);
+  }
+  .com-patrykmalinowski-pomidor-selectable-menu__item:hover {
+    background-color: var(--avocado-color-menu-item-hover);
+  }
+  .com-patrykmalinowski-pomidor-selectable-menu__item--selected {
+    background-color: var(--avocado-color-menu-item-selected) !important;
+  }
+  .com-patrykmalinowski-pomidor-privacy-policy {
+    @apply select-text;
+  }
+  .com-patrykmalinowski-pomidor-privacy-policy p,
+  .com-patrykmalinowski-pomidor-privacy-policy h1,
+  .com-patrykmalinowski-pomidor-privacy-policy h2,
+  .com-patrykmalinowski-pomidor-privacy-policy h3,
+  .com-patrykmalinowski-pomidor-privacy-policy h4,
+  .com-patrykmalinowski-pomidor-privacy-policy h5,
+  .com-patrykmalinowski-pomidor-privacy-policy h6 {
+    font-size: revert;
+    margin: revert;
+    padding: revert;
+  }
+  .com-patrykmalinowski-pomidor-privacy-policy p,
+  .com-patrykmalinowski-pomidor-privacy-policy li {
+    font-size: 20px;
+  }
+  .com-patrykmalinowski-pomidor-introduction {
+    @apply select-text;
+  }
+  .com-patrykmalinowski-pomidor-introduction p,
+  .com-patrykmalinowski-pomidor-introduction h1,
+  .com-patrykmalinowski-pomidor-introduction h2,
+  .com-patrykmalinowski-pomidor-introduction h3,
+  .com-patrykmalinowski-pomidor-introduction h4,
+  .com-patrykmalinowski-pomidor-introduction h5,
+  .com-patrykmalinowski-pomidor-introduction h6 {
+    font-size: revert;
+    margin: revert;
+    padding: revert;
+  }
+  .com-patrykmalinowski-pomidor-introduction p,
+  .com-patrykmalinowski-pomidor-introduction li {
+    font-size: 20px;
+  }
+  .com-patrykmalinowski-pomidor-popup {
+    z-index: 1000;
+    border: 2px solid var(--avocado-color-box-border);
+    border-radius: 5px;
+    background-color: var(--avocado-color-box);
+  }
+  .com-patrykmalinowski-pomidor-header {
+    display: flex;
+    justify-content: space-between;
+  }
+  .com-patrykmalinowski-pomidor-header-left {
+    display: flex;
+    align-items: center;
+  }
+  .com-patrykmalinowski-pomidor-page {
+    flex: 1;
+    overflow: hidden;
+  }
+  .com-patrykmalinowski-pomidor-page > * {
+    height: 100%;
+  }
+  .com-patrykmalinowski-pomidor-form {
+    @apply w-full flex flex-col justify-start gap-2;
+  }
+  .com-patrykmalinowski-pomidor-form label {
+    @apply flex flex-col gap-1;
+  }
+  .com-patrykmalinowski-pomidor-dialog-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 3px;
+  }
+  #webpack-dev-server-client-overlay {
+    display: none;
+  }
 }
 
 /*# sourceMappingURL=main.css.map */

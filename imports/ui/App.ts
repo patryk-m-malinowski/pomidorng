@@ -1,23 +1,35 @@
 import {
   Component,
   OnDestroy,
+  OnInit,
   effect,
   inject,
   signal,
   ViewChild,
 } from "@angular/core";
+import { MeteorErrorDlg } from "./util/dialog/MeteorErrorDlg";
 import { OfflineDlg } from "./OfflineDlg";
-import PendingRequestsService from "/imports/client/PendingRequestsService";
+import PendingRequestsService from "#pomidor/client/PendingRequestsService";
 import UserService from "./UserService";
 import { NavigationEnd, Router, RouterOutlet } from "@angular/router";
 import { Header } from "./Header";
 import { CommonDialogs } from "./util/dialog/CommonDialogs";
+import { CdkPortalOutlet } from "@angular/cdk/portal";
 import { Subscription } from "rxjs";
+import { GlobalErrorHandler } from "./GlobalErrorHandler";
+import { WindowPortalService } from "./util/dialog/WindowPortalService";
 
 @Component({
   selector: "app-root",
   standalone: true,
-  imports: [RouterOutlet, OfflineDlg, Header, CommonDialogs],
+  imports: [
+    CdkPortalOutlet,
+    RouterOutlet,
+    OfflineDlg,
+    Header,
+    CommonDialogs,
+    MeteorErrorDlg,
+  ],
   template: ` <div
     class="com-patrykmalinowski-avocado-web-app flex flex-col h-screen w-screen"
   >
@@ -25,12 +37,18 @@ import { Subscription } from "rxjs";
       [username]="userService.user()?.username"
       [isApp]="isApp()"
     ></header>
+    <div id="window-portal">
+      @for (portal of windowPortalService.windows(); track portal) {
+        <ng-template [cdkPortalOutlet]="portal" />
+      }
+    </div>
     <router-outlet></router-outlet>
     <offline-dlg></offline-dlg>
     <common-dialogs></common-dialogs>
+    <meteor-error-dlg></meteor-error-dlg>
   </div>`,
 })
-export class App implements OnDestroy {
+export class App implements OnInit, OnDestroy {
   title = "Angular Meteor App";
   userService: UserService = inject(UserService);
   pendingRequestsService: PendingRequestsService = inject(
@@ -40,8 +58,34 @@ export class App implements OnDestroy {
   readonly isApp = signal(this.router.url.startsWith("/pomidorapp"));
   private readonly routerEventsSubscription: Subscription;
 
+  readonly windowPortalService = inject(WindowPortalService);
+
   @ViewChild(OfflineDlg)
   offlineDlg!: OfflineDlg;
+
+  @ViewChild(MeteorErrorDlg)
+  errorDlg!: MeteorErrorDlg;
+
+  private errorShown = false;
+
+  private readonly showError = (error: unknown) => {
+    if (this.errorShown) return;
+    if (!this.errorDlg) {
+      // Dialog view not initialized yet (error during first render)
+      setTimeout(() => this.showError(error), 50);
+      return;
+    }
+    this.errorShown = true;
+    this.errorDlg.open(error ?? "Unknown error");
+  };
+
+  private readonly rejectionHandler = (evt: PromiseRejectionEvent) => {
+    this.showError(evt.reason);
+  };
+
+  private readonly errorHandler = (evt: ErrorEvent) => {
+    this.showError(evt.error ?? evt.message);
+  };
 
   constructor() {
     this.routerEventsSubscription = this.router.events.subscribe((event) => {
@@ -62,7 +106,14 @@ export class App implements OnDestroy {
     });
   }
 
+  ngOnInit(): void {
+    window.addEventListener("unhandledrejection", this.rejectionHandler);
+    GlobalErrorHandler.listener = this.showError;
+  }
+
   ngOnDestroy(): void {
+    window.removeEventListener("unhandledrejection", this.rejectionHandler);
+    GlobalErrorHandler.listener = undefined;
     this.routerEventsSubscription.unsubscribe();
   }
 }
