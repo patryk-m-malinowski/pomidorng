@@ -4,11 +4,11 @@ import { DialogButtons } from "./DialogButtons";
 import { Window } from "./Window";
 
 @Component({
-  selector: "meteor-error-dlg",
+  selector: "pom-meteor-error-dlg",
   standalone: true,
   imports: [Window, DialogButtons],
   template: `
-    <window title="Runtime Error" className="w-150" [userCloseable]="false">
+    <pom-window title="Runtime Error" className="w-150" [userCloseable]="false">
       <div class="flex flex-col gap-1.5">
         <div class="flex gap-2">
           <span class="material-icons text-2xl">cancel</span>
@@ -23,9 +23,9 @@ import { Window } from "./Window";
           </p>
         </div>
         <textarea class="min-h-100" readonly [value]="detail()"></textarea>
-        <dialog-buttons show="ok" (press)="reload()"></dialog-buttons>
+        <pom-dialog-buttons show="ok" (press)="reload()"></pom-dialog-buttons>
       </div>
-    </window>
+    </pom-window>
   `,
 })
 export class MeteorErrorDlg {

@@ -7,7 +7,7 @@ import { UserProfileEditor } from "./UserProfileEditor";
  * A component that allows the user to edit their own profile.
  */
 @Component({
-  selector: "my-profile-editor",
+  selector: "pom-my-profile-editor",
   standalone: true,
   imports: [RouterLink, UserProfileEditor],
   host: { class: "block p-2" },
@@ -16,7 +16,7 @@ import { UserProfileEditor } from "./UserProfileEditor";
       @if (loading()) {
         <p>Loading...</p>
       } @else if (userService.user(); as user) {
-        <user-profile-editor [value]="user" />
+        <pom-user-profile-editor [value]="user" />
       } @else {
         <p>
           You are a guest.

@@ -7,7 +7,7 @@ import CommonDialogsService from "./util/dialog/CommonDialogsService";
 import { Router } from "@angular/router";
 
 @Component({
-  selector: "header",
+  selector: "pom-header",
   standalone: true,
   imports: [CdkPortalOutlet, ThemeSelector, SaveIndicator],
   template: `
@@ -41,7 +41,7 @@ import { Router } from "@angular/router";
 
         @if (isApp) {
           <div class="border-l border-l-white h-[80%]"></div>
-          <save-indicator />
+          <pom-save-indicator />
         }
       </div>
 
@@ -52,9 +52,9 @@ import { Router } from "@angular/router";
           <ng-template [cdkPortalOutlet]="headerPortalService.rightPortal()" />
         </div>
         <div class="border-l border-l-white h-[80%]"></div>
-        <theme-selector
+        <pom-theme-selector
           class="h-full flex items-center justify-center"
-        ></theme-selector>
+        ></pom-theme-selector>
       </div>
     </div>
 

@@ -10,14 +10,14 @@ import { PromptDlg } from "./PromptDlg";
 import CommonDialogsService from "./CommonDialogsService";
 
 @Component({
-  selector: "common-dialogs",
+  selector: "pom-common-dialogs",
   standalone: true,
   imports: [CommonDlg, PromptDlg],
   template: `
-    <common-dlg #confirmDlg buttons="yes,no" icon="help"></common-dlg>
-    <common-dlg #errorDlg buttons="ok" icon="error"></common-dlg>
-    <prompt-dlg #promptDlg></prompt-dlg>
-    <common-dlg #infoDlg buttons="ok" icon="info"></common-dlg>
+    <pom-common-dlg #confirmDlg buttons="yes,no" icon="help"></pom-common-dlg>
+    <pom-common-dlg #errorDlg buttons="ok" icon="error"></pom-common-dlg>
+    <pom-prompt-dlg #promptDlg></pom-prompt-dlg>
+    <pom-common-dlg #infoDlg buttons="ok" icon="info"></pom-common-dlg>
   `,
 })
 export class CommonDialogs implements AfterViewInit, OnDestroy {

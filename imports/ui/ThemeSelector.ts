@@ -7,7 +7,7 @@ import ThemeService, {
 import { MatIcon } from "@angular/material/icon";
 
 @Component({
-  selector: "theme-selector",
+  selector: "pom-theme-selector",
   standalone: true,
   imports: [MatIcon, CdkConnectedOverlay, CdkOverlayOrigin],
   template: `

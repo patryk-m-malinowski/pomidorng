@@ -20,7 +20,7 @@ import { GlobalErrorHandler } from "./GlobalErrorHandler";
 import { WindowPortalService } from "./util/dialog/WindowPortalService";
 
 @Component({
-  selector: "app-root",
+  selector: "pom-root",
   standalone: true,
   imports: [
     CdkPortalOutlet,
@@ -33,19 +33,19 @@ import { WindowPortalService } from "./util/dialog/WindowPortalService";
   template: ` <div
     class="com-patrykmalinowski-avocado-web-app flex flex-col h-screen w-screen"
   >
-    <header
+    <pom-header
       [username]="userService.user()?.username"
       [isApp]="isApp()"
-    ></header>
+    ></pom-header>
     <div id="window-portal">
       @for (portal of windowPortalService.windows(); track portal) {
         <ng-template [cdkPortalOutlet]="portal" />
       }
     </div>
     <router-outlet></router-outlet>
-    <offline-dlg></offline-dlg>
-    <common-dialogs></common-dialogs>
-    <meteor-error-dlg></meteor-error-dlg>
+    <pom-offline-dlg></pom-offline-dlg>
+    <pom-common-dialogs></pom-common-dialogs>
+    <pom-meteor-error-dlg></pom-meteor-error-dlg>
   </div>`,
 })
 export class App implements OnInit, OnDestroy {

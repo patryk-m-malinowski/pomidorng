@@ -3,7 +3,7 @@ import { MatIcon } from "@angular/material/icon";
 import PendingRequestsService from "#pomidor/client/PendingRequestsService";
 
 @Component({
-  selector: "save-indicator",
+  selector: "pom-save-indicator",
   standalone: true,
   imports: [MatIcon],
   template: `

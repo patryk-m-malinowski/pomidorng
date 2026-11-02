@@ -2,17 +2,17 @@ import { Component, ViewChild } from "@angular/core";
 import { Window } from "#pomidor/ui/util/dialog/Window";
 
 @Component({
-  selector: "offline-dlg",
+  selector: "pom-offline-dlg",
   standalone: true,
   imports: [Window],
   template: `
-    <window [userCloseable]="false" title="Connection Lost" className="w-100">
+    <pom-window [userCloseable]="false" title="Connection Lost" className="w-100">
       <p>
         Your connection to the server has been lost. This means your changes
         will not be synced and you will not see others' changes. Please check
         your internet connection and wait until you are reconnected...
       </p>
-    </window>
+    </pom-window>
   `,
 })
 export class OfflineDlg {

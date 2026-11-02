@@ -30,7 +30,7 @@ import { NewUserDialog } from "./NewUserDialog";
 import { ChangePasswordDlg } from "./ChangePasswordDlg";
 
 @Component({
-  selector: "users-editor",
+  selector: "pom-users-editor",
   standalone: true,
   imports: [
     CommonModule,
@@ -58,8 +58,8 @@ import { ChangePasswordDlg } from "./ChangePasswordDlg";
         <ng-container *ngTemplateOutlet="desktopDetails" />
       </div>
     }
-    <new-user-dlg #newUserDlg />
-    <change-password-dlg
+    <pom-new-user-dlg #newUserDlg />
+    <pom-change-password-dlg
       #changePasswordDlg
       [isAdmin]="true"
       [username]="selectedUser()?.username ?? ''"
@@ -74,7 +74,7 @@ import { ChangePasswordDlg } from "./ChangePasswordDlg";
           </div>
           <div class="flex-1">
             @if (detailsUser(); as user) {
-              <user-editor [value]="user" />
+              <pom-user-editor [value]="user" />
             } @else {
               <p>User not found</p>
             }
@@ -100,7 +100,7 @@ import { ChangePasswordDlg } from "./ChangePasswordDlg";
             <div
               class="com-patrykmalinowski-pomidor-users-editor__editor-container flex-1 p-2"
             >
-              <user-editor [value]="user" />
+              <pom-user-editor [value]="user" />
             </div>
           </div>
         }
@@ -138,19 +138,19 @@ import { ChangePasswordDlg } from "./ChangePasswordDlg";
         </div>
 
         <div class="flex-1 min-h-0">
-          <pomidor-table
+          <pom-pomidor-table
             [selection]="selectedUserId() ? [selectedUserId()!] : []"
             selectionMode="single"
             (selectionChange)="selectedUserId.set($event[0] ?? null)"
           >
-            <pomidor-columns>
-              <pomidor-column id="username" title="Username" [width]="180" />
-              <pomidor-column id="playgroundUser" title="Playground User" />
-              <pomidor-column id="createdAt" title="Date Joined" />
-              <pomidor-column id="lastLogin" title="Last Login" />
-            </pomidor-columns>
+            <pom-pomidor-columns>
+              <pom-pomidor-column id="username" title="Username" [width]="180" />
+              <pom-pomidor-column id="playgroundUser" title="Playground User" />
+              <pom-pomidor-column id="createdAt" title="Date Joined" />
+              <pom-pomidor-column id="lastLogin" title="Last Login" />
+            </pom-pomidor-columns>
             @for (user of users(); track user._id) {
-              <pomidor-row [id]="user._id">
+              <pom-pomidor-row [id]="user._id">
                 <td class="overflow-hidden">{{ user.username }}</td>
                 <td>{{ user.playgroundUser ? "Yes" : "No" }}</td>
                 <td>{{ formatDate(user.createdAt) }}</td>
@@ -159,9 +159,9 @@ import { ChangePasswordDlg } from "./ChangePasswordDlg";
                     user.lastLogin ? formatDate(user.lastLogin, true) : "Never"
                   }}
                 </td>
-              </pomidor-row>
+              </pom-pomidor-row>
             }
-          </pomidor-table>
+          </pom-pomidor-table>
         </div>
       </div>
     </ng-template>

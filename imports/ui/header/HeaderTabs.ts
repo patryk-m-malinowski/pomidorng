@@ -4,7 +4,7 @@ import { MatIcon } from "@angular/material/icon";
 import type { Page } from "./Page";
 
 @Component({
-  selector: "header-tabs",
+  selector: "pom-header-tabs",
   standalone: true,
   imports: [CommonModule, MatIcon],
   template: `

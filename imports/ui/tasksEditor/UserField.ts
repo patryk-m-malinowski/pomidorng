@@ -8,7 +8,7 @@ import { asyncComputedSignal } from "../../client/util/asyncComputedSignal";
  * Shows the name of a user (and optionally a coloured icon) given the user's ID.
  */
 @Component({
-  selector: "user-field",
+  selector: "pom-user-field",
   standalone: true,
   imports: [MatIcon],
   template: `

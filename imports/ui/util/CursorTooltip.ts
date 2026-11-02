@@ -11,7 +11,7 @@ import {
 } from "@angular/core";
 
 @Component({
-  selector: "cursor-tooltip-surface",
+  selector: "pom-cursor-tooltip-surface",
   standalone: true,
   template: `<div class="com-patrykmalinowski-avocado-tooltip">
     <div

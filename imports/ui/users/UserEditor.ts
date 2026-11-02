@@ -6,7 +6,7 @@ import UserService from "#pomidor/ui/UserService";
 import { formatDate } from "#pomidor/util/PomidorGlobals";
 
 @Component({
-  selector: "user-editor",
+  selector: "pom-user-editor",
   standalone: true,
   imports: [FormsModule, CheckBox],
   template: `
@@ -29,7 +29,7 @@ import { formatDate } from "#pomidor/util/PomidorGlobals";
           Last Logged In:
           <span>{{ lastLogin() }}</span>
         </p>
-        <check-box
+        <pom-check-box
           label="Admin"
           [disabled]="!canEditAdmin()"
           [readOnly]="!!currentUser() && !currentUser()!.isAdmin"

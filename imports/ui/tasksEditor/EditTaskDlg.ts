@@ -17,7 +17,7 @@ import { SubmittableDlg } from "#pomidor/ui/util/dialog/SubmittableDlg";
 export type EditTaskDlgMode = "new" | "edit";
 
 @Component({
-  selector: "edit-task-dlg",
+  selector: "pom-edit-task-dlg",
   standalone: true,
   imports: [
     CommonModule,
@@ -30,7 +30,7 @@ export type EditTaskDlgMode = "new" | "edit";
     CursorTooltip,
   ],
   template: `
-    <submittable-dlg [title]="mode() === 'new' ? 'New Task' : 'Edit Task'">
+    <pom-submittable-dlg [title]="mode() === 'new' ? 'New Task' : 'Edit Task'">
       @if (task(); as currentTask) {
         <div class="flex flex-col gap-2.5">
           <div class="com-patrykmalinowski-pomidor-form">
@@ -66,7 +66,7 @@ export type EditTaskDlgMode = "new" | "edit";
             <label class="flex gap-1 items-center">
               Created by:
               @if (currentTask.createdBy; as createdBy) {
-                <user-field [userId]="createdBy" [showIcon]="true" />
+                <pom-user-field [userId]="createdBy" [showIcon]="true" />
               } @else {
                 <span>Unknown</span>
               }
@@ -78,7 +78,7 @@ export type EditTaskDlgMode = "new" | "edit";
             <div class="flex gap-1 items-center justify-start w-64">
               <div class="flex-1 overflow-hidden">
                 @if (currentTask.assignedTo; as assignedTo) {
-                  <user-field [userId]="assignedTo" [showIcon]="true" />
+                  <pom-user-field [userId]="assignedTo" [showIcon]="true" />
                 } @else {
                   <span class="italic">Unassigned</span>
                 }
@@ -104,14 +104,14 @@ export type EditTaskDlgMode = "new" | "edit";
             </div>
           </div>
 
-          <dialog-buttons
+          <pom-dialog-buttons
             [show]="mode() === 'new' ? ['ok', 'cancel'] : ['close']"
             (press)="onDlgButton($event)"
-          ></dialog-buttons>
+          ></pom-dialog-buttons>
         </div>
       }
-    </submittable-dlg>
-    <select-user-dlg />
+    </pom-submittable-dlg>
+    <pom-select-user-dlg />
   `,
 })
 export class EditTaskDlg {

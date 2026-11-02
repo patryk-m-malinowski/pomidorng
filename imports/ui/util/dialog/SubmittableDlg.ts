@@ -2,13 +2,13 @@ import { Component, Input, ViewChild } from "@angular/core";
 import { Window } from "./Window";
 
 @Component({
-  selector: "submittable-dlg",
+  selector: "pom-submittable-dlg",
   standalone: true,
   imports: [Window],
   template: `
-    <window [title]="title" (onClose)="onWindowClose()">
+    <pom-window [title]="title" (onClose)="onWindowClose()">
       <ng-content></ng-content>
-    </window>
+    </pom-window>
   `,
 })
 export class SubmittableDlg<T = unknown> {

@@ -3,11 +3,11 @@ import { ButtonKind, DialogButtons } from "./DialogButtons";
 import { SubmittableDlg } from "./SubmittableDlg";
 
 @Component({
-  selector: "common-dlg",
+  selector: "pom-common-dlg",
   standalone: true,
   imports: [SubmittableDlg, DialogButtons],
   template: `
-    <submittable-dlg [title]="title()">
+    <pom-submittable-dlg [title]="title()">
       <div class="flex flex-col gap-1.5">
         <div class="flex gap-2.5 items-start">
           <span class="material-icons text-2xl border-2 rounded-full">{{
@@ -15,12 +15,12 @@ import { SubmittableDlg } from "./SubmittableDlg";
           }}</span>
           <p class="max-w-lg">{{ message() }}</p>
         </div>
-        <dialog-buttons
+        <pom-dialog-buttons
           [show]="buttons"
           (press)="onPress($event)"
-        ></dialog-buttons>
+        ></pom-dialog-buttons>
       </div>
-    </submittable-dlg>
+    </pom-submittable-dlg>
   `,
 })
 export class CommonDlg {

@@ -20,7 +20,7 @@ const BUTTON_IDS = Object.keys(BUTTON_INFOS) as ButtonKind[];
 export type ButtonKind = keyof typeof BUTTON_INFOS;
 
 @Component({
-  selector: "dialog-buttons",
+  selector: "pom-dialog-buttons",
   standalone: true,
   imports: [MatIconModule],
   template: `

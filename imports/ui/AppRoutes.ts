@@ -8,7 +8,7 @@ import { RegistrationForm } from "./RegistrationForm";
 
 @Component({
   standalone: true,
-  selector: "app-not-found",
+  selector: "pom-not-found",
   template: `<div>Page not found</div>`,
 })
 class NotFound {}

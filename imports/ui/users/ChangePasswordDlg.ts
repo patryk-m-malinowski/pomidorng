@@ -11,7 +11,7 @@ export interface ChangePasswordResult {
 }
 
 @Component({
-  selector: "change-password-dlg",
+  selector: "pom-change-password-dlg",
   standalone: true,
   imports: [
     FormsModule,
@@ -22,7 +22,7 @@ export interface ChangePasswordResult {
     StackPage,
   ],
   template: `
-    <submittable-dlg title="Change Password">
+    <pom-submittable-dlg title="Change Password">
       <form class="com-patrykmalinowski-pomidor-form" (ngSubmit)="onSubmit()">
         <input
           hidden
@@ -34,7 +34,7 @@ export interface ChangePasswordResult {
         @if (!isAdmin) {
           <label>
             Current Password:
-            <password-editor
+            <pom-password-editor
               name="currentPassword"
               autocomplete="current-password"
               [required]="true"
@@ -44,7 +44,7 @@ export interface ChangePasswordResult {
         }
         <label>
           New Password:
-          <password-editor
+          <pom-password-editor
             name="newPassword"
             autocomplete="new-password"
             [required]="true"
@@ -53,26 +53,26 @@ export interface ChangePasswordResult {
         </label>
         <label>
           Confirm Password:
-          <password-editor
+          <pom-password-editor
             name="confirmPassword"
             autocomplete="new-password"
             [required]="true"
             [(ngModel)]="confirmPassword"
           />
         </label>
-        <stack-layout [selection]="errorMessage()">
-          <stack-page id="passwords-do-not-match">
+        <pom-stack-layout [selection]="errorMessage()">
+          <pom-stack-page id="passwords-do-not-match">
             <p class="com-patrykmalinowski-avocado-error-message">
               Passwords do not match.
             </p>
-          </stack-page>
-        </stack-layout>
-        <dialog-buttons
+          </pom-stack-page>
+        </pom-stack-layout>
+        <pom-dialog-buttons
           [show]="['ok', 'cancel']"
           (press)="onDlgButton($event)"
-        ></dialog-buttons>
+        ></pom-dialog-buttons>
       </form>
-    </submittable-dlg>
+    </pom-submittable-dlg>
   `,
 })
 export class ChangePasswordDlg {

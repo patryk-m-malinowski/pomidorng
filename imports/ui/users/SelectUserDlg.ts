@@ -12,11 +12,11 @@ import { SubmittableDlg } from "#pomidor/ui/util/dialog/SubmittableDlg";
  * A dialog which allows the user to select a user from the system.
  */
 @Component({
-  selector: "select-user-dlg",
+  selector: "pom-select-user-dlg",
   standalone: true,
   imports: [SubmittableDlg, DialogButtons, UserField],
   template: `
-    <submittable-dlg title="Select User">
+    <pom-submittable-dlg title="Select User">
       <div class="flex flex-col gap-2.5">
         <div
           class="com-patrykmalinowski-pomidor-users-list overflow-y-scroll flex flex-col max-h-75"
@@ -26,7 +26,7 @@ import { SubmittableDlg } from "#pomidor/ui/util/dialog/SubmittableDlg";
               class="com-patrykmalinowski-pomidor-users-list__item flex cursor-pointer flex-col gap-1 p-1"
               (mousedown)="dialog.submit(user._id)"
             >
-              <user-field
+              <pom-user-field
                 className="min-w-32"
                 [userId]="user._id"
                 [showIcon]="true"
@@ -34,9 +34,9 @@ import { SubmittableDlg } from "#pomidor/ui/util/dialog/SubmittableDlg";
             </div>
           }
         </div>
-        <dialog-buttons [show]="['cancel']" (press)="dialog.submit(null)" />
+        <pom-dialog-buttons [show]="['cancel']" (press)="dialog.submit(null)" />
       </div>
-    </submittable-dlg>
+    </pom-submittable-dlg>
   `,
 })
 export class SelectUserDlg implements OnInit, OnDestroy {

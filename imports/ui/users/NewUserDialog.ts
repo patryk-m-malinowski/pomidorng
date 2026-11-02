@@ -10,7 +10,7 @@ import { SubmittableDlg } from "#pomidor/ui/util/dialog/SubmittableDlg";
  * A dialog that allows the user to create a new user.
  */
 @Component({
-  selector: "new-user-dlg",
+  selector: "pom-new-user-dlg",
   standalone: true,
   imports: [
     FormsModule,
@@ -21,7 +21,7 @@ import { SubmittableDlg } from "#pomidor/ui/util/dialog/SubmittableDlg";
     StackPage,
   ],
   template: `
-    <submittable-dlg title="New User">
+    <pom-submittable-dlg title="New User">
       <form
         class="com-patrykmalinowski-pomidor-form flex flex-col gap-1.5 max-w-96"
         (ngSubmit)="onSubmit()"
@@ -39,7 +39,7 @@ import { SubmittableDlg } from "#pomidor/ui/util/dialog/SubmittableDlg";
         </label>
         <label>
           Password:
-          <password-editor
+          <pom-password-editor
             name="password"
             autocomplete="new-password"
             [required]="true"
@@ -49,7 +49,7 @@ import { SubmittableDlg } from "#pomidor/ui/util/dialog/SubmittableDlg";
         </label>
         <label>
           Confirm Password:
-          <password-editor
+          <pom-password-editor
             name="confirmPassword"
             autocomplete="new-password"
             [required]="true"
@@ -57,24 +57,24 @@ import { SubmittableDlg } from "#pomidor/ui/util/dialog/SubmittableDlg";
             [(ngModel)]="confirmPassword"
           />
         </label>
-        <stack-layout [selection]="errorMessage()">
-          <stack-page id="passwords-do-not-match">
+        <pom-stack-layout [selection]="errorMessage()">
+          <pom-stack-page id="passwords-do-not-match">
             <p class="com-patrykmalinowski-avocado-error-message">
               Passwords do not match.
             </p>
-          </stack-page>
-          <stack-page id="username-taken">
+          </pom-stack-page>
+          <pom-stack-page id="username-taken">
             <p class="com-patrykmalinowski-avocado-error-message">
               The username is already taken. Please choose a different one.
             </p>
-          </stack-page>
-        </stack-layout>
-        <dialog-buttons
+          </pom-stack-page>
+        </pom-stack-layout>
+        <pom-dialog-buttons
           [show]="['ok', 'cancel']"
           (press)="onDlgButton($event)"
-        ></dialog-buttons>
+        ></pom-dialog-buttons>
       </form>
-    </submittable-dlg>
+    </pom-submittable-dlg>
   `,
 })
 export class NewUserDialog {

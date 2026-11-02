@@ -9,7 +9,7 @@ import { PasswordEditor } from "./util/PasswordEditor";
 import { StackLayout, StackPage } from "./util/StackLayout";
 
 @Component({
-  selector: "registration-form",
+  selector: "pom-registration-form",
   standalone: true,
   imports: [
     CommonModule,
@@ -20,7 +20,7 @@ import { StackLayout, StackPage } from "./util/StackLayout";
     PasswordEditor,
   ],
   template: `
-    <central-box>
+    <pom-central-box>
       <div class="flex flex-col items-stretch gap-2">
         <h2 class="text-center font-bold">Register</h2>
 
@@ -39,24 +39,24 @@ import { StackLayout, StackPage } from "./util/StackLayout";
 
           <label>
             Password:
-            <password-editor
+            <pom-password-editor
               name="password"
               autocomplete="current-password"
               [maxLength]="usersConstants.MAX_PASSWORD_LENGTH"
               required
               [(ngModel)]="password"
-            ></password-editor>
+            ></pom-password-editor>
           </label>
 
           <label>
             Confirm Password:
-            <password-editor
+            <pom-password-editor
               name="confirmPassword"
               autocomplete="current-password"
               [maxLength]="usersConstants.MAX_PASSWORD_LENGTH"
               required
               [(ngModel)]="confirmPassword"
-            ></password-editor>
+            ></pom-password-editor>
           </label>
 
           <p>By registering, please be aware that:</p>
@@ -92,30 +92,30 @@ import { StackLayout, StackPage } from "./util/StackLayout";
             </p>
           </div>
 
-          <stack-layout [selection]="errorMessage()">
-            <stack-page id="username-taken">
+          <pom-stack-layout [selection]="errorMessage()">
+            <pom-stack-page id="username-taken">
               <p class="com-patrykmalinowski-avocado-error-message">
                 The username is already taken. Please choose a different one.
               </p>
-            </stack-page>
-            <stack-page id="passwords-do-not-match">
+            </pom-stack-page>
+            <pom-stack-page id="passwords-do-not-match">
               <p class="com-patrykmalinowski-avocado-error-message">
                 Passwords do not match.
               </p>
-            </stack-page>
-            <stack-page id="account-limit-reached">
+            </pom-stack-page>
+            <pom-stack-page id="account-limit-reached">
               <p class="com-patrykmalinowski-avocado-error-message">
                 You have reached the limit of {{ accountLimit }} user accounts
                 from your IP address. Please delete some of your accounts in
                 order to be able to create more.
               </p>
-            </stack-page>
-            <stack-page id="unknown-error">
+            </pom-stack-page>
+            <pom-stack-page id="unknown-error">
               <p class="com-patrykmalinowski-avocado-error-message">
                 An unknown error occurred. Please try again later.
               </p>
-            </stack-page>
-          </stack-layout>
+            </pom-stack-page>
+          </pom-stack-layout>
 
           <button type="submit" class="justify-center">Register!</button>
           <button
@@ -127,7 +127,7 @@ import { StackLayout, StackPage } from "./util/StackLayout";
           </button>
         </form>
       </div>
-    </central-box>
+    </pom-central-box>
   `,
   host: {
     class: "h-full",

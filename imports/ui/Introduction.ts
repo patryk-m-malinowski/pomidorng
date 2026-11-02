@@ -3,7 +3,7 @@ import { RouterLink } from "@angular/router";
 
 @Component({
   standalone: true,
-  selector: "app-introduction",
+  selector: "pom-introduction",
   imports: [RouterLink],
   host: { class: "block flex-1 min-h-0 overflow-y-auto" },
   template: `

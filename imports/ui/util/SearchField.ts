@@ -4,7 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { MatIcon } from "@angular/material/icon";
 
 @Component({
-  selector: "search-field",
+  selector: "pom-search-field",
   standalone: true,
   imports: [CommonModule, FormsModule, MatIcon],
   template: `

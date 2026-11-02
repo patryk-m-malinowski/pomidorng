@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, Input } from "@angular/core";
 
 @Component({
-  selector: "tasks-column",
+  selector: "pom-tasks-column",
   standalone: true,
   imports: [CommonModule],
   template: `

@@ -9,7 +9,7 @@ import { PasswordEditor } from "./util/PasswordEditor";
 import { StackLayout, StackPage } from "./util/StackLayout";
 
 @Component({
-  selector: "login-form",
+  selector: "pom-login-form",
   standalone: true,
   imports: [
     CommonModule,
@@ -20,7 +20,7 @@ import { StackLayout, StackPage } from "./util/StackLayout";
     PasswordEditor,
   ],
   template: `
-    <central-box>
+    <pom-central-box>
       <div class="flex flex-col items-stretch gap-2">
         <h2 class="text-center font-bold">Welcome to Pomidor!</h2>
         <p>
@@ -66,8 +66,8 @@ import { StackLayout, StackPage } from "./util/StackLayout";
           </label>
         </div>
 
-        <stack-layout [selection]="loginMethod()">
-          <stack-page id="continue">
+        <pom-stack-layout [selection]="loginMethod()">
+          <pom-stack-page id="continue">
             <button
               type="button"
               (click)="navigateToApp()"
@@ -75,9 +75,9 @@ import { StackLayout, StackPage } from "./util/StackLayout";
             >
               Continue
             </button>
-          </stack-page>
+          </pom-stack-page>
 
-          <stack-page id="user">
+          <pom-stack-page id="user">
             <form
               class="com-patrykmalinowski-pomidor-form"
               (ngSubmit)="onSubmit()"
@@ -95,28 +95,28 @@ import { StackLayout, StackPage } from "./util/StackLayout";
 
               <label>
                 Password:
-                <password-editor
+                <pom-password-editor
                   name="password"
                   autocomplete="current-password"
                   [(ngModel)]="password"
                   required
-                ></password-editor>
+                ></pom-password-editor>
               </label>
 
-              <stack-layout [selection]="errorMessage()">
-                <stack-page id="invalid-username-password">
+              <pom-stack-layout [selection]="errorMessage()">
+                <pom-stack-page id="invalid-username-password">
                   <p class="com-patrykmalinowski-avocado-error-message">
                     The account matching the username and password does not
                     exist. Please make sure you've entered the details
                     correctly.
                   </p>
-                </stack-page>
-                <stack-page id="unknown-error">
+                </pom-stack-page>
+                <pom-stack-page id="unknown-error">
                   <p class="com-patrykmalinowski-avocado-error-message">
                     An unknown error occurred. Please try again later.
                   </p>
-                </stack-page>
-              </stack-layout>
+                </pom-stack-page>
+              </pom-stack-layout>
 
               <button class="justify-center" type="submit">Log In</button>
               <button
@@ -127,9 +127,9 @@ import { StackLayout, StackPage } from "./util/StackLayout";
                 Create Account
               </button>
             </form>
-          </stack-page>
+          </pom-stack-page>
 
-          <stack-page id="guest">
+          <pom-stack-page id="guest">
             <div class="flex flex-col gap-2">
               <p>
                 You will be able to view the data but you won't be able to make
@@ -144,10 +144,10 @@ import { StackLayout, StackPage } from "./util/StackLayout";
                 Log In
               </button>
             </div>
-          </stack-page>
-        </stack-layout>
+          </pom-stack-page>
+        </pom-stack-layout>
       </div>
-    </central-box>
+    </pom-central-box>
   `,
   host: {
     class: "h-full",

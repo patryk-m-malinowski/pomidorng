@@ -18,7 +18,7 @@ import { CdkPortal } from "@angular/cdk/portal";
 import { WindowPortalService } from "./WindowPortalService";
 
 @Component({
-  selector: "window",
+  selector: "pom-window",
   standalone: true,
   imports: [CommonModule, CdkPortal],
   host: {

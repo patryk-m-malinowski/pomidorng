@@ -3,12 +3,12 @@
  * Selection mode is currently single, but may be extended to multiple selection.
  *
  * Usage:
- * <pomidor-table [selection]="ids" (selectionChange)="...">
- *   <pomidor-columns>
- *     <pomidor-column id="name" title="Name" [width]="180" />
- *   </pomidor-columns>
- *   <pomidor-row id="1"><td>...</td></pomidor-row>
- * </pomidor-table>
+ * <pom-pomidor-table [selection]="ids" (selectionChange)="...">
+ *   <pom-pomidor-columns>
+ *     <pom-pomidor-column id="name" title="Name" [width]="180" />
+ *   </pom-pomidor-columns>
+ *   <pom-pomidor-row id="1"><td>...</td></pom-pomidor-row>
+ * </pom-pomidor-table>
  */
 import { NgTemplateOutlet } from "@angular/common";
 import {
@@ -25,10 +25,10 @@ import {
 } from "@angular/core";
 
 /**
- * Specification of a column of the table. Must be a child of <pomidor-columns>.
+ * Specification of a column of the table. Must be a child of <pom-pomidor-columns>.
  */
 @Component({
-  selector: "pomidor-column",
+  selector: "pom-pomidor-column",
   standalone: true,
   template: "",
 })
@@ -55,10 +55,10 @@ export class Column {
 }
 
 /**
- * Groups the <pomidor-column> children.
+ * Groups the <pom-pomidor-column> children.
  */
 @Component({
-  selector: "pomidor-columns",
+  selector: "pom-pomidor-columns",
   standalone: true,
   template: "",
 })
@@ -70,7 +70,7 @@ export class Columns {
  * A row of the table. Its children must be <td> elements, one per column.
  */
 @Component({
-  selector: "pomidor-row",
+  selector: "pom-pomidor-row",
   standalone: true,
   template: `<ng-template #content><ng-content /></ng-template>`,
 })
@@ -88,7 +88,7 @@ interface SortState {
 }
 
 @Component({
-  selector: "pomidor-table",
+  selector: "pom-pomidor-table",
   standalone: true,
   imports: [NgTemplateOutlet],
   host: {

@@ -13,7 +13,7 @@ import { MyProfileEditor } from "#pomidor/ui/users/MyProfileEditor";
 import { UsersEditor } from "#pomidor/ui/users/UsersEditor";
 
 @Component({
-  selector: "main-ui",
+  selector: "pom-main-ui",
   standalone: true,
   imports: [CommonModule, CdkPortal, HeaderTabs, HeaderMenu, MatIcon],
   host: {
@@ -33,14 +33,14 @@ import { UsersEditor } from "#pomidor/ui/users/UsersEditor";
 
     <ng-template cdkPortal #rightPortal="cdkPortal">
       <div class="hidden lg:block h-full">
-        <header-tabs
+        <pom-header-tabs
           [pages]="pages"
           [(selectedPage)]="selectedPage"
-        ></header-tabs>
+        ></pom-header-tabs>
       </div>
 
       <div class="flex lg:hidden items-center justify-center h-full">
-        <header-menu [(open)]="isMenuOpen"></header-menu>
+        <pom-header-menu [(open)]="isMenuOpen"></pom-header-menu>
       </div>
     </ng-template>
 

@@ -5,7 +5,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
  * A labelled checkbox. Works with ngModel / form controls.
  */
 @Component({
-  selector: "check-box",
+  selector: "pom-check-box",
   standalone: true,
   template: `
     <label class="flex flex-row gap-1" style="flex-direction: row">

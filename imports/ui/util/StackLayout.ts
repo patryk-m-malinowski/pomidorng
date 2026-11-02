@@ -9,7 +9,7 @@ import {
 } from "@angular/core";
 
 @Component({
-  selector: "stack-page",
+  selector: "pom-stack-page",
   standalone: true,
   template: "<ng-content></ng-content>",
 })
@@ -42,7 +42,7 @@ export class StackPage {
 }
 
 @Component({
-  selector: "stack-layout",
+  selector: "pom-stack-layout",
   standalone: true,
   template: `
     <div style="display: grid;">

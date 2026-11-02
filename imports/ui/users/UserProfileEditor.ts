@@ -13,7 +13,7 @@ import { ChangePasswordDlg } from "./ChangePasswordDlg";
  * A component that allows the user to edit a system user's details.
  */
 @Component({
-  selector: "user-profile-editor",
+  selector: "pom-user-profile-editor",
   standalone: true,
   imports: [MatIcon, CursorTooltip, ChangePasswordDlg],
   template: `
@@ -60,7 +60,7 @@ import { ChangePasswordDlg } from "./ChangePasswordDlg";
         </fieldset>
       </div>
     </div>
-    <change-password-dlg [isAdmin]="false" [username]="value().username" />
+    <pom-change-password-dlg [isAdmin]="false" [username]="value().username" />
   `,
 })
 export class UserProfileEditor {

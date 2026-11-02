@@ -3,7 +3,7 @@ import { Component, model } from "@angular/core";
 import { MatIcon } from "@angular/material/icon";
 
 @Component({
-  selector: "header-menu",
+  selector: "pom-header-menu",
   standalone: true,
   imports: [CommonModule, MatIcon],
   template: `

@@ -4,11 +4,11 @@ import { DialogButtons } from "./DialogButtons";
 import { SubmittableDlg } from "./SubmittableDlg";
 
 @Component({
-  selector: "prompt-dlg",
+  selector: "pom-prompt-dlg",
   standalone: true,
   imports: [SubmittableDlg, DialogButtons, FormsModule],
   template: `
-    <submittable-dlg [title]="title()">
+    <pom-submittable-dlg [title]="title()">
       <form
         class="com-patrykmalinowski-pomidor-form flex flex-col gap-1.5"
         (submit)="onSubmit($event)"
@@ -21,12 +21,12 @@ import { SubmittableDlg } from "./SubmittableDlg";
           [attr.maxlength]="maxLength ?? null"
           required
         />
-        <dialog-buttons
+        <pom-dialog-buttons
           [show]="['ok', 'cancel']"
           (cancel)="onCancel()"
-        ></dialog-buttons>
+        ></pom-dialog-buttons>
       </form>
-    </submittable-dlg>
+    </pom-submittable-dlg>
   `,
 })
 export class PromptDlg {

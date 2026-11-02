@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 
 @Component({
   standalone: true,
-  selector: "app-privacy-policy",
+  selector: "pom-privacy-policy",
   host: { class: "block flex-1 min-h-0 overflow-y-auto" },
   template: `
     <div class="com-patrykmalinowski-pomidor-privacy-policy p-5">

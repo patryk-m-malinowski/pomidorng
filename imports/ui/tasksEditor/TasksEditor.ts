@@ -24,7 +24,7 @@ import CommonDialogsService from "../util/dialog/CommonDialogsService";
 import UserService from "../UserService";
 
 @Component({
-  selector: "tasks-editor",
+  selector: "pom-tasks-editor",
   standalone: true,
   imports: [CommonModule, SearchField, TasksColumn, TaskBox, EditTaskDlg],
   template: `
@@ -34,13 +34,13 @@ import UserService from "../UserService";
           class="com-patrykmalinowski-avocado-toolbar flex items-center gap-2"
         >
           <div class="w-full max-w-sm flex-none">
-            <search-field
+            <pom-search-field
               placeholder="Search tasks"
               [value]="searchDraft()"
               (valueChange)="searchDraft.set($event)"
               (search)="searchQuery.set($event)"
               (clear)="clearSearch()"
-            ></search-field>
+            ></pom-search-field>
           </div>
 
           <button
@@ -54,50 +54,50 @@ import UserService from "../UserService";
 
         <div class="flex-1 overflow-x-scroll w-full">
           <div class="h-full flex gap-2.5 justify-center min-w-fit">
-            <tasks-column
+            <pom-tasks-column
               label="To Do"
               color="var(--pomidor-color-tasks-col-todo)"
             >
               @for (task of tasksTodo(); track task._id) {
-                <task-box
+                <pom-task-box
                   [task]="task"
                   [editTask]="openEditTask"
                   [deleteTask]="deleteTask"
-                ></task-box>
+                ></pom-task-box>
               }
-            </tasks-column>
+            </pom-tasks-column>
 
-            <tasks-column
+            <pom-tasks-column
               label="In Progress"
               color="var(--pomidor-color-tasks-col-inprogress)"
             >
               @for (task of tasksInProgress(); track task._id) {
-                <task-box
+                <pom-task-box
                   [task]="task"
                   [editTask]="openEditTask"
                   [deleteTask]="deleteTask"
-                ></task-box>
+                ></pom-task-box>
               }
-            </tasks-column>
+            </pom-tasks-column>
 
-            <tasks-column
+            <pom-tasks-column
               label="Done"
               color="var(--pomidor-color-tasks-col-done)"
             >
               @for (task of tasksDone(); track task._id) {
-                <task-box
+                <pom-task-box
                   [task]="task"
                   [editTask]="openEditTask"
                   [deleteTask]="deleteTask"
-                ></task-box>
+                ></pom-task-box>
               }
-            </tasks-column>
+            </pom-tasks-column>
           </div>
         </div>
       </div>
     </div>
 
-    <edit-task-dlg #editTaskDlg></edit-task-dlg>
+    <pom-edit-task-dlg #editTaskDlg></pom-edit-task-dlg>
   `,
 })
 export class TasksEditor implements AfterViewInit, OnInit, OnDestroy {

@@ -8,7 +8,7 @@ import type { Task } from "#pomidor/data/tasks/Task";
 import { CursorTooltip } from "../util/CursorTooltip";
 
 @Component({
-  selector: "task-box",
+  selector: "pom-task-box",
   standalone: true,
   imports: [CommonModule, MatIcon, CursorTooltip, UserField],
   template: `
@@ -60,7 +60,7 @@ import { CursorTooltip } from "../util/CursorTooltip";
       <h3 class="font-bold text-xl">{{ task.title }}</h3>
 
       @if (task.assignedTo) {
-        <user-field userId="{{ task.assignedTo }}"></user-field>
+        <pom-user-field userId="{{ task.assignedTo }}"></pom-user-field>
       } @else {
         <div class="flex items-center gap-1">
           <mat-icon>account_circle</mat-icon>
