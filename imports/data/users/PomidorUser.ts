@@ -25,7 +25,7 @@ export class PomidorUser extends MsoObject {
    * Users which were created manually in the users editor as opposed to registration.
    * Non admin users can only delete playground users
    */
-  @MsoObject.Property({ client: "hidden", init: false })
+  @MsoObject.Property({ init: false })
   declare playgroundUser: boolean;
 
   public async registerInAccounts({
