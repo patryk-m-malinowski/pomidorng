@@ -25,3 +25,4 @@ mongo-playground.js
 tsconfig.tsbuildinfo
 pomidorng.code-workspace
 release/
+mongo.js
