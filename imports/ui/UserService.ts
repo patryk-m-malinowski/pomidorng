@@ -9,18 +9,15 @@ import { Tracker } from "meteor/tracker";
 export default class UserService {
   public user = signal<PomidorUser | null>(null);
   constructor() {
-    let loading = true;
-    Meteor.subscribe("users.allUsers", {
-      onReady: () => (loading = false),
-    });
     Tracker.autorun(() => {
+      let handle = Meteor.subscribe("users.allUsers");
       const pojo = getPomidorUser();
-      if (loading) return;
+      if (!handle.ready()) return;
       this.user.set(
         pojo
           ? PoolFactory.instance
               .getPool(PomidorUser)
-              .get(pojo as unknown as ServerPojo)
+              .createOrUpdate(pojo as unknown as ServerPojo)
           : null,
       );
     });

@@ -11,58 +11,82 @@ export default class ObjectsPool<T extends MsoObject> {
    * We use a weak registry to ensure that duplicate objects with the same ID are not created;
    */
   private itemsById: Record<string, WeakRef<T>> = {};
+  private pendingRegistrations: Promise<void>[] = [];
+  //We need this to delete entries for object which have been garbage-collected.
   private finalizationRegistry: FinalizationRegistry<string> =
     new FinalizationRegistry((id: string) => {
       delete this.itemsById[id];
     });
 
-  public get(data: ServerPojo): T {
+  public getById(id: string): T | undefined {
+    const obj = this.itemsById[id]?.deref();
+    return obj;
+  }
+
+  /**
+   * Creates a new object if it doesn't exist in the pool with the data,
+   * or updates the existing object with the new data.
+   *
+   * @param data
+   * @returns
+   */
+  public createOrUpdate(data: ServerPojo): T {
     let obj = this.itemsById[data._id]?.deref();
     if (obj === undefined) {
       obj = new this.clazz();
-      this.itemsById[data._id] = new WeakRef(obj);
-      this.finalizationRegistry.register(obj, data._id);
+      obj.update(data);
+      this.addObject(obj);
+    } else {
+      obj.update(data);
     }
-    obj.update(data);
     return obj;
   }
+
   /**
-   * Do not call this manually
+   * Internal use only. Do not call manually.
+   */
+  addPendingRegistration(promise: Promise<void>): void {
+    this.pendingRegistrations.push(promise);
+  }
+
+  /**
+   * Internal use only. Do not call manually.
+   */
+  removePendingRegistration(promise: Promise<void>): void {
+    const index = this.pendingRegistrations.indexOf(promise);
+    if (index !== -1) {
+      this.pendingRegistrations.splice(index, 1);
+    } else {
+      throw new Error(`Object is not in the pending registrations list.`);
+    }
+  }
+
+  /**
+   * Do not modify the returned value.
+   */
+  getPendingRegistrations(): Promise<void>[] {
+    return this.pendingRegistrations;
+  }
+  /**
+   * Internal use only. Do not call manually.
    * @param obj
    * @returns
    */
-  async insert(obj: T): Promise<void> {
-    let meta = MsoObject.getClazzMeta(this.clazz);
-    let id: string;
-    if (Meteor.isServer) {
-      const { _id, ...doc } = obj.serialize();
-      const collection = getServerCollection(meta.collectionName);
-      id = (await collection.insertAsync(
-        (_id ? { _id, ...doc } : doc) as any,
-      )) as string;
-    } else {
-      id = await Meteor.callAsync(
-        meta.collectionName + ".insert",
-        obj.serialize(),
+  addObject(obj: T) {
+    if (this.getById(obj._id)) {
+      throw new Error(
+        `Object with _id ${obj._id} is already registered. This probably means that a duplicate object was created from a publication before it managed to register.`,
       );
     }
-    obj._id = id;
     this.itemsById[obj._id] = new WeakRef(obj);
     this.finalizationRegistry.register(obj, obj._id);
-    return;
   }
   /**
    * Internal use only. Do not call manually.
    * @param obj
    */
-  async delete(obj: T): Promise<void> {
-    let meta = MsoObject.getClazzMeta(this.clazz);
+  removeObject(obj: T) {
     delete this.itemsById[obj._id];
-    if (Meteor.isServer) {
-      const collection = getServerCollection(meta.collectionName);
-      await collection.removeAsync(obj._id);
-    } else {
-      await Meteor.callAsync(meta.collectionName + ".delete", obj._id);
-    }
+    this.finalizationRegistry.unregister(obj);
   }
 }

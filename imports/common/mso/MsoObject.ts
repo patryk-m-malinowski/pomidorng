@@ -5,6 +5,7 @@ import { PoolFactory } from "./PoolFactory";
 
 export interface ClassMeta {
   collectionName: string;
+  clientRegisterable?: boolean;
 }
 
 /**
@@ -30,6 +31,7 @@ export default abstract class MsoObject {
    */
   public static Meta(meta: ClassMeta) {
     return function (constructor: new () => MsoObject) {
+      meta.clientRegisterable ??= true;
       (constructor as any)[symMeta] = meta;
     };
   }
@@ -44,28 +46,10 @@ export default abstract class MsoObject {
       prototype[symProperties][propertyKey] = meta;
       Object.defineProperty(prototype, propertyKey, {
         set(this: MsoObject, v) {
-          const signal = this.propertySignals[propertyKey];
-          let oldValue = signal();
-          if (v !== oldValue) {
-            if (!this.isUpdating) {
-              this.lastUserPropertySetAt[propertyKey] = Date.now();
-            }
-            signal.set(v);
-            this.onPropertyChange(propertyKey, v, oldValue);
-          }
+          return this.setRemoteProperty(propertyKey, v);
         },
         get(this: MsoObject) {
-          const signal = this.propertySignals[propertyKey];
-          let value = signal();
-          if (value === undefined) {
-            if (!this.registered) {
-              return prototype[symProperties][propertyKey].init;
-            }
-            throw new Error(
-              `Property ${propertyKey} is not available. This means it hasn't been sent to the client via your subscription.`,
-            );
-          }
-          return value;
+          return this.getRemoteProperty(propertyKey);
         },
         enumerable: true,
         configurable: true,
@@ -91,7 +75,7 @@ export default abstract class MsoObject {
   private isUpdating = false;
   private registering = false;
   private registered = false;
-  public _id!: string;
+  public _id?: string;
   private propertySignals: Record<string, WritableSignal<any>> = {};
   private lastUserPropertySetAt: Record<string, number> = {};
   private queuedServerPropertyUpdates: Record<
@@ -121,9 +105,9 @@ export default abstract class MsoObject {
   }
 
   /**
-   * Call this method on a new instance that you're created on the client to register it on the server.
+   * Call this method on a new instance that you're created to register it on the server.
    */
-  async register(): Promise<void> {
+  public async register(): Promise<void> {
     if (this._id) {
       throw new Error(`Object is already registered with _id ${this._id}`);
     }
@@ -131,13 +115,47 @@ export default abstract class MsoObject {
       throw new Error(`Object is already in the process of registering.`);
     }
     this.registering = true;
+
+    const pool = PoolFactory.instance.getPool(
+      this.constructor as new () => MsoObject,
+    );
+    const { promise, resolve } = Promise.withResolvers<void>();
+    pool.addPendingRegistration(promise);
     try {
       this.copyInitValues();
-      await PoolFactory.instance
-        .getPool(this.constructor as new () => MsoObject)
-        .insert(this);
+
+      let meta = MsoObject.getClazzMeta(
+        this.constructor as new () => MsoObject,
+      );
+      let id: string;
+      if (Meteor.isServer) {
+        const { _id, ...doc } = this.serialize();
+        const collection = getServerCollection(meta.collectionName);
+        id = (await collection.insertAsync(
+          (_id ? { _id, ...doc } : doc) as any,
+        )) as string;
+      } else {
+        if (!meta.clientRegisterable) {
+          throw new Error(
+            `Class ${meta.collectionName} is not client-registrable.`,
+          );
+        }
+        id = await Meteor.callAsync(
+          meta.collectionName + ".insert",
+          this.serialize(),
+        );
+      }
+      if (typeof id !== "string") {
+        throw new Error(
+          `Failed to register object, invalid id returned: ${id}. Please make sure your server method returns the id.`,
+        );
+      }
+      this._id = id;
+      pool.addObject(this);
       this.registered = true;
     } finally {
+      pool.removePendingRegistration(promise);
+      resolve();
       this.registering = false;
     }
   }
@@ -152,10 +170,46 @@ export default abstract class MsoObject {
     if (this.deleted) {
       throw new Error(`Object is already deleted.`);
     }
+
     this.deleted = true;
-    return await PoolFactory.instance
+
+    let meta = MsoObject.getClazzMeta(this.constructor as new () => MsoObject);
+    if (Meteor.isServer) {
+      const collection = getServerCollection(meta.collectionName);
+      await collection.removeAsync(this._id);
+    } else {
+      await Meteor.callAsync(meta.collectionName + ".delete", this._id);
+    }
+
+    PoolFactory.instance
       .getPool(this.constructor as new () => MsoObject)
-      .delete(this);
+      .removeObject(this);
+  }
+
+  public getRemoteProperty(propertyKey: string): any {
+    const signal = this.propertySignals[propertyKey];
+    let value = signal();
+    if (value === undefined) {
+      if (!this.registered) {
+        return this[symProperties][propertyKey].init;
+      }
+      throw new Error(
+        `Property ${propertyKey} is not available. This means it hasn't been sent to the client via your subscription.`,
+      );
+    }
+    return value;
+  }
+
+  public setRemoteProperty(propertyKey: string, value: any): void {
+    const signal = this.propertySignals[propertyKey];
+    let oldValue = signal();
+    if (value !== oldValue) {
+      if (!this.isUpdating) {
+        this.lastUserPropertySetAt[propertyKey] = Date.now();
+      }
+      signal.set(value);
+      this.onPropertyChange(propertyKey, value, oldValue);
+    }
   }
 
   private onPropertyChange(propertyKey: string, value: any, oldValue: any) {

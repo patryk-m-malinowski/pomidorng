@@ -34,7 +34,7 @@ function validateTask(task: Partial<Task>) {
 Meteor.methods({
   "tasks.Task.insert": mutexPerUser(async function (
     task: ServerPojo,
-  ): Promise<void> {
+  ): Promise<string> {
     if (!Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
     }
@@ -56,7 +56,8 @@ Meteor.methods({
 
     task.status = "todo";
     task.createdBy = Meteor.userId()!;
-    await TaskCollection.insertAsync(task);
+    let id = await TaskCollection.insertAsync(task);
+    return id;
   }),
   "tasks.Task.delete": async function (taskId: string): Promise<void> {
     if (!Meteor.userId()) {

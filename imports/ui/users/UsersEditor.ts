@@ -222,36 +222,27 @@ export class UsersEditor implements OnInit, OnDestroy {
       }
     });
 
-    const sub = Meteor.subscribe("users.allUsers", {
-      onStop: () => this.loading.set(false),
-    });
-    this.usersSub = sub;
-
     // Loading is cleared in the same computation that reads the data, so the
     // template never renders before the ready data has been processed.
     this.tracker = Tracker.autorun(() => {
-      const ready = sub.ready();
+      let handle = Meteor.subscribe("users.allUsers");
+      const ready = handle.ready();
+      this.loading.set(!ready);
+
       const pojos = pomidorUsers.find({}).fetch() as unknown as ServerPojo[];
+      if (!ready) return;
       console.log(
         `debug: usersEditor tracker: length of pojos = ${pojos.length}, ready: ${ready}`,
       );
       const users = pojos.map((pojo) =>
-        PoolFactory.instance.getPool(PomidorUser).get(pojo),
+        PoolFactory.instance.getPool(PomidorUser).createOrUpdate(pojo),
       );
       users.sort((a, b) => a.username.localeCompare(b.username));
       this.users.set(users);
-      if (ready) {
-        if (users[0].createdAt === undefined) {
-          //this means bug still exists. Fix it!
-          debugger;
-        }
-        this.loading.set(false);
-      }
     });
   }
 
   ngOnDestroy(): void {
-    this.usersSub?.stop();
     this.tracker?.stop();
     this.routerSub?.unsubscribe();
   }

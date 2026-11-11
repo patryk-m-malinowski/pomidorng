@@ -3,9 +3,9 @@ import MsoObject from "#pomidor/common/mso/MsoObject";
 
 @MsoObject.Meta({
   collectionName: "users",
+  clientRegisterable: false,
 })
 //Note: For now, you cannot re-use the object after it's been registered on the server.
-//Do not register on the client.
 export class PomidorUser extends MsoObject {
   @MsoObject.Property({ client: "readonly" })
   declare createdAt: Date;

@@ -19,9 +19,9 @@ import { TasksColumn } from "#pomidor/ui/tasksEditor/TasksColumn";
 import { SearchField } from "#pomidor/ui/util/SearchField";
 import { EditTaskDlg } from "./EditTaskDlg";
 import { ServerPojo } from "#pomidor/common/mso/ObjectsPool";
-import { PoolFactory } from "#pomidor/common/mso/PoolFactory";
 import CommonDialogsService from "../util/dialog/CommonDialogsService";
 import UserService from "../UserService";
+import ServerObjectMapper from "#pomidor/common/mso/ServerObjectMapper";
 
 @Component({
   selector: "pom-tasks-editor",
@@ -101,7 +101,6 @@ import UserService from "../UserService";
   `,
 })
 export class TasksEditor implements AfterViewInit, OnInit, OnDestroy {
-  private tasksSub: Meteor.SubscriptionHandle | null = null;
   private tracker: Tracker.Computation | null = null;
   private loading = signal(true);
 
@@ -130,9 +129,9 @@ export class TasksEditor implements AfterViewInit, OnInit, OnDestroy {
     });
   });
 
-  readonly tasksTodo = computed(() =>
-    this.filteredTasks().filter((task: Task) => task.status === "todo"),
-  );
+  readonly tasksTodo = computed(() => {
+    return this.filteredTasks().filter((task: Task) => task.status === "todo");
+  });
   readonly tasksInProgress = computed(() =>
     this.filteredTasks().filter((task: Task) => task.status === "inProgress"),
   );
@@ -168,7 +167,7 @@ export class TasksEditor implements AfterViewInit, OnInit, OnDestroy {
     let task = new Task();
     let okPressed = await this.tasksService.editDlg.open("new", task);
     if (okPressed) {
-      await task.register();
+      task.register();
     }
   }
 
@@ -176,28 +175,19 @@ export class TasksEditor implements AfterViewInit, OnInit, OnDestroy {
     this.tasksService.registerHost(this.editTaskDlg);
   }
   ngOnInit(): void {
-    this.tasksSub = Meteor.subscribe("tasks.Task", {
-      onReady: () => {
-        this.loading.set(false);
-      },
-      onStop: (err?: Error) => {
-        this.loading.set(false);
-      },
-    });
-
     // Reactively fetch data from the collection
-    this.tracker = Tracker.autorun(() => {
-      const pojos = TaskCollection.find({}).fetch() as ServerPojo[];
-      let tasks = pojos.map((pojo) =>
-        PoolFactory.instance.getPool(Task).get(pojo),
-      );
+    // let oldPojos = null;
+    let mapper = new ServerObjectMapper(Task, (tasks) => {
       this.tasks.set(tasks);
+    });
+    this.tracker = Tracker.autorun(async () => {
+      let handle = Meteor.subscribe("tasks.Task");
+      const pojos = TaskCollection.find({}).fetch() as ServerPojo[];
+      this.loading.set(!handle.ready());
+      mapper.setInput(pojos);
     });
   }
   ngOnDestroy(): void {
-    if (this.tasksSub) {
-      this.tasksSub.stop();
-    }
     if (this.tracker) {
       this.tracker.stop();
     }

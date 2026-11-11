@@ -3,7 +3,7 @@ import { CallTracker } from "./CallTracker";
 
 @Injectable({ providedIn: "root" })
 export default class PendingRequestsService {
-  private tracker: CallTracker = new CallTracker(2000); //!!temp
+  private tracker: CallTracker = new CallTracker(7000);
 
   constructor() {
     monkeyPatchCallAsync(this.tracker);

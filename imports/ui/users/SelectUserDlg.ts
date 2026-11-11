@@ -44,23 +44,21 @@ export class SelectUserDlg implements OnInit, OnDestroy {
   dialog!: SubmittableDlg<string>;
 
   readonly users = signal<PomidorUser[]>([]);
-  private sub: Meteor.SubscriptionHandle | null = null;
   private tracker: Tracker.Computation | null = null;
 
   ngOnInit(): void {
-    this.sub = Meteor.subscribe("users.allUsers");
     this.tracker = Tracker.autorun(() => {
+      const handle = Meteor.subscribe("users.allUsers");
       const pojos = pomidorUsers.find({}).fetch() as unknown as ServerPojo[];
       this.users.set(
         pojos.map((pojo) =>
-          PoolFactory.instance.getPool(PomidorUser).get(pojo),
+          PoolFactory.instance.getPool(PomidorUser).createOrUpdate(pojo),
         ),
       );
     });
   }
 
   ngOnDestroy(): void {
-    this.sub?.stop();
     this.tracker?.stop();
   }
 
