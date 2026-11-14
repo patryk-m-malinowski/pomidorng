@@ -2,18 +2,16 @@
   "compilerOptions": {
     /* Basic Options */
     "target": "es2022",
-    "lib": ["es2021", "dom"],
+    "lib": ["es2024", "dom"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": false,
 
     /* Module Resolution Options */
     "module": "preserve",
     "types": ["node", "mocha"],
-    "baseUrl": ".",
     "paths": {
       "#pomidor/*": ["./imports/*"],
       /* Support absolute /imports/* with a leading '/' */
-      "/*": ["*"],
       /* Pull in type declarations for Meteor packages */
       "meteor/*": [
         "./node_modules/@types/meteor/*",

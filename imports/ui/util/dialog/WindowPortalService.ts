@@ -6,17 +6,28 @@ import { Injectable, signal } from "@angular/core";
  */
 @Injectable({ providedIn: "root" })
 export class WindowPortalService {
-  readonly windows = signal<CdkPortal[]>([]);
+  private nextId = 1;
+  readonly windowToId = new Map<CdkPortal, number>();
+  readonly windows = signal<{ portal: CdkPortal; id: number }[]>([]);
+
+  private updateOutput(): void {
+    const entries = Array.from(this.windowToId.entries());
+    const out = entries.map(([portal, id]) => ({ portal, id }));
+    this.windows.set(out);
+  }
 
   add(portal: CdkPortal): void {
-    if (!this.windows().includes(portal)) {
-      this.windows.update((list) => [...list, portal]);
+    if (!this.windowToId.has(portal)) {
+      const id = this.nextId++;
+      this.windowToId.set(portal, id);
+      this.updateOutput();
     }
   }
 
   remove(portal: CdkPortal | undefined): void {
-    if (portal && this.windows().includes(portal)) {
-      this.windows.update((list) => list.filter((p) => p !== portal));
+    if (portal && this.windowToId.has(portal)) {
+      this.windowToId.delete(portal);
+      this.updateOutput();
     }
   }
 }

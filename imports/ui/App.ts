@@ -18,6 +18,7 @@ import { CdkPortalOutlet } from "@angular/cdk/portal";
 import { Subscription } from "rxjs";
 import { GlobalErrorHandler } from "./GlobalErrorHandler";
 import { WindowPortalService } from "./util/dialog/WindowPortalService";
+import { ProgressPopupDlg } from "./util/dialog/ProgressPopupDlg";
 
 @Component({
   selector: "pom-root",
@@ -29,6 +30,7 @@ import { WindowPortalService } from "./util/dialog/WindowPortalService";
     Header,
     CommonDialogs,
     MeteorErrorDlg,
+    ProgressPopupDlg,
   ],
   template: ` <div
     class="com-patrykmalinowski-avocado-web-app flex flex-col h-screen w-screen"
@@ -38,14 +40,15 @@ import { WindowPortalService } from "./util/dialog/WindowPortalService";
       [isApp]="isApp()"
     ></pom-header>
     <div id="window-portal">
-      @for (portal of windowPortalService.windows(); track portal) {
-        <ng-template [cdkPortalOutlet]="portal" />
+      @for (entry of windowPortalService.windows(); track entry.id) {
+        <ng-template [cdkPortalOutlet]="entry.portal" />
       }
     </div>
     <router-outlet></router-outlet>
     <pom-offline-dlg></pom-offline-dlg>
     <pom-common-dialogs></pom-common-dialogs>
     <pom-meteor-error-dlg></pom-meteor-error-dlg>
+    <pom-progress-popup-dlg #progressPopupDlg></pom-progress-popup-dlg>
   </div>`,
 })
 export class App implements OnInit, OnDestroy {

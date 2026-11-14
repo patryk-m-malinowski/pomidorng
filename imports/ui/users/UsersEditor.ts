@@ -46,7 +46,7 @@ import { ChangePasswordDlg } from "./ChangePasswordDlg";
   host: { class: "block h-full" },
   template: `
     @if (loading()) {
-      <p>Loading...</p>
+      <p class="p-1.5">Loading users...</p>
     } @else {
       <!-- Mobile: either the list or the details of the selected user -->
       <div class="lg:hidden h-full">

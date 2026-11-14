@@ -88,7 +88,6 @@ export class TaskBox {
     const nextStatus = this.statusOrder[index - 1];
     if (nextStatus) {
       this.task.status = nextStatus;
-      this.task.dateModified = new Date();
     }
   }
 
@@ -97,7 +96,6 @@ export class TaskBox {
     const nextStatus = this.statusOrder[index + 1];
     if (nextStatus) {
       this.task.status = nextStatus;
-      this.task.dateModified = new Date();
     }
   }
 

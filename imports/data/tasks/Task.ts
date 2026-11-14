@@ -17,6 +17,4 @@ export class Task extends MsoObject {
   declare description: string;
   @MsoObject.Property({ init: "todo" })
   declare status: "todo" | "inProgress" | "done";
-  @MsoObject.Property({ init: null })
-  declare dateModified: Date | null;
 }

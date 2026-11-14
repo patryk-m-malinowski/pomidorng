@@ -22,6 +22,7 @@ import { ServerPojo } from "#pomidor/common/mso/ObjectsPool";
 import CommonDialogsService from "../util/dialog/CommonDialogsService";
 import UserService from "../UserService";
 import ServerObjectMapper from "#pomidor/common/mso/ServerObjectMapper";
+import ProgressPopupService from "../util/dialog/ProgressPopupService";
 
 @Component({
   selector: "pom-tasks-editor",
@@ -29,72 +30,76 @@ import ServerObjectMapper from "#pomidor/common/mso/ServerObjectMapper";
   imports: [CommonModule, SearchField, TasksColumn, TaskBox, EditTaskDlg],
   template: `
     <div class="p-1.5 h-full">
-      <div class="flex flex-col gap-1.5 h-full">
-        <div
-          class="com-patrykmalinowski-avocado-toolbar flex items-center gap-2"
-        >
-          <div class="w-full max-w-sm flex-none">
-            <pom-search-field
-              placeholder="Search tasks"
-              [value]="searchDraft()"
-              (valueChange)="searchDraft.set($event)"
-              (search)="searchQuery.set($event)"
-              (clear)="clearSearch()"
-            ></pom-search-field>
-          </div>
-
-          <button
-            type="button"
-            (click)="createTask()"
-            [disabled]="!userService.user()"
+      @if (loading()) {
+        <div>Loading tasks...</div>
+      } @else {
+        <div class="flex flex-col gap-1.5 h-full">
+          <div
+            class="com-patrykmalinowski-avocado-toolbar flex items-center gap-2"
           >
-            + New Task
-          </button>
-        </div>
+            <div class="w-full max-w-sm flex-none">
+              <pom-search-field
+                placeholder="Search tasks"
+                [value]="searchDraft()"
+                (valueChange)="searchDraft.set($event)"
+                (search)="searchQuery.set($event)"
+                (clear)="clearSearch()"
+              ></pom-search-field>
+            </div>
 
-        <div class="flex-1 overflow-x-scroll w-full">
-          <div class="h-full flex gap-2.5 justify-center min-w-fit">
-            <pom-tasks-column
-              label="To Do"
-              color="var(--pomidor-color-tasks-col-todo)"
+            <button
+              type="button"
+              (click)="createTask()"
+              [disabled]="!userService.user()"
             >
-              @for (task of tasksTodo(); track task._id) {
-                <pom-task-box
-                  [task]="task"
-                  [editTask]="openEditTask"
-                  [deleteTask]="deleteTask"
-                ></pom-task-box>
-              }
-            </pom-tasks-column>
+              + New Task
+            </button>
+          </div>
 
-            <pom-tasks-column
-              label="In Progress"
-              color="var(--pomidor-color-tasks-col-inprogress)"
-            >
-              @for (task of tasksInProgress(); track task._id) {
-                <pom-task-box
-                  [task]="task"
-                  [editTask]="openEditTask"
-                  [deleteTask]="deleteTask"
-                ></pom-task-box>
-              }
-            </pom-tasks-column>
+          <div class="flex-1 overflow-x-scroll w-full">
+            <div class="h-full flex gap-2.5 justify-center min-w-fit">
+              <pom-tasks-column
+                label="To Do"
+                color="var(--pomidor-color-tasks-col-todo)"
+              >
+                @for (task of tasksTodo(); track task._id) {
+                  <pom-task-box
+                    [task]="task"
+                    [editTask]="openEditTask"
+                    [deleteTask]="deleteTask"
+                  ></pom-task-box>
+                }
+              </pom-tasks-column>
 
-            <pom-tasks-column
-              label="Done"
-              color="var(--pomidor-color-tasks-col-done)"
-            >
-              @for (task of tasksDone(); track task._id) {
-                <pom-task-box
-                  [task]="task"
-                  [editTask]="openEditTask"
-                  [deleteTask]="deleteTask"
-                ></pom-task-box>
-              }
-            </pom-tasks-column>
+              <pom-tasks-column
+                label="In Progress"
+                color="var(--pomidor-color-tasks-col-inprogress)"
+              >
+                @for (task of tasksInProgress(); track task._id) {
+                  <pom-task-box
+                    [task]="task"
+                    [editTask]="openEditTask"
+                    [deleteTask]="deleteTask"
+                  ></pom-task-box>
+                }
+              </pom-tasks-column>
+
+              <pom-tasks-column
+                label="Done"
+                color="var(--pomidor-color-tasks-col-done)"
+              >
+                @for (task of tasksDone(); track task._id) {
+                  <pom-task-box
+                    [task]="task"
+                    [editTask]="openEditTask"
+                    [deleteTask]="deleteTask"
+                  ></pom-task-box>
+                }
+              </pom-tasks-column>
+            </div>
           </div>
         </div>
-      </div>
+      }
     </div>
 
     <pom-edit-task-dlg #editTaskDlg></pom-edit-task-dlg>
@@ -102,11 +107,12 @@ import ServerObjectMapper from "#pomidor/common/mso/ServerObjectMapper";
 })
 export class TasksEditor implements AfterViewInit, OnInit, OnDestroy {
   private tracker: Tracker.Computation | null = null;
-  private loading = signal(true);
+  readonly loading = signal(true);
 
   readonly tasksService = inject(TasksService)!;
   readonly dialogs = inject(CommonDialogsService)!;
   readonly userService = inject(UserService)!;
+  readonly progressPopupService = inject(ProgressPopupService)!;
 
   @ViewChild("editTaskDlg")
   private editTaskDlg!: EditTaskDlg;
@@ -141,7 +147,6 @@ export class TasksEditor implements AfterViewInit, OnInit, OnDestroy {
 
   readonly openEditTask = async (task: Task): Promise<void> => {
     await this.tasksService.editDlg.open("edit", task);
-    task.dateModified = new Date();
   };
 
   readonly deleteTask = async (task: Task): Promise<void> => {
@@ -167,7 +172,9 @@ export class TasksEditor implements AfterViewInit, OnInit, OnDestroy {
     let task = new Task();
     let okPressed = await this.tasksService.editDlg.open("new", task);
     if (okPressed) {
-      task.register();
+      let progressTask = this.progressPopupService.addTask("Creating task...");
+      await task.register();
+      progressTask.finish();
     }
   }
 
@@ -190,6 +197,7 @@ export class TasksEditor implements AfterViewInit, OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.tracker) {
       this.tracker.stop();
+      this.tracker = null;
     }
   }
 }
