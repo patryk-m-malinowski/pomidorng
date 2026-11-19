@@ -35,7 +35,7 @@ import { PoolFactory } from "#pomidor/common/mso/PoolFactory";
       } @else {
         <div class="flex flex-col gap-1.5 h-full">
           <div
-            class="com-patrykmalinowski-avocado-toolbar flex items-center gap-2"
+            class="com-patrykmalinowski-avocado-toolbar flex items-center gap-1.5"
           >
             <div class="w-full max-w-sm flex-none">
               <pom-search-field

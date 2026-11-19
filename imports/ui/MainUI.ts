@@ -85,7 +85,7 @@ export class MainUI implements OnDestroy {
     },
     users: {
       title: "Users",
-      icon: "shield",
+      icon: "admin_panel_settings",
       component: UsersEditor,
     },
     me: {

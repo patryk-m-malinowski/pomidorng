@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { Introduction } from "./Introduction";
 import { PrivacyPolicy } from "./PrivacyPolicy";
-import { Routes, UrlMatcher, UrlSegment } from "@angular/router";
+import { RouterLink, Routes, UrlMatcher, UrlSegment } from "@angular/router";
 import { LoginForm } from "./LoginForm";
 import { MainUI } from "./MainUI";
 import { RegistrationForm } from "./RegistrationForm";
@@ -9,7 +9,12 @@ import { RegistrationForm } from "./RegistrationForm";
 @Component({
   standalone: true,
   selector: "pom-not-found",
-  template: `<div>Page not found</div>`,
+  imports: [RouterLink],
+  host: { class: "p-1" },
+  template: `
+    <div>Page not found.</div>
+    <a routerLink="/">Back to Home</a>
+  `,
 })
 class NotFound {}
 

@@ -1,9 +1,11 @@
 import { Component } from "@angular/core";
+import { RouterLink } from "@angular/router";
 
 @Component({
   standalone: true,
   selector: "pom-privacy-policy",
   host: { class: "block flex-1 min-h-0 overflow-y-auto" },
+  imports: [RouterLink],
   template: `
     <div class="com-patrykmalinowski-pomidor-privacy-policy p-5">
       <h1>Privacy Policy</h1>
@@ -89,7 +91,7 @@ import { Component } from "@angular/core";
         We may update this policy from time to time. Updates will be posted on
         this page with a revised “Last updated” date.
       </p>
-      <a href="/">Back to Home</a>
+      <a routerLink="/">Back to Home</a>
     </div>
   `,
 })
