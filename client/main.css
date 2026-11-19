@@ -232,6 +232,9 @@
     color: var(--avocado-color-text);
     border: 1px solid var(--avocado-color-window-border);
   }
+  .cdk-overlay-container {
+    user-select: none;
+  }
   .com-patrykmalinowski-avocado-web-app {
     height: 100vh;
     width: 100vw;

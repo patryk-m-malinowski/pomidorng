@@ -9,16 +9,20 @@ import { MatIcon } from "@angular/material/icon";
   selector: "pom-check-box",
   standalone: true,
   imports: [MatIcon],
+  host: {
+    class: "pom-checkbox",
+  },
   template: `
     <label
-      class="pom-checkbox-label flex flex-row items-center gap-1"
-      [class.checked]="checked()"
-      [class.disabled]="disabled()"
+      class="pom-checkbox__label flex flex-row items-center gap-1"
+      [class.pom-checkbox__label--checked]="checked()"
+      [class.pom-checkbox__label--disabled]="disabled()"
       (click)="onLabelClick($event)"
     >
       <div
-        class="pom-checkbox"
-        [class.checked]="checked()"
+        class="pom-checkbox__toggle"
+        [class.pom-checkbox__toggle--checked]="checked()"
+        [class.pom-checkbox__toggle--disabled]="disabled()"
         [attr.aria-checked]="checked()"
         role="checkbox"
         [attr.tabindex]="disabled() ? -1 : 0"
@@ -27,7 +31,7 @@ import { MatIcon } from "@angular/material/icon";
         (blur)="onTouched()"
       >
         @if (checked()) {
-          <mat-icon class="pom-checkbox-icon">check</mat-icon>
+          <mat-icon class="pom-checkbox__icon">check</mat-icon>
         }
       </div>
       {{ label() }}
@@ -35,18 +39,17 @@ import { MatIcon } from "@angular/material/icon";
   `,
   styles: [
     `
-      .pom-checkbox-label {
+      .pom-checkbox__label {
         cursor: pointer;
         user-select: none;
         outline: none;
-
-        &.disabled {
-          cursor: not-allowed;
-          opacity: 0.5;
-        }
+      }
+      .pom-checkbox__label--disabled {
+        cursor: not-allowed !important;
+        opacity: 0.5;
       }
 
-      .pom-checkbox {
+      .pom-checkbox__toggle {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -61,32 +64,35 @@ import { MatIcon } from "@angular/material/icon";
         flex-shrink: 0;
         outline: none;
 
-        &:hover:not(.disabled) {
+        &:hover:not(.pom-checkbox__toggle--disabled) {
           border-color: #999;
           box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+        }
+
+        &:hover.pom-checkbox__toggle--disabled {
+          cursor: not-allowed;
         }
 
         &:focus-visible {
           outline: 2px solid var(--avocado-color-focus);
           outline-offset: 2px;
         }
+      }
+      .pom-checkbox__toggle--checked {
+        background-color: var(--avocado-color-button);
+        border-color: var(--avocado-color-button);
 
-        &.checked {
-          background-color: var(--avocado-color-button);
-          border-color: var(--avocado-color-button);
-
-          &:hover:not(.disabled) {
-            background-color: var(--avocado-color-button-background-hover);
-            border-color: var(--avocado-color-button-background-hover);
-          }
+        &:hover:not(.pom-checkbox__toggle--disabled) {
+          background-color: var(--avocado-color-button-background-hover);
+          border-color: var(--avocado-color-button-background-hover);
         }
       }
 
-      .pom-checkbox-icon {
+      .pom-checkbox__icon {
         color: white;
         font-size: 16px;
-        width: 16px;
-        height: 16px;
+        width: 20px;
+        height: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
