@@ -39,8 +39,8 @@ export class PomidorUser extends MsoObject {
     //Later, we will register the user in our MsoObject system as well
     //but this is not needed right now
     try {
-      this.createdAt = new Date();
       this._id = id; //The _id property must be set last!
+      //No need to set createdAt, because it's set by Meteor automatically
 
       let updates: Record<string, any> = {};
       this.copyInitValues();

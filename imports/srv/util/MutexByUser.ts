@@ -5,7 +5,7 @@ import { MutexByKey } from "#pomidor/util/MutexByKey";
  * Takes a callback and returns a function which calls the callback in a mutex per user basis
  * i.e. at most one call per user can be in progress at a time.
  */
-export function mutexPerUser<Args extends any[], ThisType, ReturnType>( //!todo put into apiUtils
+export function mutexPerUser<Args extends any[], ThisType, ReturnType>(
   fn: (this: ThisType, ...args: Args) => Promise<ReturnType>,
 ) {
   let mutex = new MutexByKey();

@@ -2,6 +2,7 @@ import { getServerCollection } from "./getServerCollection";
 import { signal, type WritableSignal } from "@angular/core";
 import { ServerPojo } from "./ObjectsPool";
 import { PoolFactory } from "./PoolFactory";
+import { Random } from "meteor/random";
 
 export interface ClassMeta {
   collectionName: string;
@@ -127,11 +128,10 @@ export default abstract class MsoObject {
       let meta = MsoObject.getClazzMeta(
         this.constructor as new () => MsoObject,
       );
-      let id: string;
       if (Meteor.isServer) {
         const { _id, ...doc } = this.serialize();
         const collection = getServerCollection(meta.collectionName);
-        id = (await collection.insertAsync(
+        this._id = (await collection.insertAsync(
           (_id ? { _id, ...doc } : doc) as any,
         )) as string;
       } else {
@@ -140,18 +140,31 @@ export default abstract class MsoObject {
             `Class ${meta.collectionName} is not client-registrable.`,
           );
         }
-        id = await Meteor.callAsync(
-          meta.collectionName + ".insert",
-          this.serialize(),
-        );
+        while (true) {
+          this._id = Random.id();
+          if (pool.getById(this._id)) {
+            continue;
+          }
+          pool.addObject(this);
+          let out = await Meteor.callAsync(
+            meta.collectionName + ".insert",
+            this.serialize(),
+          );
+
+          if (out == "idExists") {
+            pool.removeObject(this);
+            continue;
+          }
+
+          break;
+        }
       }
+      const id = this._id;
       if (typeof id !== "string") {
         throw new Error(
           `Failed to register object, invalid id returned: ${id}. Please make sure your server method returns the id.`,
         );
       }
-      this._id = id;
-      pool.addObject(this);
       this.registered = true;
     } finally {
       pool.removePendingRegistration(promise);
@@ -217,7 +230,9 @@ export default abstract class MsoObject {
       return;
     }
     if (this.registering) {
-      throw new Error(`Object is currently in the process of registering.`);
+      throw new Error(
+        `Currently, it is not possible to change properties while the object is registering. We are looking at improving this in the future.`,
+      );
     }
     if (!this._id) {
       //not registered yet, ignore

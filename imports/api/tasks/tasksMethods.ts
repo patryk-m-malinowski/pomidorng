@@ -32,6 +32,9 @@ function validateTask(task: Partial<Task>) {
 }
 
 Meteor.methods({
+  /**
+   * @returns The ID of the newly created task, or an error code if this failed
+   */
   "tasks.Task.insert": mutexPerUser(async function (
     task: ServerPojo,
   ): Promise<string> {
@@ -56,7 +59,16 @@ Meteor.methods({
 
     task.status = "todo";
     task.createdBy = Meteor.userId()!;
-    let id = await TaskCollection.insertAsync(task);
+    let id;
+    try {
+      id = await TaskCollection.insertAsync(task);
+    } catch (e: any) {
+      if (e.code === 11000) {
+        return "idExists";
+      } else {
+        throw e;
+      }
+    }
     return id;
   }),
   "tasks.Task.delete": async function (taskId: string): Promise<void> {

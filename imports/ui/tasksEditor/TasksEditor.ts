@@ -21,8 +21,8 @@ import { EditTaskDlg } from "./EditTaskDlg";
 import { ServerPojo } from "#pomidor/common/mso/ObjectsPool";
 import CommonDialogsService from "../util/dialog/CommonDialogsService";
 import UserService from "../UserService";
-import ServerObjectMapper from "#pomidor/common/mso/ServerObjectMapper";
 import ProgressPopupService from "../util/dialog/ProgressPopupService";
+import { PoolFactory } from "#pomidor/common/mso/PoolFactory";
 
 @Component({
   selector: "pom-tasks-editor",
@@ -183,15 +183,13 @@ export class TasksEditor implements AfterViewInit, OnInit, OnDestroy {
   }
   ngOnInit(): void {
     // Reactively fetch data from the collection
-    // let oldPojos = null;
-    let mapper = new ServerObjectMapper(Task, (tasks) => {
-      this.tasks.set(tasks);
-    });
     this.tracker = Tracker.autorun(async () => {
       let handle = Meteor.subscribe("tasks.Task");
       const pojos = TaskCollection.find({}).fetch() as ServerPojo[];
       this.loading.set(!handle.ready());
-      mapper.setInput(pojos);
+      this.tasks.set(
+        PoolFactory.instance.getPool(Task).mapCreateOrUpdate(pojos),
+      );
     });
   }
   ngOnDestroy(): void {

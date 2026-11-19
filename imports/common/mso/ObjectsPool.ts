@@ -42,6 +42,10 @@ export default class ObjectsPool<T extends MsoObject> {
     return obj;
   }
 
+  public mapCreateOrUpdate(data: ServerPojo[]) {
+    return data.map((d) => this.createOrUpdate(d));
+  }
+
   /**
    * Internal use only. Do not call manually.
    */
@@ -73,6 +77,9 @@ export default class ObjectsPool<T extends MsoObject> {
    * @returns
    */
   addObject(obj: T) {
+    if (obj._id === undefined) {
+      throw new Error("Cannot add object without _id to the pool.");
+    }
     if (this.getById(obj._id)) {
       throw new Error(
         `Object with _id ${obj._id} is already registered. This probably means that a duplicate object was created from a publication before it managed to register.`,
@@ -86,6 +93,9 @@ export default class ObjectsPool<T extends MsoObject> {
    * @param obj
    */
   removeObject(obj: T) {
+    if (obj._id === undefined) {
+      throw new Error("Cannot remove object without _id from the pool.");
+    }
     delete this.itemsById[obj._id];
     this.finalizationRegistry.unregister(obj);
   }
