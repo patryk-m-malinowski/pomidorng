@@ -35,18 +35,21 @@ export class PomidorUser extends MsoObject {
     username: string;
     password: string;
   }): Promise<void> {
+    //Meteor sets the createdAt when calling Accounts.createUserAsync
+    //However, we still have to set it here so we don't get an exception that it is not defined
+    //When we call copyInitValues
+    this.createdAt = new Date();
     let id = await Accounts.createUserAsync({ username, password });
     //Later, we will register the user in our MsoObject system as well
     //but this is not needed right now
     try {
       this._id = id; //The _id property must be set last!
-      //No need to set createdAt, because it's set by Meteor automatically
 
       let updates: Record<string, any> = {};
       this.copyInitValues();
       let serialized = this.serialize();
       for (let key in serialized) {
-        if (["username"].includes(key)) {
+        if (["username", "createdAt"].includes(key)) {
           continue;
         }
         updates[key] = serialized[key];
@@ -54,11 +57,13 @@ export class PomidorUser extends MsoObject {
       await pomidorUsers.updateAsync(id, {
         $set: updates,
       });
-      this.makeRegistered();
+      this.registered = true;
     } catch (e) {
       // If there is an error, we should remove the user from Accounts to avoid partially-created accounts
       await Meteor.users.removeAsync(id);
       throw e;
+    } finally {
+      this.registering = false;
     }
   }
 }

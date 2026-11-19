@@ -45,6 +45,11 @@ export default abstract class MsoObject {
     return function (prototype: MsoObject, propertyKey: string) {
       prototype[symProperties] ??= {};
       prototype[symProperties][propertyKey] = meta;
+      if (Meteor.isClient) {
+        if (meta.client === "hidden") {
+          return;
+        }
+      }
       Object.defineProperty(prototype, propertyKey, {
         set(this: MsoObject, v) {
           return this.setRemoteProperty(propertyKey, v);
@@ -74,8 +79,11 @@ export default abstract class MsoObject {
    * Whether it's updating with data from the server
    */
   private isUpdating = false;
-  private registering = false;
-  private registered = false;
+  //The two below have to be protected because the PomidorUser class needs access to them,
+  //because registration of that class is special.
+  //TODO decouple this from Pomidor
+  protected registering = false;
+  protected registered = false;
   public _id?: string;
   private propertySignals: Record<string, WritableSignal<any>> = {};
   private lastUserPropertySetAt: Record<string, number> = {};
